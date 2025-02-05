@@ -1,0 +1,17 @@
+{
+  "name": "yourwords",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev":"nodemon api/index.js",
+    "start":"node api/index.js"
+  },
+  "keywords": ["JavaScript"],
+  "author": "Mihir Solanki",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

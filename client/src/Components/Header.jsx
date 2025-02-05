@@ -59,15 +59,15 @@ const Header = () => {
             </Link>
           </ul>
         </div>
-        {/* themeBtn And signInBtn */}
+        {/* themeBtn, signInBtn & dropDownMenu */}
         <div className='flex gap-1 mr-2 md:mr-8'>
           {/* themeBtn */}
           <button className='btn h-10 border-3 rounded-2xl'>
             <FaMoon size={20} />
           </button>
           {/* SignInBtn */}
-          <Link to='/sign-in'>
-            <button className='btn w-20 h-10 p-1 text-white bg-gradient-to-r border-3 from-pink-600 to-blue-600 rounded-lg'>
+          <Link to='/sign-in' >
+            <button  className='btn w-20 h-10 p-1 border-3 font-extrabold text-white bg-gradient-to-r from-pink-600 to-blue-600 rounded-lg hover:text-transparent hover:bg-clip-text'>
               Sign In
             </button>
           </Link>
