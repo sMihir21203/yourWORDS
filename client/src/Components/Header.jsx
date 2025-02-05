@@ -20,7 +20,7 @@ const Header = () => {
         <div className='flex-1 '>
           <Link
             to='/'
-            className='self-center whitespace-nowrap text-xl sm:text-3xl font-extrabold dark:text-white'
+            className='ml-2 md:ml-12  self-center whitespace-nowrap text-2xl sm:text-3xl font-extrabold dark:text-white'
           >
             <span className='px-2 py-1 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-l-lg text-white font-semibold'>
               Your
@@ -29,7 +29,7 @@ const Header = () => {
           </Link>
         </div>
         {/* searchBar */}
-        <div className='flex-2 ml-4 hidden lg:inline'>
+        <div className='mr-40 hidden lg:inline'>
           <form className='max-w-fit flex items-center border-1 rounded-2xl p-2 m-0 bg-base-200'>
             <input
               type='text'
@@ -41,12 +41,12 @@ const Header = () => {
         </div>
         {/* SearchBtn in Small Screen*/}
         <div className='lg:hidden'>
-          <button className='btn w-12 h-10 mr-2 p-1 rounded-2xl border-3'>
+          <button className='btn w-12 h-10 mr-1 p-1 rounded-2xl border-3'>
             <AiOutlineSearch size={25} />
           </button>
         </div>
         {/* Menu For largeScreen */}
-        <div className='mr-[15rem] hidden lg:inline'>
+        <div className='mr-32 hidden lg:inline'>
           <ul className='text-xl space-x-4 text-md'>
             <Link className={liveLink("/")} to='/'>
               Home
@@ -60,9 +60,9 @@ const Header = () => {
           </ul>
         </div>
         {/* themeBtn And signInBtn */}
-        <div className='flex gap-1'>
+        <div className='flex gap-1 mr-2 md:mr-8'>
           {/* themeBtn */}
-          <button className='btn max-w-full h-10 border-3 rounded-2xl'>
+          <button className='btn h-10 border-3 rounded-2xl'>
             <FaMoon size={20} />
           </button>
           {/* SignInBtn */}
@@ -71,9 +71,8 @@ const Header = () => {
               Sign In
             </button>
           </Link>
-        </div>
-        {/* dropDownMenu For smallScreen */}
-        <div className='dropdown  dropdown-bottom dropdown-end ml-2 lg:hidden'>
+          {/* dropDownMenu For smallScreen */}
+        <div className='dropdown  dropdown-bottom dropdown-end lg:hidden '>
           <div
             tabIndex={0}
             role='button'
@@ -95,6 +94,7 @@ const Header = () => {
               Portfolio
             </Link>
           </li>
+        </div>
         </div>
       </div>
     </>
