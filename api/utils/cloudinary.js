@@ -1,9 +1,5 @@
-
-
 const cloudinary = () => {
-  return (
-    <div>cloudinary</div>
-  )
-}
+  return("") 
+};
 
-export default cloudinary
+export default cloudinary;
