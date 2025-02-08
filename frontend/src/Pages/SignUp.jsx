@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FaKey, FaUser } from "react-icons/fa"
 import { AiFillMail } from 'react-icons/ai'
 import Container from '../Components/Container/Container'
 import { Button, Input, Logo } from '../Components/CompsIndex'
+
 
 
 const SignUp = () => {
@@ -14,6 +15,7 @@ const SignUp = () => {
   })
   const [errorMsg, setErrorMsg] = useState("")
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
 
   const handleOnChange = (e) => {
     setFormData((prev) => ({
@@ -56,6 +58,7 @@ const SignUp = () => {
         return setErrorMsg(data.message || "SignUp Failed!")
       }
 
+      navigate('/sign-in')
       alert("SignUp Successfully")
       console.log(data)
     } catch (error) {
@@ -98,10 +101,7 @@ const SignUp = () => {
 
             <Input label="Your Password" type="password" placeholder="Password" icon={FaKey} id="password" onChange={handleOnChange} />
 
-            <Button type="submit" text={loading ? "" : "Sign Up"} style='gradient' className='w-71 text-xl pb-2 mt-4' disabled={loading}>
-              {
-                loading ? <span className="loading loading-spinner text-secondary">Loading...</span> : "Sign Up"
-              }
+            <Button type="submit" text={loading ? "Loading...." : "Sign Up"} style='gradient' className='w-71 text-xl pb-2 mt-4' disabled={loading}>
             </Button>
           </form>
           <div className=' ml-22 md:ml-52 lg:ml-2 mt-4'>
