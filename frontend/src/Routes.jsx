@@ -9,7 +9,7 @@ import {
   SignIn,
   SignUp,
 } from "./Pages/PagesIndex.js";
-import { Header } from "./Components/CompsIndex.js";
+import { Header,Footer } from "./Components/CompsIndex.js";
 
 export const WebRoutes = () => {
   return (
@@ -25,6 +25,7 @@ export const WebRoutes = () => {
           <Route path='/sign-up' element=<SignUp /> />
           <Route path='/*' element=<NotFound /> />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </>
   );

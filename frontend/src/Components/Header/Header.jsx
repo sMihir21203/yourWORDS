@@ -13,7 +13,7 @@ const Header = () => {
 
   return (
     <>
-      <div className='navbar bg-base-100 shadow-md p-4'>
+      <div className='navbar fixed top-0 left-0 right-0 z-10 bg-base-100 shadow-md p-4 '>
         {/* logo */}
         <div className='flex-1 '>
           <Logo />
