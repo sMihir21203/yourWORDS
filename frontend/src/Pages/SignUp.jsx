@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaKey, FaUser } from "react-icons/fa"
 import { AiFillMail } from 'react-icons/ai'
-import Container from '../Components/Container/Container'
-import { Button, Input, Logo } from '../Components/CompsIndex'
+import { Button, Input, Logo, Container } from '../Components/CompsIndex'
 
 
 
@@ -46,10 +45,6 @@ const SignUp = () => {
         body: JSON.stringify(formData),
       })
 
-      const data = await res.json();
-
-
-
       if (!res.ok) {
         setLoading(false)
         if (res.status === 409) {
@@ -58,11 +53,12 @@ const SignUp = () => {
         return setErrorMsg(data.message || "SignUp Failed!")
       }
 
+      const data = await res.json();
       navigate('/sign-in')
       alert("SignUp Successfully")
       console.log(data)
     } catch (error) {
-      setErrorMsg("Something went wrong. Please try again.");
+      setErrorMsg("Oops👀 Something went wrong. Please try again.");
       console.log(`SignUp Err: ${error.message}`)
     } finally {
       setLoading(false)
@@ -99,7 +95,7 @@ const SignUp = () => {
 
             <Input label="Your E-Mail" type="email" placeholder="abcd@gmail.com" icon={AiFillMail} id="email" onChange={handleOnChange} />
 
-            <Input label="Your Password" type="password" placeholder="Password" icon={FaKey} id="password" onChange={handleOnChange} />
+            <Input label="Your Password" type="password" placeholder="********" icon={FaKey} id="password" onChange={handleOnChange} />
 
             <Button type="submit" text={loading ? "Loading...." : "Sign Up"} style='gradient' className='w-71 text-xl pb-2 mt-4' disabled={loading}>
             </Button>

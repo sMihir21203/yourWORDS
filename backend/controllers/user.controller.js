@@ -81,7 +81,7 @@ const signUpUser = asyncHandler(async (req, res) => {
 const signInUser = asyncHandler(async (req, res) => {
   //data from body
   const { username, password } = req.body;
-  if (!username) {
+  if (!username || !password) {
     throw new ApiError(400, "All fields are mandatory");
   }
 
@@ -89,7 +89,7 @@ const signInUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({
     $or: [{ username }],
   });
-  if (!user) {
+  if (!user ) {
     throw new ApiError(404, "User Not Found");
   }
 
