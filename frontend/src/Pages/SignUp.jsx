@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FaKey, FaUser } from "react-icons/fa"
 import { AiFillMail } from 'react-icons/ai'
 import { Button, Input, Logo, Container } from '../Components/CompsIndex'
-import {useDispatch,useSelector} from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { signInStart, signInSuccess, signInFailure } from "../Store/User/userSlice.js"
-import {API} from "../API/API.js"
+import { API } from "../API/API.js"
 
 
 const SignUp = () => {
@@ -14,7 +14,7 @@ const SignUp = () => {
     email: "",
     password: ""
   })
-  const {loading,error:errorMsg} = useSelector((state)=>state.user)
+  const { loading, error: errorMsg } = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
@@ -39,17 +39,17 @@ const SignUp = () => {
 
     try {
       dispatch(signInStart())
-      const res = await API.post("/sign-up",formData)
+      const res = await API.post("/sign-up", formData)
 
       const data = res.data;
-      
+
       dispatch(signInSuccess(data))
       navigate('/sign-in')
       alert("SignUp Successfully")
     } catch (error) {
-      if(error.response){
-        return dispatch(signInFailure(error.response.data.message || "Oops👀 Something went wrong. Please try again!") )
-      }else{
+      if (error.response) {
+        return dispatch(signInFailure(error.response.data.message || "Oops👀 Something went wrong. Please try again!"))
+      } else {
         return dispatch(signInFailure("Oops👀 Something went wrong. Please try again!"));
       }
     }

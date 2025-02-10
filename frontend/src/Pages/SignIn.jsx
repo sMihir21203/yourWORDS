@@ -4,7 +4,7 @@ import { Logo, Button, Input, Container } from '../Components/CompsIndex.js'
 import { FaUser, FaKey, FaDiscourse } from 'react-icons/fa'
 import { useDispatch, useSelector } from "react-redux"
 import { signInStart, signInSuccess, signInFailure } from "../Store/User/userSlice.js"
-import {API} from "../API/API.js"
+import { API } from "../API/API.js"
 
 
 const SignIn = () => {
@@ -39,17 +39,17 @@ const SignIn = () => {
 
       const data = res.data
       console.log(data)
-      
+
       dispatch(signInSuccess(data))
       navigate('/')
     } catch (error) {
       console.error(error)
-      if(error.response){
+      if (error.response) {
         return dispatch(signInFailure(error.response.data.message || "Oops👀 Something went wrong. Please try again!"))
-      }else{
-      return dispatch(signInFailure("Oops👀 Something went wrong. Please try again!"));
+      } else {
+        return dispatch(signInFailure("Oops👀 Something went wrong. Please try again!"));
+      }
     }
-  }
   }
   return (
     <Container>
