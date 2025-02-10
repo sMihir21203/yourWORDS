@@ -3,7 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FaKey, FaUser } from "react-icons/fa"
 import { AiFillMail } from 'react-icons/ai'
 import { Button, Input, Logo, Container } from '../Components/CompsIndex'
-
+import {useDispatch,useSelector} from "react-redux"
+import { signInStart, signInSuccess, signInFailure } from "../Store/User/userSlice.js"
+import {API} from "../API/API.js"
 
 
 const SignUp = () => {
@@ -12,8 +14,8 @@ const SignUp = () => {
     email: "",
     password: ""
   })
-  const [errorMsg, setErrorMsg] = useState("")
-  const [loading, setLoading] = useState(false)
+  const {loading,error:errorMsg} = useSelector((state)=>state.user)
+  const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const handleOnChange = (e) => {
@@ -26,42 +28,30 @@ const SignUp = () => {
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    setErrorMsg("")
 
     if (
       !formData.username ||
       !formData.email ||
       !formData.password) {
-      return setErrorMsg('All Fields Are Required!')
+      return dispatch(signInFailure('All Fields Are Required!'))
     }
 
 
     try {
-      setLoading(true);
-      setErrorMsg(null);
-      const res = await fetch('/api/v1/user/sign-up', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
+      dispatch(signInStart())
+      const res = await API.post("/sign-up",formData)
 
-      if (!res.ok) {
-        setLoading(false)
-        if (res.status === 409) {
-          return setErrorMsg("User with this email or username already exists!");
-        }
-        return setErrorMsg(data.message || "SignUp Failed!")
-      }
-
-      const data = await res.json();
+      const data = res.data;
+      
+      dispatch(signInSuccess(data))
       navigate('/sign-in')
       alert("SignUp Successfully")
-      console.log(data)
     } catch (error) {
-      setErrorMsg("Oops👀 Something went wrong. Please try again.");
-      console.log(`SignUp Err: ${error.message}`)
-    } finally {
-      setLoading(false)
+      if(error.response){
+        return dispatch(signInFailure(error.response.data.message || "Oops👀 Something went wrong. Please try again!") )
+      }else{
+        return dispatch(signInFailure("Oops👀 Something went wrong. Please try again!"));
+      }
     }
   }
 

@@ -1,5 +1,5 @@
-const cloudinary = () => {
+export const cloudinary = () => {
   return("") 
 };
 
-export default cloudinary;
+

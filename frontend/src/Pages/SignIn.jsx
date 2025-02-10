@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Logo, Button, Input, Container } from '../Components/CompsIndex.js'
-import { FaUser, FaKey } from 'react-icons/fa'
+import { FaUser, FaKey, FaDiscourse } from 'react-icons/fa'
+import { useDispatch, useSelector } from "react-redux"
+import { signInStart, signInSuccess, signInFailure } from "../Store/User/userSlice.js"
+import {API} from "../API/API.js"
 
 
 const SignIn = () => {
@@ -9,8 +12,9 @@ const SignIn = () => {
     username: "",
     password: ""
   })
-  const [errorMsg, setErrorMsg] = useState("")
-  const [loading, setLoading] = useState(false)
+
+  const { loading, error: errorMsg } = useSelector((state) => state.user)
+  const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const handleOnChange = (e) => {
@@ -22,45 +26,30 @@ const SignIn = () => {
   console.log(formData)
 
   const handleOnSubmit = async (e) => {
+
     e.preventDefault();
-    setErrorMsg("");
 
     if (!formData.username || !formData.password) {
-      return setErrorMsg("All Fields Are Required")
+      return dispatch(signInFailure("All Fields Are Required!"))
     }
 
     try {
-      setLoading(true);
-      setErrorMsg(null)
-      const res = await fetch('/api/v1/user/sign-in', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
+      dispatch(signInStart());
+      const res = await API.post("/sign-in", formData)
 
-      if (!res.ok) {
-        setLoading(false)
-        if (res.status === 404) {
-          return setErrorMsg("Enter Valid Username!")
-        }
-        if (res.status === 401) {
-          return setErrorMsg("Enter Valid Password!")
-        }
-        return setErrorMsg(data.message || "Login Failed!")
-
-      }
-
-      const data = await res.json()
-      navigate('/')
-      alert("SignIn Successfully")
+      const data = res.data
       console.log(data)
+      
+      dispatch(signInSuccess(data))
+      navigate('/')
     } catch (error) {
-      setErrorMsg("Oops👀 Something Went Wrong! Pleas Try Again")
-      console.log(`SignUp Err: ${error.message}`)
-    } finally {
-      setLoading(false)
+      console.error(error)
+      if(error.response){
+        return dispatch(signInFailure(error.response.data.message || "Oops👀 Something went wrong. Please try again!"))
+      }else{
+      return dispatch(signInFailure("Oops👀 Something went wrong. Please try again!"));
     }
-
+  }
   }
   return (
     <Container>
