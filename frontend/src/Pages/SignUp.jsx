@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaKey, FaUser } from "react-icons/fa"
 import { AiFillMail } from 'react-icons/ai'
-import { Button, Input, Logo, Container } from '../Components/CompsIndex'
+import { Button, Input, Logo, Container,GoogleAuth } from '../Components/CompsIndex.js'
 import { useDispatch, useSelector } from "react-redux"
 import { signInStart, signInSuccess, signInFailure } from "../Store/User/userSlice.js"
 import { API } from "../API/API.js"
@@ -17,6 +17,12 @@ const SignUp = () => {
   const { loading, error: errorMsg } = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (errorMsg) {
+      dispatch(signInFailure(null))
+    }
+  },[])
 
   const handleOnChange = (e) => {
     setFormData((prev) => ({
@@ -39,7 +45,7 @@ const SignUp = () => {
 
     try {
       dispatch(signInStart())
-      const res = await API.post("/sign-up", formData)
+      const res = await API.post("/user/sign_up", formData)
 
       const data = res.data;
 
@@ -68,18 +74,18 @@ const SignUp = () => {
         )
       }
 
-      <div className='lg:ml-70 flex flex-col lg:flex-row  '>
-        <div className='lg:mt-20 lg:space-y-8'>
-          <Logo className='ml-22 md:ml-28 lg:ml-0 text-4xl md:5xl lg:text-6xl' />
+      <div className='lg:ml-80 flex flex-col lg:flex-row items-center justify-items-center'>
+        <div className='mt-4 lg:-mt-32 lg:space-y-8'>
+          <Logo className='text-3xl lg:text-6xl' />
           <div className='hidden lg:inline text-xl font-semibold'>
             SignUp to Share <span className='font-extrabold'>YourWords...</span>
           </div>
         </div>
 
-        <div className='mt-13 lg:ml-24'>
+        <div className='mt-12 lg:ml-16'>
 
           <form onSubmit={handleOnSubmit}
-            className='flex-col justify-items-center space-y-2'>
+            className=' space-y-2'>
 
             <Input label="Your Username" type="username" placeholder="Username" icon={FaUser} id="username" onChange={handleOnChange} />
 
@@ -89,8 +95,10 @@ const SignUp = () => {
 
             <Button type="submit" text={loading ? "Loading...." : "Sign Up"} style='gradient' className='w-71 text-xl pb-2 mt-4' disabled={loading}>
             </Button>
+            
           </form>
-          <div className=' ml-22 md:ml-52 lg:ml-2 mt-4'>
+          <GoogleAuth/>
+          <div >
             Already a User ?
             <Link to="/sign-in" className='ml-2 text-blue-600 link-hover text-md font-semibold' >Sign In</Link>
           </div>

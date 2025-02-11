@@ -8,7 +8,7 @@ const Logo = ({
     ...props
 }) => {
     return (
-        <div className={`ml-2 md:ml-12  self-center whitespace-nowrap text-2xl sm:text-3xl font-extrabold dark:text-white ${className}`
+        <div className={`self-center whitespace-nowrap text-2xl sm:text-3xl font-extrabold dark:text-white ${className}`
         }
             {...props}>
             <Link

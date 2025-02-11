@@ -3,6 +3,7 @@ import React from 'react'
 const Button = ({
     style = "default",
     icon: Icon,
+    urlIcon,
     iconSize = 20,
     text,
     className = "",
@@ -16,6 +17,7 @@ const Button = ({
 
     return <button className={`${styles[style]} ${className}`} {...props}>
         {Icon && <Icon size={iconSize} />}
+        {urlIcon &&<img src={urlIcon} alt='icon' className= 'w-fit h-12' />}
         {text && <span>{text}</span>}
     </button>;
 }

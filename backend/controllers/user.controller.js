@@ -1,5 +1,6 @@
 import { asyncHandler, ApiResponse, ApiError } from "../utils/index.utils.js";
 import { User } from "../models/user.model.js";
+import bcrypt from "bcrypt";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -26,6 +27,13 @@ const generateAccessAndRefreshToken = async (userId) => {
     );
   }
 };
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: true
+};
+
+const makeRandomPassword = () => Math.random().toString(36).slice(-6);
 
 const signUpUser = asyncHandler(async (req, res, next) => {
   //get info from body
@@ -88,9 +96,7 @@ const signInUser = asyncHandler(async (req, res, next) => {
   }
 
   // Find user
-  const user = await User.findOne(
-   {username}
-  );
+  const user = await User.findOne({ username });
 
   if (!user) {
     return next(new ApiError(404, "User Not Found"));
@@ -111,18 +117,13 @@ const signInUser = asyncHandler(async (req, res, next) => {
     "-password -refreshToken"
   );
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
-
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
     .json(
       new ApiResponse(
-        201,
+        200,
         {
           user: loggedInUser,
           accessToken,
@@ -133,4 +134,67 @@ const signInUser = asyncHandler(async (req, res, next) => {
     );
 });
 
-export { signUpUser, signInUser };
+const googleAuth = asyncHandler(async (req, res, next) => {
+
+  //fetch data -> req.body
+  const { email, name, googleImgUrl } = req.body;
+  if ([email, name, googleImgUrl].some((field) => field?.trim() === "")) {
+    return next(new ApiError(400, "Something Wrong Please Try Again"));
+  }
+
+  try {
+    
+    //check user exist or not
+    let user = await User.findOne({ email });
+    let isNewUser = false;
+
+    //if new user then create user
+    if (!user) {
+      // Generating randomPass & hash it
+      const randomPassword = makeRandomPassword();
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+      // Create new user
+      user = await User.create({
+        username: name.replace(/\s/g, "").toLowerCase(),
+        email,
+        password: hashedPassword,
+        avatar: googleImgUrl,
+        isGoogleAuth: true,
+      });
+
+      isNewUser = true;
+
+      console.log(`Generated password for ${email}: ${randomPassword}`);
+    }
+
+    // Generate tokens
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+
+    // Fetch userData and remove -password -refreshToken
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
+
+    
+    return res
+      .status(isNewUser ? 201 : 200)
+      .cookie("accessToken", accessToken, cookieOptions)
+      .cookie("refreshToken", refreshToken, cookieOptions)
+      .json(
+        new ApiResponse(
+          isNewUser ? 201 : 200,
+          {
+            user: loggedInUser,
+            accessToken,
+            refreshToken,
+          },
+          isNewUser ? "User SignUp and SignIn successfully" : "User SignIn successfully"
+        )
+      );
+  } catch (error) {
+    console.error("Google Auth Error:", error);
+    return next(new ApiError(500, "Internal Server Error"));
+  }
+});
+
+
+export { signUpUser, signInUser, googleAuth };

@@ -25,6 +25,10 @@ const userSchema = new Schema(
       required: [true, "PassWord is required"],
       minlength: 6
     },
+    avatar:{
+      type: String,
+      default: "../public/defaultAvatar.png"
+    },
     refreshToken: {
       type: String,
     },

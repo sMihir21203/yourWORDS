@@ -16,17 +16,17 @@ const Header = () => {
       <div className='navbar fixed top-0 left-0 right-0 z-10 bg-base-100 shadow-md p-4 '>
         {/* logo */}
         <div className='flex-1 '>
-          <Logo />
+          <Logo className="md:ml-12" />
         </div>
 
         {/* searchBar */}
         <div className='mr-20 hidden lg:inline'>
-          <form className='max-w-fit flex items-center border-1 rounded-2xl p-2 m-0 bg-base-200 '>
+          <form className='max-w-fit flex items-center input input-secondary rounded-2xl p-2 m-0 h-12 bg-base-200 '>
             <input
               placeholder='FIND your READ...'
               className='border-0 outline-0 text-md  w-70 '
             />
-            <AiOutlineSearch size={30} className='cursor-pointer' onClick={Radhe} />
+            <AiOutlineSearch size={30} className='cursor-pointer text-pink-600 ' onClick={Radhe} />
           </form>
         </div>
 
