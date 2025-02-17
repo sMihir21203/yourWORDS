@@ -3,7 +3,7 @@ import { app, Button } from "../CompsIndex.js"
 import Google from './Google.png'
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import {useDispatch} from "react-redux"
-import {signInFailure, signInSuccess} from "../../Store/User/userSlice.js"
+import {signInSuccess} from "../../Store/User/userSlice.js"
 import { API } from '../../API/API.js'
 import { useNavigate } from 'react-router-dom'
 
@@ -39,14 +39,15 @@ const navigate = useNavigate()
       }
 
     } catch (error) {
-      console.error("Google Auth Error: ",error)
+      console.log("Google Auth Error: ",error)
       await auth.signOut() //if backend fails clear firebase session
     }
   }
   return < Button
     type="button"
     urlIcon={Google}
-    className='bg-base-100 w-71 text-xl mt-3 mb-1 hover:bg-gradient-to-r hover:from-blue-600  hover:via-cyan-50 hover:to-pink-600'
+    alt="Google"
+    className='bg-base-100 w-71 h-10 text-xl mt-3 mb-1 hover:bg-gradient-to-r hover:from-blue-600  hover:via-cyan-50 hover:to-pink-600'
     onClick={googleClickHandler}
   />
 }

@@ -27,7 +27,7 @@ const userSchema = new Schema(
     },
     avatar:{
       type: String,
-      default: "../public/defaultAvatar.png"
+      default: "https://cdn-icons-png.flaticon.com/512/5087/5087579.png"
     },
     refreshToken: {
       type: String,

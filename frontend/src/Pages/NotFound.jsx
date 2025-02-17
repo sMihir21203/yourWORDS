@@ -1,9 +1,10 @@
 import React from 'react'
-import Container from '../Components/Container/Container'
-
+import { Container } from '../Components/CompsIndex.js'
 const NotFound = () => {
   return (
-    <Container><div>NotFound</div></Container>
+    <Container>
+    <div>NotFound</div>
+    </Container>
   )
 }
 

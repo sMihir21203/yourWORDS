@@ -1,12 +1,20 @@
 import React from "react";
-import { Link} from "react-router-dom";
-import { AiOutlineSearch } from "react-icons/ai";
-import { FaMoon, FaAlignLeft } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { AiOutlineLogout, AiOutlineSearch, AiOutlineSelect } from "react-icons/ai";
+import { FaMoon, FaSun, FaListUl } from "react-icons/fa";
 import { Button, Logo, Menu } from "../CompsIndex.js"
+import { useDispatch, useSelector } from "react-redux"
+import { toggleThemeBtn } from '../../Store/Theme/themeSlice.js'
 
 
 const Header = () => {
 
+  const currentUser = useSelector(state => state.user?.currentUser?.data?.user);
+  const dispatch = useDispatch()
+  const { theme } = useSelector(state => state.theme)
+
+  console.log(currentUser?.avatar)
+  console.log(theme)
   const Radhe = () => {
     alert("Radhe Radhe")
   }
@@ -33,7 +41,13 @@ const Header = () => {
         {/* Menu For largeScreen */}
         <div className='mr-20 hidden lg:inline'>
           <ul className='text-xl space-x-4 text-md'>
-            <Menu />
+            <Menu
+              links={[
+                { name: "Home", path: "/" },
+                { name: "About", path: "/about" },
+                { name: "Portfolio", path: "/portfolio" }
+              ]}
+            />
           </ul>
         </div>
 
@@ -48,25 +62,61 @@ const Header = () => {
             <Button icon={AiOutlineSearch} iconSize={25} onClick={Radhe} />
           </div>
 
-          {/* themeBtn */}
-          <Button icon={FaMoon} onClick={Radhe} />
+          {/* themeBtn largeScreen */}
+          <Button
+            className="hidden md:inline pl-2"
+            onClick={() => dispatch(toggleThemeBtn())}
+            icon={theme === "light" ? FaSun : FaMoon}
+          />
 
           {/* SignInBtn */}
-          <Link to='/sign-in' >
-            <Button className="h-11" text={"Sign In"} style="gradient" onClick={Radhe} />
-          </Link>
+          {currentUser ? (
+            <div className="dropdown dropdown-bottom dropdown-end ">
+              <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar h-12 w-12 m-1">
+                <div className="rounded-full">
+                  <img
+                
+                    src={currentUser.avatar} alt="avatar"
+                  />
+                </div>
+              </div>
+              <ul className="menu dropdown-content  bg-base-100 rounded-lg w-48 p-6 shadow-2xl gap-y-1 place-items-start ">
+                <span className="font-semibold mb-2">@{currentUser.username}</span>
+                <Menu
+                  links={[
+                    { name: "Dashboard", path: "/dashboard?tab=profile" }
+                  ]}
+                />
+                <Button className="w-24 h-5 p-0" iconSize={15} text={"Logout"} icon={AiOutlineSelect} />
+              </ul>
+            </div>) : (
+            <Link to='/sign_in' >
+              <Button className="h-9" text={"Sign In"} style="gradient" onClick={Radhe} />
+            </Link>)
+          }
+
 
           {/* SM:dropDownMenu */}
-          <div className='dropdown  dropdown-bottom dropdown-end lg:hidden '>
-            <div
+          <div className='dropdown dropdown-bottom dropdown-end lg:hidden '>
+            <FaListUl
               tabIndex={0}
               role='button'
-              className='btn p-2 rounded-lg border-3'
-            >
-              <FaAlignLeft size={25} />
-            </div>
-            <ul className="dropdown-content menu bg-base-100 rounded-lg w-32 p-6 shadow-lg space-y-5 items-center">
-              <Menu />
+              className='btn p-2 rounded-lg border-3 w-10 h-9'
+            />
+
+            <ul className="menu dropdown-content mt-2 bg-base-100 rounded-lg w-24 p-6 shadow-2xl gap-y-2 place-items-start">
+              <Menu
+                links={[
+                  { name: "Home", path: "/" },
+                  { name: "About", path: "/about" },
+                  { name: "Portfolio", path: "/portfolio" }
+                ]}
+              />
+              <Button
+                className="md:hidden inline pl-2"
+                onClick={() => dispatch(toggleThemeBtn())}
+                icon={theme === "light" ? FaSun : FaMoon}
+              />
             </ul>
 
           </div>

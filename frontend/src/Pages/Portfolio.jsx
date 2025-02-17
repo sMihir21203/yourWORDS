@@ -1,9 +1,11 @@
 import React from 'react'
-import Container from '../Components/Container/Container'
+import { Container } from '../Components/CompsIndex.js'
 
 const Portfolio = () => {
   return (
-    <Container><div>Portfolio</div></Container>
+    <Container>
+    <div>Portfolio</div>
+    </Container>
   )
 }
 

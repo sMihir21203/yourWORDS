@@ -1,5 +1,5 @@
 import About from "./About.jsx";
-import Dashboard from "./Dashboard.jsx";
+import Dashboard from "./Dashboard/Dashboard.jsx";
 import Home from "./Home.jsx";
 import NotFound from "./NotFound.jsx";
 import Portfolio from "./Portfolio.jsx";

@@ -1,6 +1,6 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Logo, Button, Input, Container, GoogleAuth } from '../Components/CompsIndex.js'
+import { Button, Input, GoogleAuth, Container } from '../Components/CompsIndex.js'
 import { FaUser, FaKey } from 'react-icons/fa'
 import { useDispatch, useSelector } from "react-redux"
 import { signInStart, signInSuccess, signInFailure } from "../Store/User/userSlice.js"
@@ -25,7 +25,7 @@ const SignIn = () => {
     if (errorMsg) {
       dispatch(signInFailure(null))
     }
-  },[])
+  }, [])
 
   const handleOnChange = (e) => {
     setFormData((prev) => ({
@@ -62,44 +62,48 @@ const SignIn = () => {
     }
   }
   return (
-    <Container>
-      {
-        errorMsg && (
-          <div
-            role="alert"
-            className="mb-2 md:mb-0 alert alert-error alert-soft flex justify-center text-center"
-          >
-            {errorMsg}
+   <Container>
+      <div className="flex flex-col">
+        {
+          errorMsg && (
+            <div
+              role="alert"
+              className="alert alert-error alert-soft flex justify-center text-center mb-12"
+            >
+              {errorMsg}
+            </div>
+          )
+        }
+        <div className='hero-content flex-col lg:flex-row'>
+          <div className='text-center lg:text-left lg:mr-2 -mt-16'>
+            <h1 className="text-5xl font-bold"><span className='bg-gradient-to-r from-pink-600 to-blue-600 text-transparent bg-clip-text'>signIn </span>Now!</h1>
+            <p className='py-6'>
+              to Share <span className='font-extrabold'>YourWords...</span>
+            </p>
           </div>
-        )
-      }
-      <div className='lg:ml-80 flex flex-col lg:flex-row items-center justify-items-center'>
-        <div className='mt-4 lg:-mt-14 lg:space-y-8'>
-          <Logo className=' text-3xl lg:text-6xl' />
-          <div className='hidden lg:inline text-xl font-semibold'>
-            SignUp to Share <span className='font-extrabold'>YourWords...</span>
-          </div>
-        </div>
-        <div className='mt-12 lg:ml-16'>
+          <div className='card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl'>
+            <div className='card-body ml-5'>
+              <fieldset className='fieldset'>
+                <form onSubmit={handleOnSubmit}>
 
-          <form onSubmit={handleOnSubmit}
-            className='space-y-2'>
+                  <Input label="Your Username" type="username" placeholder="Username" icon={FaUser} id="username" onChange={handleOnChange} />
 
-            <Input label="Your Username" type="username" placeholder="Username" icon={FaUser} id="username" onChange={handleOnChange} />
+                  <Input label="Your Password" type="password" placeholder="********" icon={FaKey} id="password" onChange={handleOnChange} />
+                  <div><a className="link link-hover ml-1 mt-1">Forgot password?</a></div>
+                  <Button type="submit" text={loading ? "Loading...." : "Sign In"} style='gradient' className='w-71 text-xl pb-2 mt-2' disabled={loading} />
 
-            <Input label="Your Password" type="password" placeholder="********" icon={FaKey} id="password" onChange={handleOnChange} />
-
-            <Button type="submit" text={loading ? "Loading...." : "Sign In"} style='gradient' className='w-71 text-xl pb-2 mt-4' disabled={loading}>
-            </Button>
-          </form>
-          <GoogleAuth />
-          <div>
-            Don't Have An Account ?
-            <Link to="/sign-up" className='ml-2 text-blue-600 link-hover text-md font-semibold' >Sign Up</Link>
+                  <GoogleAuth />
+                  <p className='pl-1'>
+                    Don't Have An Account ?
+                    <Link to="/sign_up" className='ml-2 text-blue-600 link-hover  font-semibold' >Sign Up</Link>
+                  </p>
+                </form>
+              </fieldset>
+            </div>
           </div>
         </div>
       </div>
-    </Container>
+      </Container>
   )
 }
 
