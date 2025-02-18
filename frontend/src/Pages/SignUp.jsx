@@ -50,7 +50,7 @@ const SignUp = () => {
       const data = res.data;
 
       dispatch(signInSuccess(data))
-      navigate('/sign-in')
+      navigate('/sign_in')
       alert("SignUp Successfully")
     } catch (error) {
       if (error.response) {

@@ -80,14 +80,14 @@ const Header = () => {
                   />
                 </div>
               </div>
-              <ul className="menu dropdown-content  bg-base-100 rounded-lg w-48 p-6 shadow-2xl gap-y-1 place-items-start ">
-                <span className="font-semibold mb-2">@{currentUser.username}</span>
+              <ul className="menu dropdown-content bg-base-100 rounded-lg w-48 p-6 shadow-2xl gap-y-1 place-items-start ">
+                <span className="font-bold mb-2">@{currentUser.username}</span>
                 <Menu
                   links={[
                     { name: "Dashboard", path: "/dashboard?tab=profile" }
                   ]}
                 />
-                <Button className="w-24 h-5 p-0" iconSize={15} text={"Logout"} icon={AiOutlineSelect} />
+                <Button className="w-24 h-5 p-0" iconSize={15} text={"SignOut"} icon={AiOutlineSelect} />
               </ul>
             </div>) : (
             <Link to='/sign_in' >

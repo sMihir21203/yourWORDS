@@ -15,16 +15,17 @@ const Input = ({ icon: Icon,
         </label>
       )}
       <div className="flex items-center border rounded-lg p-2 input  input-secondary">
-        {Icon && (
-          <div className="mr-2 opacity-50">
-            <Icon size={iconSize} />
-          </div>
-        )}
+
         <input
           type={type}
           className={`border-0 outline-0 text-md ${className}`}
           {...props}
         />
+        {Icon && (
+          <div className="mr-2 opacity-50">
+            <Icon size={iconSize} />
+          </div>
+        )}
       </div>
     </div>
   );

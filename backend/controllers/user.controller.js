@@ -1,4 +1,9 @@
-import { asyncHandler, ApiResponse, ApiError } from "../utils/index.utils.js";
+import {
+  asyncHandler,
+  ApiResponse,
+  ApiError,
+  uploadOnCloudinary,
+} from "../utils/index.utils.js";
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 
@@ -30,7 +35,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 
 const cookieOptions = {
   httpOnly: true,
-  secure: true
+  secure: true,
 };
 
 const makeRandomPassword = () => Math.random().toString(36).slice(-6);
@@ -135,7 +140,6 @@ const signInUser = asyncHandler(async (req, res, next) => {
 });
 
 const googleAuth = asyncHandler(async (req, res, next) => {
-
   //fetch data -> req.body
   const { email, name, googleImgUrl } = req.body;
   if ([email, name, googleImgUrl].some((field) => field?.trim() === "")) {
@@ -143,7 +147,6 @@ const googleAuth = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    
     //check user exist or not
     let user = await User.findOne({ email });
     let isNewUser = false;
@@ -169,12 +172,15 @@ const googleAuth = asyncHandler(async (req, res, next) => {
     }
 
     // Generate tokens
-    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+      user._id
+    );
 
     // Fetch userData and remove -password -refreshToken
-    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
+    const loggedInUser = await User.findById(user._id).select(
+      "-password -refreshToken"
+    );
 
-    
     return res
       .status(isNewUser ? 201 : 200)
       .cookie("accessToken", accessToken, cookieOptions)
@@ -187,7 +193,9 @@ const googleAuth = asyncHandler(async (req, res, next) => {
             accessToken,
             refreshToken,
           },
-          isNewUser ? "User SignUp and SignIn successfully" : "User SignIn successfully"
+          isNewUser
+            ? "User SignUp and SignIn successfully"
+            : "User SignIn successfully"
         )
       );
   } catch (error) {
@@ -196,5 +204,36 @@ const googleAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
+const updateUserAvatar = asyncHandler(async (req, res, next) => {
+  console.log(req.file)
+  const avatarLocalPath = req.file?.path;
+  const userId = req.user?._id;
 
-export { signUpUser, signInUser, googleAuth };
+  if (!avatarLocalPath) {
+    return next(new ApiError(400, "Avatar file is missing"));
+  }
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+  if (!avatar.url) {
+    return next(
+      new ApiError(400, "Something went wrong while uploading avatar")
+    );
+  }
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: {
+        avatar: avatar.url,
+      },
+    },
+    { new: true }
+  ).select("-password");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Avatar updated successfully!"));
+});
+
+export { signUpUser, signInUser, googleAuth, updateUserAvatar };

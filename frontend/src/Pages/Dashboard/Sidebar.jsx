@@ -38,16 +38,16 @@ const Sidebar = () => {
           />
         </div>
       )}
-      <div className={`md:w-full min-h-full fixed md:sticky bg-base-300 top-0 left-0 sm:translate-x-0 ${show ? "translate-x-0" : "-translate-x-full"} p-4`}>
+      <div className={`md:w-full h-full md:min-h-screen fixed md:sticky bg-base-300 top-0 left-0 sm:translate-x-0 ${show ? "translate-x-0" : "-translate-x-full"} p-4`}>
         <div className="mt-24 sm:hidden absolute top-0 right-2">
           <Button
             icon={FaAngleDoubleLeft}
             onClick={() => setShow(false)} />
         </div>
         <ul className='pt-20 text-center'>
-          <img className='w-24 h-24 rounded-full mx-auto' src={currentUser?.avatar} alt="" />
-
-          <li className='flex flex-col gap-y-2'>
+          <img className='w-20 h-20 rounded-full mx-auto' src={currentUser?.avatar} alt="" />
+          <p className='font-semibold'>@<span>{currentUser.username}</span></p>
+          <li className='pt-8 flex flex-col gap-y-2'>
             <Link
               to="/dashboard?tab=profile"
               className={`${activeLink("?tab=profile")}`}>
@@ -62,7 +62,7 @@ const Sidebar = () => {
               to="/dashboard?tab=logout"
               className="flex gap-x-1 text-center justify-center text-md rounded-xl font-semibold btn btn-dash btn-secondary border-2">
               <AiOutlineSelect size={25} />
-              Logout
+              SignOut
             </Link>
           </li>
 
