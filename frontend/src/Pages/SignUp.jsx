@@ -30,7 +30,7 @@ const SignUp = () => {
       [e.target.id]: e.target.value.trim()
     }))
   }
-  console.log(formData);
+  // console.log(formData);
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
@@ -53,11 +53,7 @@ const SignUp = () => {
       navigate('/sign_in')
       alert("SignUp Successfully")
     } catch (error) {
-      if (error.response) {
-        return dispatch(signInFailure(error.response.data.message || "Oops👀 Something went wrong. Please try again!"))
-      } else {
-        return dispatch(signInFailure("Oops👀 Something went wrong. Please try again!"));
-      }
+      dispatch(signInFailure(error.response?.data?.message || "oops something went wrong while signUp please try again!"))
     }
   }
 
@@ -70,7 +66,7 @@ const SignUp = () => {
               role="alert"
               className="alert alert-error alert-soft flex justify-center text-center mb-12"
             >
-              {errorMsg}
+              {`👀 ${errorMsg}`}
             </div>
           )
         }
@@ -109,7 +105,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-      </Container>
+    </Container>
   )
 }
 

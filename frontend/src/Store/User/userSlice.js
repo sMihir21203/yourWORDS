@@ -23,9 +23,40 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    //update user detials
+    updateStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    updateSuccess: (state, action) => {
+      state.currentUser = {
+        ...state.currentUser,      // Preserve existing user data
+        data: {
+          ...state.currentUser.data,  // Preserve nested `data`
+          user: {
+            ...state.currentUser.data?.user,  // Preserve `user`
+            ...action.payload,  // Merge new data (avatar, username, etc.)
+          }
+        }
+      };
+      state.error = null;
+      state.loading = false;
+    },
+    updateFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
-export const { signInStart, signInSuccess, signInFailure } = userSlice.actions;
+export const {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+  updateStart,
+  updateSuccess,
+  updateFailure,
+} = userSlice.actions;
 
 export default userSlice.reducer;

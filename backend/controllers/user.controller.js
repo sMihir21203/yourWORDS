@@ -205,7 +205,7 @@ const googleAuth = asyncHandler(async (req, res, next) => {
 });
 
 const updateUserAvatar = asyncHandler(async (req, res, next) => {
-  console.log(req.file)
+  // console.log(req)
   const avatarLocalPath = req.file?.path;
   const userId = req.user?._id;
 
@@ -231,9 +231,65 @@ const updateUserAvatar = asyncHandler(async (req, res, next) => {
     { new: true }
   ).select("-password");
 
+  
   return res
     .status(200)
     .json(new ApiResponse(200, user, "Avatar updated successfully!"));
 });
 
-export { signUpUser, signInUser, googleAuth, updateUserAvatar };
+const updateUserDetails = asyncHandler(async (req, res, next) => {
+  const { username, email } = req.body;
+  const userId = req.user?._id;
+
+  if (!(username || email)) {
+    return next(
+      new ApiError(400, "Write either Username or Email  To changes!")
+    );
+  }
+
+  const existedInfo = await User.findOne({
+    $or: [{ username }, { email }],
+  });
+  if (existedInfo) {
+    return next(
+      new ApiError(
+        401,
+        "this username or email already exist kindly enter unique username or email"
+      )
+    );
+  }
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: {
+        username: username,
+        email: email,
+      },
+    },
+    {
+      new: true,
+    }
+  ).select("-password");
+
+  if (!user) {
+    return next(
+      new ApiError(
+        500,
+        "something went wrong while updating user details please try again!"
+      )
+    );
+  }
+
+  return res
+    .status(201)
+    .json(new ApiResponse(201, user, "User Details updated successfully"));
+});
+
+export {
+  signUpUser,
+  signInUser,
+  googleAuth,
+  updateUserAvatar,
+  updateUserDetails,
+};

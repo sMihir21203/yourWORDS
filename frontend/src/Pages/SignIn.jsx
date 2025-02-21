@@ -14,9 +14,6 @@ const SignIn = () => {
     password: ""
   })
 
-
-
-
   const { loading, error: errorMsg } = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate();
@@ -33,7 +30,7 @@ const SignIn = () => {
       [e.target.id]: e.target.value.trim()
     }))
   }
-  console.log(formData)
+  // console.log(formData)
 
   const handleOnSubmit = async (e) => {
 
@@ -48,21 +45,16 @@ const SignIn = () => {
       const res = await API.post("/user/sign_in", formData)
 
       const data = res.data
-      console.log(data)
+      // console.log(data)
 
       dispatch(signInSuccess(data))
       navigate('/')
     } catch (error) {
-      console.error(error)
-      if (error.response) {
-        return dispatch(signInFailure(error.response.data.message || "Oops👀 Something went wrong. Please try again!"))
-      } else {
-        return dispatch(signInFailure("Oops👀 Something went wrong. Please try again!"));
-      }
+      dispatch(signInFailure(error.response?.data?.message || "oops something went wrong while signIn please try again!"))
     }
   }
   return (
-   <Container>
+    <Container>
       <div className="flex flex-col">
         {
           errorMsg && (
@@ -70,7 +62,7 @@ const SignIn = () => {
               role="alert"
               className="alert alert-error alert-soft flex justify-center text-center mb-12"
             >
-              {errorMsg}
+              {`👀 ${errorMsg}`}
             </div>
           )
         }
@@ -103,7 +95,7 @@ const SignIn = () => {
           </div>
         </div>
       </div>
-      </Container>
+    </Container>
   )
 }
 

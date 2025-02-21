@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { AiOutlineLogout, AiOutlineSearch, AiOutlineSelect } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineSelect } from "react-icons/ai";
 import { FaMoon, FaSun, FaListUl } from "react-icons/fa";
 import { Button, Logo, Menu } from "../CompsIndex.js"
 import { useDispatch, useSelector } from "react-redux"
@@ -13,8 +13,8 @@ const Header = () => {
   const dispatch = useDispatch()
   const { theme } = useSelector(state => state.theme)
 
-  console.log(currentUser?.avatar)
-  console.log(theme)
+  // console.log(currentUser?.avatar)
+  // console.log(theme)
   const Radhe = () => {
     alert("Radhe Radhe")
   }
