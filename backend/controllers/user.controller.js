@@ -3,6 +3,7 @@ import {
   ApiResponse,
   ApiError,
   uploadOnCloudinary,
+  welcomeEmail
 } from "../utils/index.utils.js";
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
@@ -58,7 +59,7 @@ const signUpUser = asyncHandler(async (req, res, next) => {
   });
   if (existedUser) {
     return next(
-      new ApiError(409, "User already exist with this username and password")
+      new ApiError(409, "User already exist with this either username or email ")
     );
   }
 
@@ -81,6 +82,8 @@ const signUpUser = asyncHandler(async (req, res, next) => {
       )
     );
   }
+
+  await welcomeEmail(username,email,password)
 
   return res
     .status(200)
@@ -155,13 +158,12 @@ const googleAuth = asyncHandler(async (req, res, next) => {
     if (!user) {
       // Generating randomPass & hash it
       const randomPassword = makeRandomPassword();
-      const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
       // Create new user
       user = await User.create({
         username: name.replace(/\s/g, "").toLowerCase(),
         email,
-        password: hashedPassword,
+        password: randomPassword,
         avatar: googleImgUrl,
         isGoogleAuth: true,
       });
@@ -169,6 +171,7 @@ const googleAuth = asyncHandler(async (req, res, next) => {
       isNewUser = true;
 
       console.log(`Generated password for ${email}: ${randomPassword}`);
+      await welcomeEmail(user.username,user.email,randomPassword)
     }
 
     // Generate tokens
@@ -204,6 +207,28 @@ const googleAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
+const logOutUser = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  User.findByIdAndUpdate(
+    userId,
+    {
+      $set: {
+        refreshToken: undefined,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  return res
+    .status(201)
+    .clearCookie("accessToken", cookieOptions)
+    .clearCookie("refreshToken", cookieOptions)
+    .json(new ApiResponse(200, {}, "User LOGOUT"));
+});
+
 const updateUserAvatar = asyncHandler(async (req, res, next) => {
   // console.log(req)
   const avatarLocalPath = req.file?.path;
@@ -231,7 +256,6 @@ const updateUserAvatar = asyncHandler(async (req, res, next) => {
     { new: true }
   ).select("-password");
 
-  
   return res
     .status(200)
     .json(new ApiResponse(200, user, "Avatar updated successfully!"));
@@ -290,6 +314,7 @@ export {
   signUpUser,
   signInUser,
   googleAuth,
+  logOutUser,
   updateUserAvatar,
   updateUserDetails,
 };

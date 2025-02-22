@@ -104,7 +104,7 @@ const Profile = () => {
           />
 
           {/* Avatar Section */}
-          <div className="relative group">
+          <div className="group">
             <div
               className="h-32 w-32 cursor-pointer shadow-2xl overflow-hidden rounded-full border border-gray-300 relative flex items-center justify-center"
               onClick={() => avatarFilePickerRef.current.click()}
