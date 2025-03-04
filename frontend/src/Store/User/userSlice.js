@@ -25,8 +25,18 @@ const userSlice = createSlice({
     },
 
     //logout
-    signOut: (state) => {
-      state.currentUser=null
+    signOutStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    signOutSuccess: (state) => {
+      state.currentUser = null;
+      state.loading = false;
+      state.error = null;
+    },
+    signOutFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     },
 
     //update user detials
@@ -36,14 +46,14 @@ const userSlice = createSlice({
     },
     updateSuccess: (state, action) => {
       state.currentUser = {
-        ...state.currentUser,      // Preserve existing user data
+        ...state.currentUser, // Preserve existing user data
         data: {
-          ...state.currentUser.data,  // Preserve nested `data`
-          user: {
-            ...state.currentUser.data?.user,  // Preserve `user`
-            ...action.payload,  // Merge new data (avatar, username, etc.)
-          }
-        }
+          ...state.currentUser.data, // Preserve nested `data`
+          loggedInUser: {
+            ...state.currentUser.data?.loggedInUser, // Preserve `user`
+            ...action.payload, // Merge new data (avatar, username, etc.)
+          },
+        },
       };
       state.error = null;
       state.loading = false;
@@ -52,17 +62,31 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    //deleteUser
+
+    deleteUserSuccess: (state) => {
+      state.currentUser = null;
+      state.loading = false;
+      state.error = null;
+    },
   },
 });
 
 export const {
   signInStart,
   signInSuccess,
-  signOut,
   signInFailure,
+
+  signOutStart,
+  signOutSuccess,
+  signOutFailure,
+
   updateStart,
   updateSuccess,
   updateFailure,
+
+ deleteUserSuccess
 } = userSlice.actions;
 
 export default userSlice.reducer;

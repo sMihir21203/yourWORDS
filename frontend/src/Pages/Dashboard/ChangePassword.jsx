@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { FaKey } from 'react-icons/fa'
-import {Input,Button} from "./CompsIndex.js"
+import {Input,Button} from "../../Components/CompsIndex.js"
 
 const ChangePassword = ({onClose}) => {
     const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const ChangePassword = ({onClose}) => {
             [e.target.id]: e.target.value.trim()
         }))
     }
+    
     return (
         <div className='mt-2 w-full space-y-2'>
             <Input
@@ -49,4 +50,4 @@ const ChangePassword = ({onClose}) => {
     )
 }
 
-export default ChangePassword
+export  {ChangePassword}

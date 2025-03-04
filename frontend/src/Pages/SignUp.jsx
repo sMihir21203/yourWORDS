@@ -64,7 +64,7 @@ const SignUp = () => {
           errorMsg && (
             <div
               role="alert"
-              className="alert alert-error alert-soft flex justify-center text-center mb-12"
+              className="alert alert-error alert-soft flex justify-center text-center"
             >
               {`👀 ${errorMsg}`}
             </div>
@@ -83,7 +83,7 @@ const SignUp = () => {
             <div className='card-body ml-5'>
               <fieldset className='fieldset'>
 
-                <form onSubmit={handleOnSubmit}>
+                <form onSubmit={handleOnSubmit} className='space-y-2'>
 
                   <Input label="Your Username" type="username" placeholder="Username" icon={FaUser} id="username" onChange={handleOnChange} />
 
@@ -91,7 +91,7 @@ const SignUp = () => {
 
                   <Input label="Your Password" type="password" placeholder="********" icon={FaKey} id="password" onChange={handleOnChange} />
 
-                  <Button type="submit" text={loading ? "Loading...." : "Sign Up"} style='gradient' className='w-71 text-xl pb-2 mt-4' disabled={loading}>
+                  <Button type="submit" text={loading ? "Loading...." : "Sign Up"} style='gradient' className='w-71 text-xl  mt-2' disabled={loading}>
                   </Button>
 
                   <GoogleAuth />

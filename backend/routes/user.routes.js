@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  deleteUser,
   googleAuth,
   logOutUser,
   signInUser,
@@ -14,7 +15,8 @@ export const userRouter = Router();
 userRouter.route("/sign_up").post(signUpUser);
 userRouter.route("/sign_in").post(signInUser);
 userRouter.route("/google_auth").post(googleAuth);
-userRouter.route("/logout").get(logOutUser);
+userRouter.route("/logout").get(veryfyJWT,logOutUser);
+userRouter.route("/delete_user").post(veryfyJWT,deleteUser);
 userRouter
   .route("/update_avatar")
   .post(veryfyJWT, upload.single("avatar"), updateUserAvatar);

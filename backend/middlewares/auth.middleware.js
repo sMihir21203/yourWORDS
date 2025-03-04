@@ -2,7 +2,8 @@ import {ApiError,asyncHandler} from '../utils/index.utils.js'
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken"
 
-export const veryfyJWT = asyncHandler(async(req,res,next)=>{
+export const veryfyJWT = asyncHandler(async(req,_,next)=>{
+    // console.log(req)
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ","")
     

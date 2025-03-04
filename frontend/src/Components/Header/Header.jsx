@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineSearch, AiOutlineSelect } from "react-icons/ai";
 import { FaMoon, FaSun, FaListUl } from "react-icons/fa";
@@ -9,11 +9,19 @@ import { toggleThemeBtn } from '../../Store/Theme/themeSlice.js'
 
 const Header = () => {
 
-  const currentUser = useSelector(state => state.user?.currentUser?.data?.user);
+  const currentUser = useSelector(state => state.user?.currentUser?.data?.loggedInUser);
   const dispatch = useDispatch()
   const { theme } = useSelector(state => state.theme)
+  const [avatar, setAvatar] = useState("");
+  const [username, setUsername] = useState("");
 
-  // console.log(currentUser?.avatar)
+  useEffect(() => {
+    if (currentUser) {
+      setAvatar(currentUser.avatar),
+      setUsername(currentUser.username)
+    }
+  }, [currentUser])
+
   // console.log(theme)
   const Radhe = () => {
     alert("Radhe Radhe")
@@ -75,13 +83,13 @@ const Header = () => {
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar h-12 w-12 m-1">
                 <div className="rounded-full">
                   <img
-                
-                    src={currentUser.avatar} alt="avatar"
+
+                    src={avatar} alt="avatar"
                   />
                 </div>
               </div>
               <ul className="menu dropdown-content bg-base-100 rounded-lg w-48 p-6 shadow-2xl gap-y-1 place-items-start ">
-                <span className="font-bold mb-2">@{currentUser.username}</span>
+                <span className="font-bold mb-2">@{username}</span>
                 <Menu
                   links={[
                     { name: "Dashboard", path: "/dashboard?tab=profile" }

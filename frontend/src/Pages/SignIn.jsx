@@ -24,6 +24,8 @@ const SignIn = () => {
     }
   }, [])
 
+  const clearError = setTimeout(() => setErrorMsg(null), 2000);
+  
   const handleOnChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -76,7 +78,7 @@ const SignIn = () => {
           <div className='card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl'>
             <div className='card-body ml-5'>
               <fieldset className='fieldset'>
-                <form onSubmit={handleOnSubmit}>
+                <form onSubmit={handleOnSubmit} className='space-y-2'>
 
                   <Input label="Your Username" type="username" placeholder="Username" icon={FaUser} id="username" onChange={handleOnChange} />
 

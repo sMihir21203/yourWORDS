@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { signOut } from '../../Store/User/userSlice.js';
+import { signOutFailure, signOutStart, signOutSuccess } from '../../Store/User/userSlice.js';
 import { Button } from "../../Components/CompsIndex.js";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 import { AiOutlineSelect } from 'react-icons/ai';
 import { API } from '../../API/API.js';
 
 const Sidebar = () => {
-  const currentUser = useSelector(state => state.user?.currentUser?.data?.user);
+  const currentUser = useSelector(state => state.user?.currentUser?.data?.loggedInUser);
   const dispatch = useDispatch()
 
   const [tab, setTab] = useState("");
@@ -23,13 +23,14 @@ const Sidebar = () => {
 
   const logOutHandler = async () => {
     try {
+      dispatch(signOutStart())
       const logOutUser = await API.get("user/logout", { withCredentials: true });
       if (logOutUser) {
-        dispatch(signOut())
+        dispatch(signOutSuccess())
         window.location.href = "/sign_in"; // Redirect after logout
       }
     } catch (error) {
-      console.log(error.response?.data?.message || "Logout problem");
+      dispatch(signOutFailure(error.response?.data?.message || "Logout problem"));
     }
   };
 

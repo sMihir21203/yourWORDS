@@ -3,7 +3,7 @@ import {
   ApiResponse,
   ApiError,
   uploadOnCloudinary,
-  welcomeEmail
+  welcomeEmail,
 } from "../utils/index.utils.js";
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
@@ -59,7 +59,10 @@ const signUpUser = asyncHandler(async (req, res, next) => {
   });
   if (existedUser) {
     return next(
-      new ApiError(409, "User already exist with this either username or email ")
+      new ApiError(
+        409,
+        "User already exist with this either username or email "
+      )
     );
   }
 
@@ -83,7 +86,7 @@ const signUpUser = asyncHandler(async (req, res, next) => {
     );
   }
 
-  await welcomeEmail(username,email,password)
+  await welcomeEmail(username, email, password);
 
   return res
     .status(200)
@@ -133,7 +136,7 @@ const signInUser = asyncHandler(async (req, res, next) => {
       new ApiResponse(
         200,
         {
-          user: loggedInUser,
+          loggedInUser,
           accessToken,
           refreshToken,
         },
@@ -156,7 +159,7 @@ const googleAuth = asyncHandler(async (req, res, next) => {
 
     //if new user then create user
     if (!user) {
-      // Generating randomPass & hash it
+      // Generating randomPassword
       const randomPassword = makeRandomPassword();
 
       // Create new user
@@ -170,8 +173,8 @@ const googleAuth = asyncHandler(async (req, res, next) => {
 
       isNewUser = true;
 
-      console.log(`Generated password for ${email}: ${randomPassword}`);
-      await welcomeEmail(user.username,user.email,randomPassword)
+      // console.log(`Generated password for ${email}: ${randomPassword}`);
+      await welcomeEmail(user.username, user.email, randomPassword);
     }
 
     // Generate tokens
@@ -192,7 +195,7 @@ const googleAuth = asyncHandler(async (req, res, next) => {
         new ApiResponse(
           isNewUser ? 201 : 200,
           {
-            user: loggedInUser,
+            loggedInUser,
             accessToken,
             refreshToken,
           },
@@ -229,6 +232,86 @@ const logOutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User LOGOUT"));
 });
 
+const deleteUser = asyncHandler(async (req, res, next) => {
+  const { password } = req.body;
+  const userId = req.user?._id;
+
+  if (!password) {
+    return next(new ApiError(400, "Password is required for delete account"));
+  }
+  if (password.length < 6) {
+    return next(new ApiError(400, "Password should be at least 6 characters"));
+  }
+
+  const user = await User.findById(userId);
+
+  const isPasswordValid = await user.isPasswordTrue(password);
+
+  if (isPasswordValid) {
+    await User.findByIdAndDelete(userId);
+  } else {
+    return next(new ApiError(401, "Invalid password"));
+  }
+
+  return res.status(200).json(new ApiResponse(200, {}, "User Deleted"));
+});
+
+const updateUserPassword = asyncHandler(async (req, res, next) => {
+  //check password is available
+  //check valid old password
+  //check new password is available
+  //set new password
+  //return response
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user?._id;
+
+  if (!currentPassword)
+    return next(new ApiError(400, "Current Password is required"));
+
+  if (!newPassword) return next(new ApiError(400, "New Password is required"));
+
+  if (currentPassword.length < 6)
+    return next(
+      new ApiError(400, "Current Password should be at least 6 characters")
+    );
+
+  if (newPassword.length < 6)
+    return next(
+      new ApiError(400, "New Password should be at least 6 characters")
+    );
+
+  const user = await User.findById(userId);
+
+  const isPasswordValid = await user.isPasswordTrue(currentPassword);
+  if (!isPasswordValid) {
+    return next(new ApiError(401, "Current Password is Invalid"));
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: {
+        password: newPassword,
+      },
+    },
+    {
+      new: true,
+    }
+  ).select("-password");
+
+  if (!updatedUser) {
+    return next(
+      new ApiError(
+        500,
+        "Something went wrong while set new password please try again"
+      )
+    );
+  }
+
+  return res
+    .status(201)
+    .json(new ApiResponse(201, updatedUser, "Password changed successfully"));
+});
 const updateUserAvatar = asyncHandler(async (req, res, next) => {
   // console.log(req)
   const avatarLocalPath = req.file?.path;
@@ -315,6 +398,8 @@ export {
   signInUser,
   googleAuth,
   logOutUser,
+  deleteUser,
+  updateUserPassword,
   updateUserAvatar,
   updateUserDetails,
 };

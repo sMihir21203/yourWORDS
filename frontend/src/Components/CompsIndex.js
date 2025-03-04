@@ -7,8 +7,6 @@ import ThemeProvider from "./ThemeProvider.jsx"
 import Logo from "./Logo.jsx"
 import Menu from "./Menu.jsx"
 import GoogleAuth from "./GoogleAuth/GoogleAuth.jsx"
-import app from "./GoogleAuth/fireBase.js"
-import ChangePassword from "./ChangePassword.jsx"
 
 
 
@@ -22,6 +20,4 @@ export{
     Logo,
     Menu,
     GoogleAuth,
-    app,
-    ChangePassword
 }

@@ -1,20 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
-import { updateStart, updateSuccess, updateFailure } from "../../Store/User/userSlice.js"
-import { Input, Button, ChangePassword } from '../../Components/CompsIndex.js'
+import { updateStart, updateSuccess, updateFailure, } from "../../Store/User/userSlice.js"
+import { Input, Button } from '../../Components/CompsIndex.js'
+import { ChangePassword } from './ChangePassword.jsx'
+import { DeleteUser } from './DeleteUser.jsx'
 import { FaUser } from 'react-icons/fa'
 import { AiFillMail } from 'react-icons/ai'
 import { API } from '../../API/API.js'
 
 const Profile = () => {
-  const currentUser = useSelector(state => state?.user?.currentUser?.data?.user)
+  const currentUser = useSelector(state => state?.user?.currentUser?.data?.loggedInUser)
   const dispatch = useDispatch()
 
   const { loading, error: errorMsg } = useSelector((state) => state.user)
 
+  const clearError = () => {
+    setTimeout(() => dispatch(updateFailure(null)), 2000);
+  };
+
   useEffect(() => {
-    if (errorMsg) dispatch(updateFailure(null))
-  }, [])
+    if (errorMsg) clearError();
+  }, [errorMsg]); 
+
 
   // Avatar update data
   const [avatarFileUrl, setAvatarFileUrl] = useState(currentUser?.avatar)
@@ -80,19 +87,11 @@ const Profile = () => {
 
   return (
     <div className="hero min-h-screen flex flex-col justify-center items-center bg-base-200">
-      
+
       <div className="hero-content text-center flex flex-col items-center">
-      {
-        errorMsg && (
-          <div
-            role="alert"
-            className="alert alert-error alert-soft flex justify-center text-center"
-          >
-            {`👀 ${errorMsg}`}
-          </div>
-        )
-      }
+
         <h1 className='font-semibold text-3xl mb-6'>Profile</h1>
+
 
         <form onSubmit={handleUpdateOnSubmit} className="flex flex-col items-center space-y-4">
           <input
@@ -122,6 +121,16 @@ const Profile = () => {
           </div>
 
           {/* Input Fields */}
+          {
+            errorMsg && (
+              <div
+                role="alert"
+                className="alert alert-error alert-soft flex justify-center text-center"
+              >
+                {`👀 ${errorMsg}`}
+              </div>
+            )
+          }
           <div className='space-y-4 w-full flex flex-col items-center'>
             <Input
               icon={FaUser}
@@ -145,13 +154,13 @@ const Profile = () => {
               type="submit"
               text="Update Details"
               style='gradient'
-              className='w-70 text-xl pb-2 mt-4'
+              className='w-48 text-xl pb-2 mt-4'
             />
           </div>
         </form>
 
         {/* Change Password & Delete Account */}
-        <div className="mt-6 flex flex-col items-center space-y-2">
+        <div className="mt-6 items-center space-y-2">
           <div
             className="cursor-pointer hover:text-blue-700 hover:font-bold"
             onClick={() => setShowChangePass(true)}
@@ -159,10 +168,7 @@ const Profile = () => {
             Change Password
           </div>
           {showChangePass && <ChangePassword onClose={() => setShowChangePass(false)} />}
-
-          <div className="cursor-pointer hover:text-red-600 hover:font-bold">
-            Delete Account
-          </div>
+          <DeleteUser />
         </div>
       </div>
     </div>

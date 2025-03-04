@@ -20,8 +20,7 @@ export const welcomeEmail = async (userName, userEmail, userPassword) => {
              <p><b>Password: </b> ${userPassword}</p>`,
     };
 
-    await transporter.sendMail(emailData);
-    console.log(`signUp email send to: ${emailData}`);
+    await transporter.sendMail(emailData);s
   } catch (error) {
     console.error("Error sending Email: ", error);
   }

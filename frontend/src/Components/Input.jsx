@@ -14,7 +14,7 @@ const Input = ({ icon: Icon,
           {label}
         </label>
       )}
-      <div className="flex items-center border rounded-lg p-2 input  input-secondary">
+      <div className="flex  border rounded-lg p-2 input  input-secondary">
 
         <input
           type={type}
