@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineSearch, AiOutlineSelect } from "react-icons/ai";
 import { FaMoon, FaSun, FaListUl } from "react-icons/fa";
-import { Button, Logo, Menu } from "../CompsIndex.js"
+import { Button, Logo, Menu, SignOutBtn } from "../CompsIndex.js"
 import { useDispatch, useSelector } from "react-redux"
 import { toggleThemeBtn } from '../../Store/Theme/themeSlice.js'
 
@@ -18,7 +18,7 @@ const Header = () => {
   useEffect(() => {
     if (currentUser) {
       setAvatar(currentUser.avatar),
-      setUsername(currentUser.username)
+        setUsername(currentUser.username)
     }
   }, [currentUser])
 
@@ -29,26 +29,26 @@ const Header = () => {
 
   return (
     <>
-      <div className='navbar fixed top-0 left-0 right-0 z-10 bg-base-100 shadow-md p-4 '>
+      <div className='navbar fixed top-0 left-0 right-0 z-10 bg-base-100 shadow-md p-4 items-center'>
         {/* logo */}
         <div className='flex-1 '>
-          <Logo className="md:ml-12" />
+          <Logo className="md:ml-12 " />
         </div>
 
         {/* searchBar */}
-        <div className='mr-20 hidden lg:inline'>
+        <div className='mr-14 hidden lg:inline'>
           <form className='max-w-fit flex items-center input input-secondary rounded-2xl p-2 m-0 h-12 bg-base-200 '>
             <input
               placeholder='FIND your READ...'
               className='border-0 outline-0 text-md  w-70 '
             />
-            <AiOutlineSearch size={30} className='cursor-pointer text-pink-600 ' onClick={Radhe} />
+            <AiOutlineSearch size={30} className='cursor-pointer text-[#ff007f] ' onClick={Radhe} />
           </form>
         </div>
 
         {/* Menu For largeScreen */}
-        <div className='mr-20 hidden lg:inline'>
-          <ul className='text-xl space-x-4 text-md'>
+        <div className='mr-16 hidden lg:inline'>
+          <ul className='text-lg space-x-2'>
             <Menu
               links={[
                 { name: "Home", path: "/" },
@@ -64,7 +64,7 @@ const Header = () => {
             signInBtn &
             SM:dropDownMenu 
         */}
-        <div className='flex gap-1 mr-2 md:mr-12 items-center'>
+        <div className='flex gap-1.5 mr-4 md:mt-1.5 md:mr-12 '>
           {/* SM:searchBtn */}
           <div className='lg:hidden'>
             <Button icon={AiOutlineSearch} iconSize={25} onClick={Radhe} />
@@ -79,40 +79,44 @@ const Header = () => {
 
           {/* SignInBtn */}
           {currentUser ? (
-            <div className="dropdown dropdown-bottom dropdown-end ">
-              <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar h-12 w-12 m-1">
-                <div className="rounded-full">
-                  <img
 
-                    src={avatar} alt="avatar"
-                  />
-                </div>
+            <div 
+            className="dropdown dropdown-bottom dropdown-end ">
+                <div tabIndex={0} role="button" className="btn btn-circle avatar h-12 w-12 -mt-2 border-none shadow-sm hover:shadow-md shadow-accent-content">
+                  <div className="rounded-full">
+                    <img
+                      src={avatar} alt="avatar"
+                    />
+                  </div>
               </div>
-              <ul className="menu dropdown-content bg-base-100 rounded-lg w-48 p-6 shadow-2xl gap-y-1 place-items-start ">
-                <span className="font-bold mb-2">@{username}</span>
+              <ul className="menu dropdown-content bg-base-100 shadow-md shadow-accent-content rounded-lg max-w-auto p-4 mt-1 gap-y-2  place-items-center">
+                <p className="font-bold mb-2">@{username}</p>
                 <Menu
                   links={[
                     { name: "Dashboard", path: "/dashboard?tab=profile" }
                   ]}
                 />
-                <Button className="w-24 h-5 p-0" iconSize={15} text={"SignOut"} icon={AiOutlineSelect} />
+                <SignOutBtn/>
               </ul>
             </div>) : (
             <Link to='/sign_in' >
-              <Button className="h-9" text={"Sign In"} style="gradient" onClick={Radhe} />
+              <Button
+                text="Sign In"
+                style="gradient"
+                onClick={Radhe}
+              />
             </Link>)
           }
 
 
           {/* SM:dropDownMenu */}
           <div className='dropdown dropdown-bottom dropdown-end lg:hidden '>
-            <FaListUl
+            <Button
               tabIndex={0}
               role='button'
-              className='btn p-2 rounded-lg border-3 w-10 h-9'
+              icon={FaListUl}
             />
-
-            <ul className="menu dropdown-content mt-2 bg-base-100 rounded-lg w-24 p-6 shadow-2xl gap-y-2 place-items-start">
+            <ul className="menu dropdown-content mt-1 bg-base-100 shadow-md shadow-accent-content rounded-lg w-24 p-6 gap-y-2 place-items-start">
               <Menu
                 links={[
                   { name: "Home", path: "/" },
@@ -121,7 +125,7 @@ const Header = () => {
                 ]}
               />
               <Button
-                className="md:hidden inline pl-2"
+                className="md:hidden inline ml-3 pl-2"
                 onClick={() => dispatch(toggleThemeBtn())}
                 icon={theme === "light" ? FaSun : FaMoon}
               />

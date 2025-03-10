@@ -1,53 +1,102 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaKey } from 'react-icons/fa'
-import {Input,Button} from "../../Components/CompsIndex.js"
+import { Input, Button, Loader } from "../../Components/CompsIndex.js"
+import { updateStart, updateSuccess, updateFailure, clearAllMessages } from "../../Store/User/userSlice.js"
+import { useDispatch, useSelector } from 'react-redux'
+import { API } from '../../API/API.js'
 
-const ChangePassword = ({onClose}) => {
+const ChangePassword = () => {
+
+    const { loading, error: errorMsg, success: successMsg } = useSelector(state => state.user)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (errorMsg || successMsg) {
+            setTimeout(() => {
+                dispatch(clearAllMessages())
+            }, 3000);
+        }
+    }, [errorMsg, successMsg, dispatch])
+
     const [formData, setFormData] = useState({
-        oldPassword: "",
+        currentPassword: "",
         newPassword: ""
     })
 
+    // console.table(formData)
     const handleOnChange = (e) => {
         setFormData((prev) => ({
             ...prev,
             [e.target.id]: e.target.value.trim()
         }))
     }
-    
-    return (
-        <div className='mt-2 w-full space-y-2'>
-            <Input
-                icon={FaKey}
-                type="password"
-                placeholder="Old Password"
-                id="oldPassword"
-                onChange={handleOnChange}
-            />
-            <Input
-                icon={FaKey}
-                type="password"
-                placeholder="New Password"
-                id="newPassword"
-                onChange={handleOnChange}
-            />
 
-           <div className="flex flex-col mt-4">
-            <Button
-                type="submit"
-                text="Update Password"
-                style="gradient"
-                className="w-70 text-xl" 
-            />
-            <Button
-                type="button"
-                text="Cancel"
-                className="w-68 self-center rounded-sm text-lg btn-secondary hover:bg-white hover:text-secondary"
-                onClick={onClose}        
-            />
-           </div>
-        </div>
+    const handleOnSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            if (!formData.currentPassword) {
+                return dispatch(updateFailure("Current password is required!"));
+            }
+            if (formData.currentPassword.length < 6) {
+                return dispatch(updateFailure("Current password should be 6 characters!"));
+            }
+            if (!formData.newPassword) {
+                return dispatch(updateFailure("New Password is required"));
+            }
+            if (formData.newPassword.length < 6) {
+                return dispatch(updateFailure("New password should be 6 characters!"));
+            }
+
+            dispatch(updateStart());
+
+            const response = await API.post("/user/update_password", formData);
+            // console.log("API Response:", response);
+
+            if (response.data) {
+                dispatch(updateSuccess(response.data));
+            }
+
+            setFormData({ currentPassword: "", newPassword: "" })
+        } catch (error) {
+            setFormData({ currentPassword: "", newPassword: "" })
+            // console.error("Error Updating Password:", error?.response?.data);
+            dispatch(updateFailure(error?.response?.data?.message || "Something went wrong while changing password, please try again!"));
+        }
+    };
+
+    return (
+        
+                    <form
+                        onSubmit={handleOnSubmit}
+                        className='w-full space-y-2'>
+                        <Input
+                            icon={FaKey}
+                            type="password"
+                            placeholder="Current Password"
+                            id="currentPassword"
+                            onChange={handleOnChange}
+                            value={formData.currentPassword}
+                        />
+                        <Input
+                            icon={FaKey}
+                            type="password"
+                            placeholder="New Password"
+                            id="newPassword"
+                            onChange={handleOnChange}
+                            value={formData.newPassword}
+                        />
+                            <Button
+                                type="submit"
+                                text={loading ? <Loader /> : "Update Password"}
+                                className="w-68 h10 text-lg hover:pb-1"
+                            />
+                    </form>
+               
+            
     )
 }
 
-export  {ChangePassword}
+export { ChangePassword }
+
+

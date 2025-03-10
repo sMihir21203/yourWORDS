@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Input } from '../../Components/CompsIndex.js';
 import { API } from '../../API/API.js';
 import { useDispatch } from 'react-redux';
@@ -11,11 +11,11 @@ const DeleteUser = () => {
 
     const clearError = () => {
         setTimeout(() => setErrorMsg(null), 2000);
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         if (errorMsg) clearError();
-      }, [errorMsg]); 
+    }, [errorMsg]);
 
     const handleOnChange = (e) => {
         setFormData({ password: e.target.value.trim() });
@@ -50,21 +50,21 @@ const DeleteUser = () => {
         <div>
             <p
                 onClick={() => document.getElementById('deleteAccount').showModal()}
-                className='cursor-pointer hover:text-red-600 hover:font-bold'
+                className='cursor-pointer hover:text-red-600 font-bold hover:scale-110'
             >
                 Delete Account
             </p>
 
             <dialog id="deleteAccount" className="modal">
-                <div className="modal-box">
-                    <p className="py-4">Are You Sure?<br />You Want to Delete This Account?</p>
-                    <p>Enter Your Password to delete your account.</p>
+                <div className="modal-box rounded-xl">
+                    <p className="py-4 font-bold">Are You Sure?<br />You Want to Delete This Account?</p>
+                    <p className='mb-1'>Enter Your Password to delete your account.</p>
 
                     <form onSubmit={handleOnSubmit} className='flex flex-col items-center space-y-2'>
                         {errorMsg && (
                             <div
                                 role="alert"
-                                className="alert alert-error alert-soft flex justify-center text-center mb-2"
+                                className="alert alert-error alert-soft flex justify-center text-center"
                             >
                                 {`👀 ${errorMsg}`}
                             </div>
@@ -76,16 +76,22 @@ const DeleteUser = () => {
                             value={formData.password} // ✅ Controlled input
                             id='password'
                         />
-                        <Button
+                        <button
                             type="submit"
-                            text="Confirm Delete"
-                            className="btn btn-dash btn-error w-28"
-                        />
+                            text=""
+                            className="btn btn-dash btn-error h-8 w-28 text-nowrap rounded-lg"
+                        >
+                            Confirm Delete
+                        </button>
                     </form>
                     <div className="modal-action">
-                        <button onClick={handleClose} className="btn">
-                            Close
-                        </button>
+                        <Button
+                            text="Cancel"
+                            onClick={handleClose}
+                            className="w-20"
+                        />
+
+
                     </div>
                 </div>
             </dialog>

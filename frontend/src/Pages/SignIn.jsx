@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button, Input, GoogleAuth, Container } from '../Components/CompsIndex.js'
+import { Button, Input, GoogleAuth, Container, Loader } from '../Components/CompsIndex.js'
 import { FaUser, FaKey } from 'react-icons/fa'
 import { useDispatch, useSelector } from "react-redux"
-import { signInStart, signInSuccess, signInFailure } from "../Store/User/userSlice.js"
+import { signInStart, signInSuccess, signInFailure, clearAllMessages } from "../Store/User/userSlice.js"
 import { API } from "../API/API.js"
 
 
@@ -14,18 +14,18 @@ const SignIn = () => {
     password: ""
   })
 
-  const { loading, error: errorMsg } = useSelector((state) => state.user)
+  const { loading, error: errorMsg, successMsg } = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (errorMsg) {
-      dispatch(signInFailure(null))
+    if (errorMsg || successMsg) {
+      setTimeout(() => {
+        dispatch(clearAllMessages())
+      }, 3000);
     }
-  }, [])
+  }, [errorMsg, successMsg])
 
-  const clearError = setTimeout(() => setErrorMsg(null), 2000);
-  
   const handleOnChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -47,9 +47,10 @@ const SignIn = () => {
       const res = await API.post("/user/sign_in", formData)
 
       const data = res.data
+      const successMessage = data.message
       // console.log(data)
+      dispatch(signInSuccess({ ...data, message: successMessage }))
 
-      dispatch(signInSuccess(data))
       navigate('/')
     } catch (error) {
       dispatch(signInFailure(error.response?.data?.message || "oops something went wrong while signIn please try again!"))
@@ -68,9 +69,14 @@ const SignIn = () => {
             </div>
           )
         }
+        {successMsg && (
+          <div role="alert" className="alert alert-success alert-soft flex justify-center text-center">
+            {`✅ ${successMsg}`}
+          </div>
+        )}
         <div className='hero-content flex-col lg:flex-row'>
           <div className='text-center lg:text-left lg:mr-2 -mt-16'>
-            <h1 className="text-5xl font-bold"><span className='bg-gradient-to-r from-pink-600 to-blue-600 text-transparent bg-clip-text'>signIn </span>Now!</h1>
+            <h1 className="text-5xl font-bold text-nowrap"><span className='bg-gradient-to-r hover:bg-gradient-to-l from-[#ff007f] via-sky-300 to-[#003cff] text-transparent bg-clip-text'>signIn</span> Now!</h1>
             <p className='py-6'>
               to Share <span className='font-extrabold'>YourWords...</span>
             </p>
@@ -83,15 +89,27 @@ const SignIn = () => {
                   <Input label="Your Username" type="username" placeholder="Username" icon={FaUser} id="username" onChange={handleOnChange} />
 
                   <Input label="Your Password" type="password" placeholder="********" icon={FaKey} id="password" onChange={handleOnChange} />
-                  <div><a className="link link-hover ml-1 mt-1">Forgot password?</a></div>
-                  <Button type="submit" text={loading ? "Loading...." : "Sign In"} style='gradient' className='w-71 text-xl pb-2 mt-2' disabled={loading} />
 
-                  <GoogleAuth />
-                  <p className='pl-1'>
-                    Don't Have An Account ?
-                    <Link to="/sign_up" className='ml-2 text-blue-600 link-hover  font-semibold' >Sign Up</Link>
-                  </p>
+                  <span className="link link-hover hover:text-blue-600 hover:font-bold ml-1"> Forgot password ?</span>
+
+                  <Button
+                    type="submit"
+                    style='imp'
+                    text={loading ? <Loader /> : "SignIn"}
+                    className='mt-3'
+                    disabled={loading}
+                  />
                 </form>
+                <div
+                  className='tooltip tooltip-info tooltip-top'
+                  data-tip="Sign In With Google!"
+                >
+                  <GoogleAuth />
+                </div>
+                <p className='pl-1'>
+                  Don't Have An Account ?
+                  <Link to="/sign_up" className='ml-1 text-blue-600 link-hover  font-semibold' >Sign Up</Link>
+                </p>
               </fieldset>
             </div>
           </div>

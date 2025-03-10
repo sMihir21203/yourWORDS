@@ -1,10 +1,10 @@
 import React from 'react'
-import { Container } from "../Components/CompsIndex.js"
+import { Container, Button, Loader } from "../Components/CompsIndex.js"
 
 const About = () => {
   return (
     <Container>
-      <div>About</div>
+     <Button className='w-70' style='imp' text={<Loader  />} />
     </Container>
 
   )

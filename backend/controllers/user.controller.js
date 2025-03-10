@@ -90,7 +90,13 @@ const signUpUser = asyncHandler(async (req, res, next) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(201, newUser, "User SignUp Successfull"));
+    .json(
+      new ApiResponse(
+        201,
+        newUser,
+        "User SignUp Successfull! U can SignIn now!"
+      )
+    );
 });
 
 const signInUser = asyncHandler(async (req, res, next) => {
@@ -210,7 +216,7 @@ const googleAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
-const logOutUser = asyncHandler(async (req, res) => {
+const signOutUser = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
 
   User.findByIdAndUpdate(
@@ -256,6 +262,8 @@ const deleteUser = asyncHandler(async (req, res, next) => {
   return res.status(200).json(new ApiResponse(200, {}, "User Deleted"));
 });
 
+const resetForgetPassword = asyncHandler(async () => {});
+
 const updateUserPassword = asyncHandler(async (req, res, next) => {
   //check password is available
   //check valid old password
@@ -280,6 +288,9 @@ const updateUserPassword = asyncHandler(async (req, res, next) => {
       new ApiError(400, "New Password should be at least 6 characters")
     );
 
+  if (currentPassword === newPassword) {
+    return next(new ApiError(400, "New Password must be unique!"));
+  }
   const user = await User.findById(userId);
 
   const isPasswordValid = await user.isPasswordTrue(currentPassword);
@@ -287,31 +298,14 @@ const updateUserPassword = asyncHandler(async (req, res, next) => {
     return next(new ApiError(401, "Current Password is Invalid"));
   }
 
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    {
-      $set: {
-        password: newPassword,
-      },
-    },
-    {
-      new: true,
-    }
-  ).select("-password");
-
-  if (!updatedUser) {
-    return next(
-      new ApiError(
-        500,
-        "Something went wrong while set new password please try again"
-      )
-    );
-  }
+  user.password = newPassword;
+  await user.save({ validateBeforeSave: false });
 
   return res
     .status(201)
-    .json(new ApiResponse(201, updatedUser, "Password changed successfully"));
+    .json(new ApiResponse(201, {}, "Password changed successfully"));
 });
+
 const updateUserAvatar = asyncHandler(async (req, res, next) => {
   // console.log(req)
   const avatarLocalPath = req.file?.path;
@@ -397,8 +391,9 @@ export {
   signUpUser,
   signInUser,
   googleAuth,
-  logOutUser,
+  signOutUser,
   deleteUser,
+  resetForgetPassword,
   updateUserPassword,
   updateUserAvatar,
   updateUserDetails,

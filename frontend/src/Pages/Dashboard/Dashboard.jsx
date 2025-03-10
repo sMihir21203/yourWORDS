@@ -19,9 +19,9 @@ const Dashboard = () => {
 
 
   return (
-    <div className='md:flex'>
-      <div><Sidebar/></div>
-      {tab === 'profile' && <Profile/>}
+    <div className='lg:flex  lg:flex-row'>
+      <Sidebar />
+      {tab === 'profile' && <Profile />}
     </div>
   )
 }

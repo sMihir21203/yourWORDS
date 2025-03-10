@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   currentUser: null,
+  success: null,
   error: null,
   loading: null,
 };
@@ -42,6 +43,7 @@ const userSlice = createSlice({
     //update user detials
     updateStart: (state) => {
       state.loading = true;
+      state.success = null;
       state.error = null;
     },
     updateSuccess: (state, action) => {
@@ -55,11 +57,13 @@ const userSlice = createSlice({
           },
         },
       };
+      state.success = action.payload.message || "update successfull";
       state.error = null;
       state.loading = false;
     },
     updateFailure: (state, action) => {
       state.loading = false;
+      state.success = null;
       state.error = action.payload;
     },
 
@@ -68,6 +72,12 @@ const userSlice = createSlice({
     deleteUserSuccess: (state) => {
       state.currentUser = null;
       state.loading = false;
+      state.error = null;
+    },
+
+    //clear Msgs
+    clearAllMessages: (state) => {
+      state.success = null;
       state.error = null;
     },
   },
@@ -86,7 +96,9 @@ export const {
   updateSuccess,
   updateFailure,
 
- deleteUserSuccess
+  deleteUserSuccess,
+
+  clearAllMessages,
 } = userSlice.actions;
 
 export default userSlice.reducer;

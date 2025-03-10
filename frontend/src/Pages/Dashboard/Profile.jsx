@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
-import { updateStart, updateSuccess, updateFailure, } from "../../Store/User/userSlice.js"
-import { Input, Button } from '../../Components/CompsIndex.js'
+import { updateStart, updateSuccess, updateFailure, clearAllMessages } from "../../Store/User/userSlice.js"
+import { Input, Button, Loader } from '../../Components/CompsIndex.js'
 import { ChangePassword } from './ChangePassword.jsx'
 import { DeleteUser } from './DeleteUser.jsx'
 import { FaUser } from 'react-icons/fa'
@@ -11,47 +11,74 @@ import { API } from '../../API/API.js'
 const Profile = () => {
   const currentUser = useSelector(state => state?.user?.currentUser?.data?.loggedInUser)
   const dispatch = useDispatch()
+  const { loading, error: errorMsg, success: successMsg } = useSelector((state) => state.user)
 
-  const { loading, error: errorMsg } = useSelector((state) => state.user)
-
-  const clearError = () => {
-    setTimeout(() => dispatch(updateFailure(null)), 2000);
-  };
+  const [showChangePass, setShowChangePass] = useState(false) // Track password change visibility
 
   useEffect(() => {
-    if (errorMsg) clearError();
-  }, [errorMsg]); 
-
+    if (errorMsg || successMsg) {
+      setTimeout(() => {
+        dispatch(clearAllMessages())
+      }, 3000);
+    }
+  }, [errorMsg, successMsg]);
 
   // Avatar update data
+  const [avatarLoader, setAvatarLoader] = useState(false)
+  const [updateAvatarProgress, setUpdateAvatarProgress] = useState(0)
   const [avatarFileUrl, setAvatarFileUrl] = useState(currentUser?.avatar)
   const avatarFilePickerRef = useRef()
 
-  // avatar update handler
   const handleUpdateAvatar = async (e) => {
+    e.preventDefault()
+
     const file = e.target.files[0]
     if (!file) {
-      return console.log(dispatch(updateFailure("image is missing")))
+      return alert("No file selected!")
     }
 
+    const validImgTypes = ["image/jpeg", "image/png", "image/jpg"]
+
+    if (!validImgTypes.includes(file.type)) {
+      return alert("Invalid file type! Please upload JPEG,JPG, PNG!");
+    }
+
+    const maxSize = 1 * 1024 * 1024 //1mb
+    if (file.size > maxSize) {
+      return dispatch(updateFailure("File Must be less than 500kb"))
+    }
     setAvatarFileUrl(URL.createObjectURL(file)) //preview avatar
+    setAvatarLoader(true)
 
     const formData = new FormData()
     formData.append("avatar", file)
 
+    let interval;
     try {
-      dispatch(updateStart())
+      interval = setInterval(() => {
+        setUpdateAvatarProgress((prev) => (prev < 100 ? prev + 10 : prev))
+      }, 200);
+      console.log(interval)
 
-      const res = await API.post("user/update_avatar", formData)
+      const res = await API.post('user/update_avatar', formData)
+      clearInterval(interval)
+      setUpdateAvatarProgress(100)
+
+      setTimeout(() => {
+        setAvatarLoader(false)
+        setUpdateAvatarProgress(0)
+      }, 1000);
 
       const updatedData = res?.data?.data
+      const successMessage = res?.data?.message || "Avatar updated"
 
-      dispatch(updateSuccess(updatedData))
+      dispatch(updateSuccess({ ...updatedData, message: successMessage }))
+
     } catch (error) {
-      dispatch(error.response?.data?.message || "Something went wrong while updating avatar! please try again!")
+      setAvatarLoader(false)
+      dispatch(updateFailure(error.response?.data?.message || "Something went wrong while updating avatar! please try again!"))
     }
   }
-
 
   // Update username and email data
   const [updateFormData, setUpdateFormData] = useState({
@@ -67,108 +94,135 @@ const Profile = () => {
   }
 
   const handleUpdateOnSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      dispatch(updateStart())
+      dispatch(updateStart());
 
-      const res = await API.post('user/update_details', updateFormData)
+      const res = await API.post('user/update_details', updateFormData);
 
-      const updatedData = res?.data?.data
+      const updatedUserData = res?.data?.data; // Updated user details
+      const successMessage = res?.data?.message || "Details updated"
 
-      // console.log(updatedData)
-      dispatch(updateSuccess(updatedData))
+      // console.log(`${updatedUserData}:- ${successMessage}:-`)
+
+      dispatch(updateSuccess({ ...updatedUserData, message: successMessage }));
+      setUpdateFormData({ username: "", email: "" })
     } catch (error) {
-      dispatch(updateFailure(error.response?.data?.message || "Something went wrong while updating username or email please try again!"))
+      setUpdateFormData({ username: "", email: "" })
+      dispatch(updateFailure(error.response?.data?.message || "Something went wrong while updating username or email, please try again!"));
     }
-  }
+  };
 
-  const [showChangePass, setShowChangePass] = useState(false)
 
   return (
-    <div className="hero min-h-screen flex flex-col justify-center items-center bg-base-200">
-
+    <div style={{
+      backgroundImage: `bg-slate-950`
+    }}
+      className="hero min-h-screen flex flex-col justify-center items-center bg-base-200">
       <div className="hero-content text-center flex flex-col items-center">
-
-        <h1 className='font-semibold text-3xl mb-6'>Profile</h1>
-
+        <h1 className='font-semibold text-3xl mb-2'>Profile</h1>
 
         <form onSubmit={handleUpdateOnSubmit} className="flex flex-col items-center space-y-4">
-          <input
-            type="file"
-            name='avatar'
-            className="hidden file-input file-input-secondary"
-            onChange={handleUpdateAvatar}
-            ref={avatarFilePickerRef}
-          />
-
           {/* Avatar Section */}
-          <div className="group">
-            <div
-              className="h-32 w-32 cursor-pointer shadow-2xl overflow-hidden rounded-full border border-gray-300 relative flex items-center justify-center"
-              onClick={() => avatarFilePickerRef.current.click()}
-            >
-              <img
-                src={avatarFileUrl || currentUser.avatar}
-                alt="avatar"
-                className="rounded-full w-full h-full"
-              />
-              {/* Hover Text */}
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                Click Here to Update Avatar!
-              </div>
-            </div>
-          </div>
 
-          {/* Input Fields */}
-          {
-            errorMsg && (
-              <div
-                role="alert"
-                className="alert alert-error alert-soft flex justify-center text-center"
-              >
-                {`👀 ${errorMsg}`}
-              </div>
-            )
-          }
-          <div className='space-y-4 w-full flex flex-col items-center'>
-            <Input
-              icon={FaUser}
-              type="username"
-              placeholder={currentUser.username}
-              id="username"
-              onChange={handleOnChange}
-              className="w-80"
-            />
-
-            <Input
-              icon={AiFillMail}
-              type="email"
-              placeholder={currentUser.email}
-              id="email"
-              onChange={handleOnChange}
-              className="w-80"
-            />
-
-            <Button
-              type="submit"
-              text="Update Details"
-              style='gradient'
-              className='w-48 text-xl pb-2 mt-4'
-            />
-          </div>
-        </form>
-
-        {/* Change Password & Delete Account */}
-        <div className="mt-6 items-center space-y-2">
           <div
-            className="cursor-pointer hover:text-blue-700 hover:font-bold"
-            onClick={() => setShowChangePass(true)}
+            className="relative tooltip tooltip-info tooltip-side h-32 w-32 cursor-pointer shadow-2xl rounded-full border-2 border-slate-300 mb-12"
+            data-tip="Click Here To Update Avatar!"
+            onClick={() => avatarFilePickerRef.current.click()}
           >
-            Change Password
+            <input
+              type="file"
+              accept='image/*'
+              name='avatar'
+              className="hidden file-input file-input-secondary"
+              onChange={handleUpdateAvatar}
+              ref={avatarFilePickerRef}
+            />
+            {updateAvatarProgress > 0 && (
+              <div
+                className="radial-progress font-extrabold text-xl"
+                style={{
+                  "--value": updateAvatarProgress.toString(),
+                  "--size": "8rem",
+                  "--thickness": "10px",
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)"
+                } /*as React.CSSProperties*/}
+                aria-valuenow={updateAvatarProgress}
+                role="progressbar"
+              >
+                {updateAvatarProgress}%
+              </div>
+            )}
+
+
+            <img
+              src={avatarFileUrl || currentUser.avatar}
+              alt="avatar"
+              className={`rounded-full w-full h-full hover:opacity-50 ${updateAvatarProgress ? "opacity-50" : "opacity-100"}`}
+
+            />
+
           </div>
-          {showChangePass && <ChangePassword onClose={() => setShowChangePass(false)} />}
-          <DeleteUser />
+
+          {/* Show error message if any */}
+          {errorMsg && (
+            <div role="alert" className="alert alert-error alert-soft flex justify-center text-center mb-2">
+              {`👀 ${errorMsg}`}
+            </div>
+          )}
+          {successMsg && (
+            <div role="alert" className="alert alert-success alert-soft flex justify-center text-center">
+              {`✅ ${successMsg}`}
+            </div>
+          )}
+
+          {/* Hide username & email fields when changePass is true*/}
+          {!showChangePass && (
+            <div className='space-y-2 w-full flex flex-col items-center'>
+              <Input
+                icon={FaUser}
+                type="username"
+                placeholder={currentUser.username}
+                id="username"
+                onChange={handleOnChange}
+                value={updateFormData.username}
+              />
+
+              <Input
+                icon={AiFillMail}
+                type="email"
+                placeholder={currentUser.email}
+                id="email"
+                onChange={handleOnChange}
+                value={updateFormData.email}
+              />
+
+              <Button
+                type="submit"
+                text={loading ? <Loader /> : "Update Details"}
+                className='w-68 h10 text-lg hover:pb-1'
+
+              />
+            </div>
+          )}
+        </form>
+        {/* Change Password & Delete Account */}
+        <div className="flex flex-col items-center -mt-4">
+
+          {showChangePass && <ChangePassword setShowChangePass={setShowChangePass} />}
+
+          <div className="flex gap-x-4  mt-4">
+            <DeleteUser />
+            <p className="cursor-pointer  font-bold hover:scale-110 hover:bg-gradient-to-b from-[#ff007f] via-sky-300 to-[#003cff] hover:text-transparent bg-clip-text" onClick={() => setShowChangePass(!showChangePass)}>
+              {showChangePass ? "Update Details" : "Change Password"}
+            </p>
+
+
+          </div>
         </div>
       </div>
     </div>

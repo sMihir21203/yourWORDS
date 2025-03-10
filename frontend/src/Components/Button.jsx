@@ -11,13 +11,16 @@ const Button = ({
 }) => {
 
     const styles = {
-        default: "btn w-10 h-9 p-1 border-3 rounded-lg",
-        gradient: "btn h-10 p-1 border-3 rounded-lg w-20 text-white bg-gradient-to-r from-pink-600 to-blue-600  hover:bg-gradient-to-r hover:from-blue-600 hover:to-pink-600"
+        default: "w-9 h-8.5  ",
+
+        imp: "w-70 h-10 text-xl hover:pb-1",
+
+        gradient: "w-18 md:w-20 h-10 -mt-1 md:w-24 text-nowrap text-[1.1rem] md:text-xl text-white bg-gradient-to-br from-[#ff007f] via-sky-300 to-[#003cff]"
     }
 
-    return <button className={`${styles[style]} ${className}`} {...props}>
+    return <button className={` btn px-0 font-bold  border-none bg-base-100 rounded-lg  shadow hover:shadow-md shadow-accent-content ${styles[style]} ${className}`} {...props}>
         {Icon && <Icon size={iconSize} />}
-        {urlIcon &&<img src={urlIcon} className= 'w-fit h-12' />}
+        {urlIcon && <img src={urlIcon} className='w-fit h-12' />}
         {text && <span>{text}</span>}
     </button>;
 }

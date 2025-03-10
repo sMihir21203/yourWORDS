@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaKey, FaUser } from "react-icons/fa"
 import { AiFillMail } from 'react-icons/ai'
-import { Button, Input, GoogleAuth, Container } from '../Components/CompsIndex.js'
+import { Button, Input, GoogleAuth, Container, Loader } from '../Components/CompsIndex.js'
 import { useDispatch, useSelector } from "react-redux"
-import { signInStart, signInSuccess, signInFailure } from "../Store/User/userSlice.js"
+import { signInStart, signInSuccess, signInFailure, clearAllMessages } from "../Store/User/userSlice.js"
 import { API } from "../API/API.js"
 
 
@@ -14,15 +14,17 @@ const SignUp = () => {
     email: "",
     password: ""
   })
-  const { loading, error: errorMsg } = useSelector((state) => state.user)
+  const { loading, error: errorMsg, success: successMsg } = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (errorMsg) {
-      dispatch(signInFailure(null))
+    if (errorMsg || successMsg) {
+      setTimeout(() => {
+        dispatch(clearAllMessages())
+      }, 3000);
     }
-  }, [])
+  }, [errorMsg, successMsg])
 
   const handleOnChange = (e) => {
     setFormData((prev) => ({
@@ -60,20 +62,21 @@ const SignUp = () => {
   return (
     <Container>
       <div className="flex flex-col">
-        {
-          errorMsg && (
-            <div
-              role="alert"
-              className="alert alert-error alert-soft flex justify-center text-center"
-            >
-              {`👀 ${errorMsg}`}
-            </div>
-          )
-        }
+        {errorMsg && (
+          <div role="alert" className="alert alert-error alert-soft flex justify-center text-center">
+            {`👀 ${errorMsg}`}
+          </div>
+        )}
+        {successMsg && (
+          <div role="alert" className="alert alert-success alert-soft flex justify-center text-center">
+            {`✅ ${successMsg}`}
+          </div>
+        )}
+
 
         <div className='hero-content flex-col lg:flex-row'>
           <div className='text-center lg:text-left lg:mr-2 lg:-mt-16 -mt-4'>
-            <h1 className="text-5xl font-bold"><span className='bg-gradient-to-r from-pink-600 to-blue-600 text-transparent bg-clip-text'>signUp </span>Now!</h1>
+            <h1 className="text-5xl font-bold text-nowrap"><span className='bg-gradient-to-r hover:bg-gradient-to-l  from-[#ff007f] via-sky-400 to-[#003cff] text-transparent bg-clip-text'>signUp </span>Now!</h1>
             <p className='py-6'>
               to Share <span className='font-extrabold'>YourWords...</span>
             </p>
@@ -91,15 +94,23 @@ const SignUp = () => {
 
                   <Input label="Your Password" type="password" placeholder="********" icon={FaKey} id="password" onChange={handleOnChange} />
 
-                  <Button type="submit" text={loading ? "Loading...." : "Sign Up"} style='gradient' className='w-71 text-xl  mt-2' disabled={loading}>
-                  </Button>
-
-                  <GoogleAuth />
-                  <p className='pl-1' >
-                    Already a User ?
-                    <Link to="/sign_in" className='ml-2 text-blue-600 link-hover font-semibold' >Sign In</Link>
-                  </p>
+                  <Button
+                    type="submit"
+                    style='imp'
+                    text={loading ? <Loader/> : "SignUp" }
+                    className='mt-2'
+                  />
                 </form>
+                <div
+                  className='tooltip tooltip-info tooltip-top'
+                  data-tip="Sign Up With Google!"
+                >
+                  <GoogleAuth />
+                </div>
+                <p className='pl-1' >
+                  Already a User ?
+                  <Link to="/sign_in" className='ml-2 text-blue-600 link-hover font-semibold' >Sign In</Link>
+                </p>
               </fieldset>
             </div>
           </div>
