@@ -66,37 +66,39 @@ const ChangePassword = () => {
     };
 
     return (
-        
-                    <form
-                        onSubmit={handleOnSubmit}
-                        className='w-full space-y-2'>
-                        <Input
-                            icon={FaKey}
-                            type="password"
-                            placeholder="Current Password"
-                            id="currentPassword"
-                            onChange={handleOnChange}
-                            value={formData.currentPassword}
-                        />
-                        <Input
-                            icon={FaKey}
-                            type="password"
-                            placeholder="New Password"
-                            id="newPassword"
-                            onChange={handleOnChange}
-                            value={formData.newPassword}
-                        />
-                            <Button
-                                type="submit"
-                                text={loading ? <Loader /> : "Update Password"}
-                                className="w-68 h10 text-lg hover:pb-1"
-                            />
-                    </form>
-               
-            
+
+        <form
+            onSubmit={handleOnSubmit}
+            className='space-y-2 w-sm md:w-md flex flex-col items-center'>
+
+            <Input
+                icon={FaKey}
+                type="password"
+                placeholder="Current Password"
+                id="currentPassword"
+                onChange={handleOnChange}
+                value={formData.currentPassword}
+            />
+            <Input
+                icon={FaKey}
+                type="password"
+                placeholder="New Password"
+                id="newPassword"
+                onChange={handleOnChange}
+                value={formData.newPassword}
+            />
+            <Button
+                type="submit"
+                style='imp'
+                text={loading ? <Loader /> : "Update Password"}
+                className='mt-4 min-w-full hover:pb-1'
+            />
+        </form>
+
+
     )
 }
 
-export { ChangePassword }
+export default ChangePassword
 
 

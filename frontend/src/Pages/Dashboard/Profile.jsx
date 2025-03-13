@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
 import { updateStart, updateSuccess, updateFailure, clearAllMessages } from "../../Store/User/userSlice.js"
 import { Input, Button, Loader } from '../../Components/CompsIndex.js'
-import { ChangePassword } from './ChangePassword.jsx'
-import { DeleteUser } from './DeleteUser.jsx'
+import { ChangePassword, DashContainer, DeleteUser } from './DashIndex.js'
 import { FaUser } from 'react-icons/fa'
 import { AiFillMail } from 'react-icons/ai'
 import { API } from '../../API/API.js'
@@ -44,9 +43,11 @@ const Profile = () => {
     }
 
     const maxSize = 1 * 1024 * 1024 //1mb
+
     if (file.size > maxSize) {
-      return dispatch(updateFailure("File Must be less than 500kb"))
+      return alert("Avatar Image size Must be less than 1mb")
     }
+
     setAvatarFileUrl(URL.createObjectURL(file)) //preview avatar
     setAvatarLoader(true)
 
@@ -61,10 +62,13 @@ const Profile = () => {
       console.log(interval)
 
       const res = await API.post('user/update_avatar', formData)
-      clearInterval(interval)
-      setUpdateAvatarProgress(100)
+      if (!res.ok) {
+        clearInterval(interval)
+        setUpdateAvatarProgress(0)
+      }
 
       setTimeout(() => {
+        clearInterval(interval)
         setAvatarLoader(false)
         setUpdateAvatarProgress(0)
       }, 1000);
@@ -116,116 +120,111 @@ const Profile = () => {
 
 
   return (
-    <div style={{
-      backgroundImage: `bg-slate-950`
-    }}
-      className="hero min-h-screen flex flex-col justify-center items-center bg-base-200">
-      <div className="hero-content text-center flex flex-col items-center">
-        <h1 className='font-semibold text-3xl mb-2'>Profile</h1>
+    <DashContainer>
 
-        <form onSubmit={handleUpdateOnSubmit} className="flex flex-col items-center space-y-4">
-          {/* Avatar Section */}
-
+      <h1 className='font-semibold text-3xl mb-2'>Profile</h1>
+      {/* Avatar Section */}
+      <div
+        className="relative tooltip tooltip-info tooltip-side h-32 w-32 cursor-pointer shadow-2xl rounded-full border-2 border-slate-300 mb-12"
+        data-tip="Click Here To Update Avatar!"
+        onClick={() => avatarFilePickerRef.current.click()}
+      >
+        <input
+          type="file"
+          accept='image/*'
+          name='avatar'
+          className="hidden file-input file-input-secondary"
+          onChange={handleUpdateAvatar}
+          ref={avatarFilePickerRef}
+        />
+        {updateAvatarProgress > 0 && (
           <div
-            className="relative tooltip tooltip-info tooltip-side h-32 w-32 cursor-pointer shadow-2xl rounded-full border-2 border-slate-300 mb-12"
-            data-tip="Click Here To Update Avatar!"
-            onClick={() => avatarFilePickerRef.current.click()}
+            className="radial-progress font-extrabold text-xl"
+            style={{
+              "--value": updateAvatarProgress.toString(),
+              "--size": "8rem",
+              "--thickness": "10px",
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)"
+            } /*as React.CSSProperties*/}
+            aria-valuenow={updateAvatarProgress}
+            role="progressbar"
           >
-            <input
-              type="file"
-              accept='image/*'
-              name='avatar'
-              className="hidden file-input file-input-secondary"
-              onChange={handleUpdateAvatar}
-              ref={avatarFilePickerRef}
-            />
-            {updateAvatarProgress > 0 && (
-              <div
-                className="radial-progress font-extrabold text-xl"
-                style={{
-                  "--value": updateAvatarProgress.toString(),
-                  "--size": "8rem",
-                  "--thickness": "10px",
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)"
-                } /*as React.CSSProperties*/}
-                aria-valuenow={updateAvatarProgress}
-                role="progressbar"
-              >
-                {updateAvatarProgress}%
-              </div>
-            )}
-
-
-            <img
-              src={avatarFileUrl || currentUser.avatar}
-              alt="avatar"
-              className={`rounded-full w-full h-full hover:opacity-50 ${updateAvatarProgress ? "opacity-50" : "opacity-100"}`}
-
-            />
-
+            {updateAvatarProgress}%
           </div>
-
-          {/* Show error message if any */}
-          {errorMsg && (
-            <div role="alert" className="alert alert-error alert-soft flex justify-center text-center mb-2">
-              {`👀 ${errorMsg}`}
-            </div>
-          )}
-          {successMsg && (
-            <div role="alert" className="alert alert-success alert-soft flex justify-center text-center">
-              {`✅ ${successMsg}`}
-            </div>
-          )}
-
-          {/* Hide username & email fields when changePass is true*/}
-          {!showChangePass && (
-            <div className='space-y-2 w-full flex flex-col items-center'>
-              <Input
-                icon={FaUser}
-                type="username"
-                placeholder={currentUser.username}
-                id="username"
-                onChange={handleOnChange}
-                value={updateFormData.username}
-              />
-
-              <Input
-                icon={AiFillMail}
-                type="email"
-                placeholder={currentUser.email}
-                id="email"
-                onChange={handleOnChange}
-                value={updateFormData.email}
-              />
-
-              <Button
-                type="submit"
-                text={loading ? <Loader /> : "Update Details"}
-                className='w-68 h10 text-lg hover:pb-1'
-
-              />
-            </div>
-          )}
-        </form>
-        {/* Change Password & Delete Account */}
-        <div className="flex flex-col items-center -mt-4">
-
-          {showChangePass && <ChangePassword setShowChangePass={setShowChangePass} />}
-
-          <div className="flex gap-x-4  mt-4">
-            <DeleteUser />
-            <p className="cursor-pointer  font-bold hover:scale-110 hover:bg-gradient-to-b from-[#ff007f] via-sky-300 to-[#003cff] hover:text-transparent bg-clip-text" onClick={() => setShowChangePass(!showChangePass)}>
-              {showChangePass ? "Update Details" : "Change Password"}
-            </p>
+        )}
 
 
+        <img
+          src={avatarFileUrl || currentUser.avatar}
+          alt="avatar"
+          className={`rounded-full w-full h-full hover:opacity-50 ${updateAvatarProgress ? "opacity-50" : "opacity-100"}`}
+
+        />
+
+      </div>
+
+      <form onSubmit={handleUpdateOnSubmit}>
+        {/* Show error message if any */}
+        {errorMsg && (
+          <div role="alert" className="alert alert-error text-lg w-[24rem] md:w-[28rem] text-center mb-2">
+            {`👀 ${errorMsg}`}
           </div>
+        )}
+        {successMsg && (
+          <div role="alert" className="alert alert-success text-lg w-[24rem] md:w-[28rem] mb-2">
+            {`✅ ${successMsg}`}
+          </div>
+        )}
+
+        {/* Hide username & email fields when changePass is true*/}
+        {!showChangePass && (
+          <div className='space-y-2 w-sm md:w-md flex flex-col items-center'>
+            <Input
+              icon={FaUser}
+              type="username"
+              placeholder={currentUser.username}
+              id="username"
+              onChange={handleOnChange}
+              value={updateFormData.username}
+            />
+
+            <Input
+              icon={AiFillMail}
+              type="email"
+              placeholder={currentUser.email}
+              id="email"
+              onChange={handleOnChange}
+              value={updateFormData.email}
+            />
+
+            <Button
+              type="submit"
+              style='imp'
+              text={loading ? <Loader /> : "Update Details"}
+              className='mt-4 hover:pb-1'
+            />
+          </div>
+        )}
+      </form>
+      {/* Change Password & Delete Account */}
+      <div className="flex flex-col items-center -mt-4">
+
+        {showChangePass && <ChangePassword setShowChangePass={setShowChangePass} />}
+
+        <div className="flex gap-x-32 md:gap-x-48  mt-4">
+          <DeleteUser />
+          <p className="cursor-pointer  font-bold hover:scale-110 hover:bg-gradient-to-b from-[#ff007f] via-sky-300 to-[#003cff] hover:text-transparent bg-clip-text" onClick={() => setShowChangePass(!showChangePass)}>
+            {showChangePass ? "Update Details" : "Change Password"}
+          </p>
+
+
         </div>
       </div>
-    </div>
+
+    </DashContainer>
   )
 }
 

@@ -82,40 +82,68 @@ const SignUp = () => {
             </p>
           </div>
 
-          <div className='card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl'>
-            <div className='card-body ml-5'>
-              <fieldset className='fieldset'>
+          <div className='card bg-base-100 w-sm  shrink-0 shadow-2xl'>
+            <div className='card-body flex items-center justify-center'>
+              <fieldset className='fieldset w-full'>
+                <form
+                  onSubmit={handleOnSubmit}
+                  className='w-full flex flex-col items-center space-y-4'>
 
-                <form onSubmit={handleOnSubmit} className='space-y-2'>
+                  <Input
+                    label="Your Username"
+                    type="text"
+                    placeholder="Username"
+                    icon={FaUser}
+                    id="username"
+                    onChange={handleOnChange}
+                  />
 
-                  <Input label="Your Username" type="username" placeholder="Username" icon={FaUser} id="username" onChange={handleOnChange} />
+                  <Input
+                    label="Your E-Mail"
+                    type="email"
+                    placeholder="abcd@gmail.com"
+                    icon={AiFillMail}
+                    id="email"
+                    onChange={handleOnChange}
+                  />
 
-                  <Input label="Your E-Mail" type="email" placeholder="abcd@gmail.com" icon={AiFillMail} id="email" onChange={handleOnChange} />
-
-                  <Input label="Your Password" type="password" placeholder="********" icon={FaKey} id="password" onChange={handleOnChange} />
+                  <Input
+                    label="Your Password"
+                    type="password"
+                    placeholder="********"
+                    icon={FaKey}
+                    id="password"
+                    onChange={handleOnChange}
+                  />
 
                   <Button
                     type="submit"
-                    style='imp'
-                    text={loading ? <Loader/> : "SignUp" }
-                    className='mt-2'
+                    style="imp"
+                    text={loading ? <Loader /> : "Sign Up"}
+                    className='mt-3'
                   />
                 </form>
-                <div
-                  className='tooltip tooltip-info tooltip-top'
-                  data-tip="Sign Up With Google!"
-                >
+
+                {/* Google Sign-Up Button*/}
+                <div className='tooltip tooltip-info tooltip-top' data-tip="Sign Up With Google!">
                   <GoogleAuth />
                 </div>
-                <p className='pl-1' >
-                  Already a User ?
-                  <Link to="/sign_in" className='ml-2 text-blue-600 link-hover font-semibold' >Sign In</Link>
+
+                {/* Sign-In Link */}
+                <p className='pl-1 mt-2'>
+                  Already a User?
+                  <Link
+                    to="/sign_in"
+                    className='ml-1 text-blue-600 link-hover font-semibold'
+                  >Sign In
+                  </Link>
                 </p>
               </fieldset>
             </div>
           </div>
         </div>
       </div>
+
     </Container>
   )
 }

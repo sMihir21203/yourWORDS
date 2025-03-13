@@ -99,4 +99,4 @@ const DeleteUser = () => {
     );
 };
 
-export { DeleteUser };
+export default DeleteUser ;

@@ -93,7 +93,7 @@ const Header = () => {
                 <p className="font-bold mb-2">@{username}</p>
                 <Menu
                   links={[
-                    { name: "Dashboard", path: "/dashboard?tab=profile" }
+                    { name: "Profile", path: "/dashboard?tab=profile" }
                   ]}
                 />
                 <SignOutBtn/>

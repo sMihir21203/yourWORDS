@@ -3,6 +3,7 @@ import path from "path";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
+        // console.log(req)
         cb(null, "./backend/public/temp"); 
     },
     filename: function (req, file, cb) {
@@ -11,7 +12,7 @@ const storage = multer.diskStorage({
         const uniqueFilename = `${timestamp}_${now.getMilliseconds()}${path.extname(file.originalname)}`;
 
         cb(null, uniqueFilename);
-        console.log(`File Uploaded: ${uniqueFilename}`);
+        // console.log(`File Uploaded: ${uniqueFilename}`);
     }
 });
 

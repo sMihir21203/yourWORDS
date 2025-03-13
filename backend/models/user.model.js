@@ -18,16 +18,20 @@ const userSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      match: [/.+@.+\..+/, 'Please enter a valid email address']
+      match: [/.+@.+\..+/, "Please enter a valid email address"],
     },
     password: {
       type: String,
       required: [true, "PassWord is required"],
-      minlength: 6
+      minlength: 6,
     },
-    avatar:{
+    avatar: {
       type: String,
-      default: "https://cdn-icons-png.flaticon.com/512/5087/5087579.png"
+      default: "https://cdn-icons-png.flaticon.com/512/5087/5087579.png",
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
     },
     refreshToken: {
       type: String,
@@ -63,13 +67,13 @@ userSchema.methods.generateAccessToken = function () {
 userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
-      _id : this._id
+      _id: this._id,
     },
     process.env.REFRESH_TOKEN_SECRET,
     {
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
     }
-  )
-}
+  );
+};
 
 export const User = model("User", userSchema);

@@ -13,5 +13,5 @@ export{
     NotFound,
     Portfolio,
     SignIn,
-    SignUp
+    SignUp,
 }

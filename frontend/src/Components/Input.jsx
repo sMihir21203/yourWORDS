@@ -1,24 +1,17 @@
 import React from "react";
 
-const Input = ({ icon: Icon,
-  iconSize = 20,
-  label,
-  type = "text",
-  className = "",
-  ...props
-}) => {
+const Input = ({ icon: Icon, iconSize = 20, label, type = "text", className = "", ...props }) => {
   return (
-    <div className="w-70">
+    <div className="w-full"> {/* Ensuring full width */}
       {label && (
         <label className="font-bold mb-1 pl-1 validator">
           {label}
         </label>
       )}
-      <div className="flex  border rounded-lg p-2 input  input-secondary">
-
+      <div className="flex border rounded-lg p-2 input input-secondary w-full">
         <input
           type={type}
-          className={`border-0 outline-0 text-md ${className}`}
+          className={`border-0 outline-0 text-md w-full ${className}`} // Ensuring full width
           {...props}
         />
         {Icon && (

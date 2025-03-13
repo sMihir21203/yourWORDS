@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Header, Footer } from "../Components/CompsIndex.js";
 import {
   About,
   Dashboard,
@@ -9,8 +10,7 @@ import {
   SignIn,
   SignUp,
 } from "../Pages/PagesIndex.js";
-import { Header, Footer } from "../Components/CompsIndex.js";
-import PrivateRoute from "./PrivateRoute.jsx";
+import {DashBoardPrivateRoute,AdminDashPrivateRoute} from './RoutesIndex.js'
 
 export const WebRoutes = () => {
   return (
@@ -28,7 +28,7 @@ export const WebRoutes = () => {
                   path='/about' 
                   element={<About />} 
             />
-            <Route element={<PrivateRoute />} >
+            <Route element={<DashBoardPrivateRoute />} >
               <Route 
                   path='/dashboard' 
                   element={<Dashboard />} 

@@ -1,10 +1,10 @@
 import React from 'react'
 import loader_img from "../Imgs/loader_img.png"
 
-const Loader = (
+const Loader = ({
     className = "",
     ...props
-) => {
+}) => {
     return (
         <img
             src={loader_img}

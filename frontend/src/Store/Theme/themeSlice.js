@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  theme: "abyss",
+  theme: "light",
 };
 
 const themeSlice = createSlice({
@@ -9,7 +9,7 @@ const themeSlice = createSlice({
   initialState,
   reducers: {
     toggleThemeBtn: (state) => {
-      state.theme = state.theme === "light" ? "abyss" : "light";
+      state.theme = state.theme === "luxury" ? "light" : "luxury";
       
     },
   },

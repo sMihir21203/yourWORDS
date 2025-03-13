@@ -6,7 +6,6 @@ import {
   welcomeEmail,
 } from "../utils/index.utils.js";
 import { User } from "../models/user.model.js";
-import bcrypt from "bcrypt";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -88,15 +87,15 @@ const signUpUser = asyncHandler(async (req, res, next) => {
 
   await welcomeEmail(username, email, password);
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        201,
+  return res.status(200).json(
+    new ApiResponse(
+      201,
+      {
         newUser,
-        "User SignUp Successfull! U can SignIn now!"
-      )
-    );
+      },
+      "User SignUp Successfull! U can SignIn now!"
+    )
+  );
 });
 
 const signInUser = asyncHandler(async (req, res, next) => {
@@ -145,6 +144,7 @@ const signInUser = asyncHandler(async (req, res, next) => {
           loggedInUser,
           accessToken,
           refreshToken,
+          admin: user.isAdmin
         },
         "User logged in successfully"
       )
@@ -204,6 +204,7 @@ const googleAuth = asyncHandler(async (req, res, next) => {
             loggedInUser,
             accessToken,
             refreshToken,
+            admin: user.isAdmin
           },
           isNewUser
             ? "User SignUp and SignIn successfully"
@@ -273,11 +274,6 @@ const updateUserPassword = asyncHandler(async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
   const userId = req.user?._id;
 
-  if (!currentPassword)
-    return next(new ApiError(400, "Current Password is required"));
-
-  if (!newPassword) return next(new ApiError(400, "New Password is required"));
-
   if (currentPassword.length < 6)
     return next(
       new ApiError(400, "Current Password should be at least 6 characters")
@@ -319,7 +315,7 @@ const updateUserAvatar = asyncHandler(async (req, res, next) => {
 
   if (!avatar.url) {
     return next(
-      new ApiError(400, "Something went wrong while uploading avatar")
+      new ApiError(400, "Something went wrong while uploading avatar! please try again!")
     );
   }
 
@@ -342,50 +338,60 @@ const updateUserDetails = asyncHandler(async (req, res, next) => {
   const { username, email } = req.body;
   const userId = req.user?._id;
 
-  if (!(username || email)) {
+  if (!username && !email) {
     return next(
-      new ApiError(400, "Write either Username or Email  To changes!")
+      new ApiError(400, "Please provide at least a username or an email to update.")
     );
   }
 
-  const existedInfo = await User.findOne({
-    $or: [{ username }, { email }],
-  });
-  if (existedInfo) {
-    return next(
-      new ApiError(
-        401,
-        "this username or email already exist kindly enter unique username or email"
-      )
-    );
+  const user = await User.findById(userId);
+  if (!user) {
+    return next(new ApiError(404, "User not found!"));
   }
 
-  const user = await User.findByIdAndUpdate(
-    userId,
-    {
-      $set: {
-        username: username,
-        email: email,
-      },
-    },
-    {
-      new: true,
+  // Check if the new username or email already exists in the database
+  if (username || email) {
+    const existedInfo = await User.findOne({
+      $or: [{ username }, { email }]
+    });
+
+    if (existedInfo) {
+      return next(
+        new ApiError(401, "This username or email already exists. Please enter a unique one.")
+      );
     }
+  }
+
+  let updatedFields = {};
+  let message = "";
+
+  if (username && !email) {
+    updatedFields.username = username;
+    message = "Username updated successfully.";
+  } else if (email && !username) {
+    updatedFields.email = email;
+    message = "Email updated successfully.";
+  } else if (username && email) {
+    updatedFields.username = username;
+    updatedFields.email = email;
+    message = "Username and email updated successfully.";
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $set: updatedFields },
+    { new: true }
   ).select("-password");
 
-  if (!user) {
+  if (!updatedUser) {
     return next(
-      new ApiError(
-        500,
-        "something went wrong while updating user details please try again!"
-      )
+      new ApiError(500, "Something went wrong while updating user details. Please try again!")
     );
   }
 
-  return res
-    .status(201)
-    .json(new ApiResponse(201, user, "User Details updated successfully"));
+  return res.status(200).json(new ApiResponse(200, updatedUser, message));
 });
+
 
 export {
   signUpUser,

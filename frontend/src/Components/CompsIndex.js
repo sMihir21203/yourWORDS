@@ -9,6 +9,7 @@ import Logo from "./Logo.jsx"
 import Menu from "./Menu.jsx"
 import SignOutBtn from "./SignOutBtn.jsx"
 import GoogleAuth from "./GoogleAuth/GoogleAuth.jsx"
+import TextEditor from "./TextEditor/TextEditor.jsx"
 
 
 
@@ -24,4 +25,5 @@ export{
     Menu,
     SignOutBtn,
     GoogleAuth,
+    TextEditor
 }
