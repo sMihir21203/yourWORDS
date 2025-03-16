@@ -31,7 +31,7 @@ const GoogleAuth = () => {
             }
 
             setLoading(true)
-            const res = await API.post("/user/google_auth", userData, { withCredentials: true })
+            const res = await API.post("/user/google-auth", userData, { withCredentials: true })
             const data = res.data
 
             // console.log("backendRes: ", data)

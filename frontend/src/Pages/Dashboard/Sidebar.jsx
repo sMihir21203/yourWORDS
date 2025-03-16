@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Button, SignOutBtn } from "../../Components/CompsIndex.js";
-import { FaAngleDoubleRight } from 'react-icons/fa';
+import { FaAngleDoubleRight,FaUser,FaRegNewspaper,FaPen,FaBars,FaUsers } from 'react-icons/fa';
+import { RiArticleLine, RiUserLine,RiEditBoxLine, RiTeamLine } from 'react-icons/ri';
+import { BiBookContent, BiGroup, BiPencil, BiUserCircle } from 'react-icons/bi';
 
 const Sidebar = () => {
   const currentUser = useSelector(state => state.user?.currentUser?.data?.loggedInUser);
-  const admin = useSelector(state=>state?.user?.currentUser?.data?.admin)
+  const admin = useSelector(state => state?.user?.currentUser?.data?.admin)
 
   const [tab, setTab] = useState("");
   const location = useLocation();
@@ -14,7 +16,7 @@ const Sidebar = () => {
   // activeLink function that considers both pathname and search (query params)
   const activeLink = (path) => {
     return location.search === path
-      ? "w-50 lg:w-60 h-9 text-lg py-1 font-semibold shadow shadow-accent-content rounded-md border-none"
+      ? "w-50 lg:w-60 h-9 text-lg py-1 pl-12 font-semibold shadow shadow-base-content rounded-md border-none"
       : "w-50 lg:w-60 h-9 text-lg py-1 hover:bg-base-100 rounded-md";
   };
 
@@ -30,7 +32,7 @@ const Sidebar = () => {
     <>
       {/* siderBar for largeScreen */}
       <div className='hidden md:inline'>
-        <div className={`w-fit  min-h-screen sticky bg-base-300 p-4`}>
+        <div className={`w-fit  min-h-full sticky bg-base-300 p-4`}>
           <ul className='menu pt-24 text-center space-y-4'>
             <div>
               <img className='w-20 h-20 rounded-full mx-auto' src={currentUser?.avatar} alt="" />
@@ -39,23 +41,24 @@ const Sidebar = () => {
             <ul className='space-y-2 mx-auto'>
               <li>
                 <Link
+
                   to="/dashboard?tab=profile"
-                  className={`${activeLink("?tab=profile")} text-center justify-center`}>
-                  Profile
+                  className={`${activeLink("?tab=profile")}`}>
+                  <FaUser />  Profile <span className='-mr-2 py-1 px-1.5 rounded-lg text-sm font-bold bg-base-100'>{admin ? "Admin" : "User"}</span>
                 </Link>
               </li>
               <li>
                 <Link
                   to="/dashboard?tab=my-posts"
-                  className={`${activeLink("?tab=my-posts")} text-center justify-center`}>
-                  My Posts
+                  className={`${activeLink("?tab=my-posts")}`}>
+                 <FaRegNewspaper/> My Posts
                 </Link>
               </li>
               <li>
                 <Link
                   to="/dashboard?tab=create-post"
-                  className={`${activeLink("?tab=create-post")} text-center justify-center`}>
-                  Create Post
+                  className={`${activeLink("?tab=create-post")}`}>
+                  <FaPen/>  Create Post
                 </Link>
               </li>
 
@@ -64,8 +67,8 @@ const Sidebar = () => {
                 <li>
                   <Link
                     to="/dashboard?tab=users"
-                    className={`${activeLink("?tab=users")} text-center justify-center`}>
-                    Users
+                    className={`${activeLink("?tab=users")}`}>
+                   <FaUsers/>  Users
                   </Link>
                 </li>
               )}
@@ -92,23 +95,24 @@ const Sidebar = () => {
             <ul className='space-y-2 mx-auto'>
               <li>
                 <Link
+
                   to="/dashboard?tab=profile"
-                  className={`${activeLink("?tab=profile")} text-center justify-center`}>
-                  Profile
+                  className={`${activeLink("?tab=profile")}`}>
+                  <FaUser />  Profile <span className='-mr-2 py-1 px-1.5 rounded-lg text-sm font-bold bg-base-100'>{admin ? "Admin" : "User"}</span>
                 </Link>
               </li>
               <li>
                 <Link
                   to="/dashboard?tab=my-posts"
-                  className={`${activeLink("?tab=my-posts")} text-center justify-center`}>
-                  My Posts
+                  className={`${activeLink("?tab=my-posts")}`}>
+                 <FaRegNewspaper/> My Posts
                 </Link>
               </li>
               <li>
                 <Link
                   to="/dashboard?tab=create-post"
-                  className={`${activeLink("?tab=create-post")} text-center justify-center`}>
-                  Create Post
+                  className={`${activeLink("?tab=create-post")}`}>
+                  <FaPen/>  Create Post
                 </Link>
               </li>
 
@@ -117,20 +121,15 @@ const Sidebar = () => {
                 <li>
                   <Link
                     to="/dashboard?tab=users"
-                    className={`${activeLink("?tab=users")} text-center justify-center`}>
-                    Users
+                    className={`${activeLink("?tab=users")}`}>
+                   <FaUsers/>  Users
                   </Link>
                 </li>
               )}
 
             </ul>
-
             <SignOutBtn className='' />
-
           </ul>
-
-
-
         </div>
       </div>
     </>

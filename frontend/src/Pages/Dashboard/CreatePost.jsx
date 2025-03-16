@@ -94,7 +94,7 @@ const CreatePost = () => {
       const successMsg = res.data.message
       const slug = res.data.data.newPost.slug
 
-      navigate(`/my-posts/${slug}`)
+      // navigate(`/my-posts/${slug}`)
 
       setTimeout(() => {
         alert(successMsg)
@@ -122,7 +122,7 @@ const CreatePost = () => {
 
         <div className={`${!loading ? "" : "opacity-50"}`}>
 
-          <h1 className='lg:pt-12 text-center text-2xl md:text-3xl font-semibold mb-8'>Create Post</h1>
+          <h1 className='text-center text-2xl md:text-3xl font-semibold mb-8'>Create Post</h1>
 
           {/* error msg */}
           {postErrMsg && (
@@ -147,8 +147,8 @@ const CreatePost = () => {
               className='select w-full md:w-fit rounded-lg border-2'
             >
               <option value="Uncategorized">Uncategorized</option>
-              <option value="dwarka">Dwarka</option>
-              <option value="dwarka">Dwarka</option>
+              <option value="Mythology">Mythology</option>
+              <option value="Web Development">Web Development</option>
             </select>
           </div>
 

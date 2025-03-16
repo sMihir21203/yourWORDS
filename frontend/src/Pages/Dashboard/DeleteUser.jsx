@@ -30,7 +30,7 @@ const DeleteUser = () => {
         }
 
         try {
-            const deleteUser = await API.post("/user/delete_user", formData);
+            const deleteUser = await API.post("/user/delete-user", formData);
             if (deleteUser) {
                 dispatch(deleteUserSuccess());
                 window.location.href = "/sign_up";
@@ -55,7 +55,7 @@ const DeleteUser = () => {
                 Delete Account
             </p>
 
-            <dialog id="deleteAccount" className="modal">
+            <dialog id="deleteAccount" className="modal text-center">
                 <div className="modal-box rounded-xl">
                     <p className="py-4 font-bold">Are You Sure?<br />You Want to Delete This Account?</p>
                     <p className='mb-1'>Enter Your Password to delete your account.</p>

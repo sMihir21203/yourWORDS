@@ -8,7 +8,7 @@ const TextEditor = ({ onChange, className="", ...props }) => {
             <Editor
                 apiKey="0n015v2xzue7wwz15uxv6czykap3wcqvxbneeqh8mc17vqib" // ✅ Keep your secret key
                 init={{
-                    height: 300,
+                    height: 400,
                     menubar: true,
                     plugins: ["lists", "link", "preview", "advlist", "wordcount", "code"],
                     toolbar: `

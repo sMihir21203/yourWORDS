@@ -47,7 +47,7 @@ const SignUp = () => {
 
     try {
       dispatch(signInStart())
-      const res = await API.post("/user/sign_up", formData)
+      const res = await API.post("/user/sign-up", formData)
 
       const data = res.data;
 

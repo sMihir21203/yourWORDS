@@ -6,6 +6,8 @@ import {
   welcomeEmail,
 } from "../utils/index.utils.js";
 import { User } from "../models/user.model.js";
+import { Post } from "../models/post.model.js";
+import mongoose from "mongoose";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -144,7 +146,7 @@ const signInUser = asyncHandler(async (req, res, next) => {
           loggedInUser,
           accessToken,
           refreshToken,
-          admin: user.isAdmin
+          admin: user.isAdmin,
         },
         "User logged in successfully"
       )
@@ -204,7 +206,7 @@ const googleAuth = asyncHandler(async (req, res, next) => {
             loggedInUser,
             accessToken,
             refreshToken,
-            admin: user.isAdmin
+            admin: user.isAdmin,
           },
           isNewUser
             ? "User SignUp and SignIn successfully"
@@ -315,7 +317,10 @@ const updateUserAvatar = asyncHandler(async (req, res, next) => {
 
   if (!avatar.url) {
     return next(
-      new ApiError(400, "Something went wrong while uploading avatar! please try again!")
+      new ApiError(
+        400,
+        "Something went wrong while uploading avatar! please try again!"
+      )
     );
   }
 
@@ -340,7 +345,10 @@ const updateUserDetails = asyncHandler(async (req, res, next) => {
 
   if (!username && !email) {
     return next(
-      new ApiError(400, "Please provide at least a username or an email to update.")
+      new ApiError(
+        400,
+        "Please provide at least a username or an email to update."
+      )
     );
   }
 
@@ -352,12 +360,15 @@ const updateUserDetails = asyncHandler(async (req, res, next) => {
   // Check if the new username or email already exists in the database
   if (username || email) {
     const existedInfo = await User.findOne({
-      $or: [{ username }, { email }]
+      $or: [{ username }, { email }],
     });
 
     if (existedInfo) {
       return next(
-        new ApiError(401, "This username or email already exists. Please enter a unique one.")
+        new ApiError(
+          401,
+          "This username or email already exists. Please enter a unique one."
+        )
       );
     }
   }
@@ -385,13 +396,105 @@ const updateUserDetails = asyncHandler(async (req, res, next) => {
 
   if (!updatedUser) {
     return next(
-      new ApiError(500, "Something went wrong while updating user details. Please try again!")
+      new ApiError(
+        500,
+        "Something went wrong while updating user details. Please try again!"
+      )
     );
   }
 
   return res.status(200).json(new ApiResponse(200, updatedUser, message));
 });
 
+const getUserAllPosts = asyncHandler(async (req, res, next) => {
+  //setStartIndex -> req.query & convert into ObjectId
+  //userId -> req.body & convert into ObjectId
+  //lastWeek dates
+  //fetch posts using aggregationPipelines
+  //$match matchPosts belong to userId
+  //check user have posts or not
+  //setALL data
+  //give res
+
+  const setStartIndex = parseInt(req.query.setStartIndex) || 0;
+  const userId = new mongoose.Types.ObjectId(req.user?._id);
+
+  const LastWeek = new Date();
+  LastWeek.setDate(LastWeek.getDate() - 7);
+
+  const userAllPosts = await Post.aggregate([
+    {
+      $match: { userId }, //filter all post belongs to thisUserId
+    },
+    // 2 separate dataSets using facet
+    {
+      $facet: {
+        // 1 dataSet: Fetch paginated user posts
+        userAllPostsData: [
+          { $sort: { createdAt: -1 } },
+          { $skip: setStartIndex },
+          { $limit: 9 },
+          {
+            $project: {
+              _id: 1,
+              createdAt: 1,
+              updatedAt: 1,
+              slug: 1,
+              postTitle: 1,
+              postImg: 1,
+              postCategory: 1,
+              postContent: 1,
+            },
+          },
+        ],
+        //2nd dataSet: totalCounts and lastWeekTotalPosts
+        counts: [
+          {
+            $group: {
+              _id: null,
+              totalPosts: { $sum: 1 },
+              lastWeekTotalPosts: {
+                $sum: {
+                  $cond: {
+                    if: { $gte: ["createdAt", LastWeek] },
+                    then: 1,
+                    else: 0,
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  ]);
+
+  if (!userAllPosts[0].userAllPostsData.length) {
+    return next(new ApiError(404, "You Have Not Created Any Posts Yet!"));
+  }
+
+  const userPosts = userAllPosts[0].userAllPostsData;
+  const totalPosts =
+    userAllPosts[0].counts.length > 0
+      ? userAllPosts[0].counts[0].totalPosts
+      : 0;
+  const lastWeekTotalPosts =
+    userAllPosts[0].counts.length > 0
+      ? userAllPosts[0].counts[0].lastWeekTotalPosts
+      : 0;
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        userPosts,
+        totalPosts,
+        lastWeekTotalPosts,
+      },
+      "User Posts Fetched SuccessFully"
+    )
+  );
+});
 
 export {
   signUpUser,
@@ -403,4 +506,5 @@ export {
   updateUserPassword,
   updateUserAvatar,
   updateUserDetails,
+  getUserAllPosts,
 };

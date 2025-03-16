@@ -3,14 +3,13 @@ import { Schema, model } from "mongoose";
 const postSchema = new Schema(
   {
     userId: {
-      type: String,
-      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     postTitle: {
       type: String,
       required: true,
       unique: true,
-      lowercase: true,
       trim: true,
       index: true
     },

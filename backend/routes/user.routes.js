@@ -8,18 +8,20 @@ import {
   updateUserAvatar,
   updateUserDetails,
   updateUserPassword,
+  getUserAllPosts,
 } from "../controllers/user.controller.js";
 import { upload, veryfyJWT } from "../middlewares/index.middlewares.js";
 
 export const userRouter = Router();
 
-userRouter.route("/sign_up").post(signUpUser);
-userRouter.route("/sign_in").post(signInUser);
-userRouter.route("/google_auth").post(googleAuth);
-userRouter.route("/sign_out").get(veryfyJWT,signOutUser);
-userRouter.route("/delete_user").post(veryfyJWT,deleteUser);
-userRouter.route("/update_password").post(veryfyJWT,updateUserPassword)
+userRouter.route("/sign-up").post(signUpUser);
+userRouter.route("/sign-in").post(signInUser);
+userRouter.route("/google-auth").post(googleAuth);
+userRouter.route("/sign-out").get(veryfyJWT, signOutUser);
+userRouter.route("/delete-user").post(veryfyJWT, deleteUser);
+userRouter.route("/update-password").post(veryfyJWT, updateUserPassword);
 userRouter
-  .route("/update_avatar")
+  .route("/update-avatar")
   .post(veryfyJWT, upload.single("avatar"), updateUserAvatar);
-userRouter.route("/update_details").post(veryfyJWT, updateUserDetails);
+userRouter.route("/update-details").post(veryfyJWT, updateUserDetails);
+userRouter.route("/:userId/posts").get(veryfyJWT,getUserAllPosts);

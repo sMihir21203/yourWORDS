@@ -50,7 +50,7 @@ const ChangePassword = () => {
 
             dispatch(updateStart());
 
-            const response = await API.post("/user/update_password", formData);
+            const response = await API.post("/user/update-password", formData);
             // console.log("API Response:", response);
 
             if (response.data) {

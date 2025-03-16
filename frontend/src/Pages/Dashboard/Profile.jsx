@@ -61,7 +61,7 @@ const Profile = () => {
       }, 200);
       console.log(interval)
 
-      const res = await API.post('user/update_avatar', formData)
+      const res = await API.post('user/update-avatar', formData)
       if (!res.ok) {
         clearInterval(interval)
         setUpdateAvatarProgress(0)
@@ -103,7 +103,7 @@ const Profile = () => {
     try {
       dispatch(updateStart());
 
-      const res = await API.post('user/update_details', updateFormData);
+      const res = await API.post('user/update-details', updateFormData);
 
       const updatedUserData = res?.data?.data; // Updated user details
       const successMessage = res?.data?.message || "Details updated"

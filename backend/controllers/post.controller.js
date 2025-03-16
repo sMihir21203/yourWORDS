@@ -5,7 +5,7 @@ import {
   uploadOnCloudinary,
 } from "../utils/index.utils.js";
 import { Post } from "../models/post.model.js";
-import fs from "fs"
+import fs from "fs";
 
 const createNewPost = asyncHandler(async (req, res, next) => {
   //get date -> req.body
@@ -39,8 +39,8 @@ const createNewPost = asyncHandler(async (req, res, next) => {
   const existedPost = await Post.findOne({ slug });
   if (existedPost) {
     // console.log("Deleted File: ",imgLocalPath)
-    if(imgLocalPath) fs.unlinkSync(imgLocalPath)
-      
+    if (imgLocalPath) fs.unlinkSync(imgLocalPath);
+
     return next(
       new ApiError(
         400,
@@ -81,5 +81,7 @@ const createNewPost = asyncHandler(async (req, res, next) => {
     .status(200)
     .json(new ApiResponse(201, { newPost }, "newPost created successfully!🎉"));
 });
+
+
 
 export { createNewPost };

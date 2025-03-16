@@ -3,8 +3,7 @@ import { Container } from "../Components/CompsIndex.js"
 const Home = () => {
   return (
     <Container>
-      <div
-       >
+      <div >
         <div className="hero-overlay"></div>
         <div className="hero-content text-center">
           <div className="max-w-md">
@@ -17,7 +16,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      </Container>
+    </Container>
   )
 }
 

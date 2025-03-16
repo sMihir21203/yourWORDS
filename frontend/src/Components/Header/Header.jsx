@@ -82,7 +82,7 @@ const Header = () => {
 
             <div 
             className="dropdown dropdown-bottom dropdown-end ">
-                <div tabIndex={0} role="button" className="btn btn-circle avatar h-12 w-12 -mt-2 border-none shadow-sm hover:shadow-md shadow-accent-content">
+                <div tabIndex={0} role="button" className="btn btn-circle avatar h-12 w-12 -mt-2 border-none shadow hover:shadow-md shadow-base-content">
                   <div className="rounded-full">
                     <img
                       src={avatar} alt="avatar"
