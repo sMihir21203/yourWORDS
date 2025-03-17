@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
-import { updateStart, updateSuccess, updateFailure, clearAllMessages } from "../../Store/User/userSlice.js"
-import { Input, Button, Loader } from '../../Components/CompsIndex.js'
-import { ChangePassword, DashContainer, DeleteUser } from './DashIndex.js'
+import { updateStart, updateSuccess, updateFailure, clearAllMessages } from "../../../Store/User/userSlice.js"
+import { Input, Button, Loader, ChangePassword, DeleteAccount } from '../../../Components/CompsIndex.js'
+import { DashContainer } from '../DashIndex.js'
 import { FaUser } from 'react-icons/fa'
 import { AiFillMail } from 'react-icons/ai'
-import { API } from '../../API/API.js'
+import { API } from '../../../API/API.js'
 
 const Profile = () => {
   const currentUser = useSelector(state => state?.user?.currentUser?.data?.loggedInUser)
@@ -215,7 +215,7 @@ const Profile = () => {
         {showChangePass && <ChangePassword setShowChangePass={setShowChangePass} />}
 
         <div className="flex gap-x-32 md:gap-x-48  mt-4">
-          <DeleteUser />
+          <DeleteAccount />
           <p className="cursor-pointer  font-bold hover:scale-110 hover:bg-gradient-to-b from-[#ff007f] via-sky-300 to-[#003cff] hover:text-transparent bg-clip-text" onClick={() => setShowChangePass(!showChangePass)}>
             {showChangePass ? "Update Details" : "Change Password"}
           </p>

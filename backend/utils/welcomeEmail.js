@@ -20,7 +20,7 @@ export const welcomeEmail = async (userName, userEmail, userPassword) => {
              <p><b>Password: </b> ${userPassword}</p>`,
     };
 
-    await transporter.sendMail(emailData);s
+    await transporter.sendMail(emailData);
   } catch (error) {
     console.error("Error sending Email: ", error);
   }

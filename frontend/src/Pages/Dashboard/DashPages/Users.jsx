@@ -1,5 +1,5 @@
 import React from 'react'
-import {DashContainer} from './DashIndex.js'
+import {DashContainer} from '../DashIndex.js'
 
 const Users = () => {
   return (

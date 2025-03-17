@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input } from '../../Components/CompsIndex.js';
+import { Button, Input } from '../CompsIndex.js';
 import { API } from '../../API/API.js';
 import { useDispatch } from 'react-redux';
-import { deleteUserSuccess } from '../../Store/User/userSlice.js';
+import { deleteAccountSuccess } from '../../Store/User/userSlice.js';
 
-const DeleteUser = () => {
+const DeleteAccount = () => {
     const [formData, setFormData] = useState({ password: "" });
     const [errorMsg, setErrorMsg] = useState(null);
     const dispatch = useDispatch();
@@ -30,9 +30,9 @@ const DeleteUser = () => {
         }
 
         try {
-            const deleteUser = await API.post("/user/delete-user", formData);
-            if (deleteUser) {
-                dispatch(deleteUserSuccess());
+            const deletedAccount = await API.post("/user/delete-user", formData);
+            if (deletedAccount) {
+                dispatch(deleteAccountSuccess());
                 window.location.href = "/sign_up";
             }
         } catch (error) {
@@ -58,7 +58,7 @@ const DeleteUser = () => {
             <dialog id="deleteAccount" className="modal text-center">
                 <div className="modal-box rounded-xl">
                     <p className="py-4 font-bold">Are You Sure?<br />You Want to Delete This Account?</p>
-                    <p className='mb-1'>Enter Your Password to delete your account.</p>
+                    <p className='mb-1'>Enter Your Password to Confirm Delete your account.</p>
 
                     <form onSubmit={handleOnSubmit} className='flex flex-col items-center space-y-2'>
                         {errorMsg && (
@@ -97,6 +97,6 @@ const DeleteUser = () => {
             </dialog>
         </div>
     );
-};
+}
 
-export default DeleteUser ;
+export default DeleteAccount

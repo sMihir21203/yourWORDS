@@ -69,7 +69,7 @@ const userSlice = createSlice({
 
     //deleteUser
 
-    deleteUserSuccess: (state) => {
+    deleteAccountSuccess: (state) => {
       state.currentUser = null;
       state.loading = false;
       state.error = null;
@@ -96,7 +96,7 @@ export const {
   updateSuccess,
   updateFailure,
 
-  deleteUserSuccess,
+  deleteAccountSuccess,
 
   clearAllMessages,
 } = userSlice.actions;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { DashContainer } from './DashIndex.js';
-import { Button, Loader, TextEditor } from '../../Components/CompsIndex.js';
-import { API } from '../../API/API.js';
+import { DashContainer } from '../DashIndex.js';
+import { Button, Loader, TextEditor } from '../../../Components/CompsIndex.js';
+import { API } from '../../../API/API.js';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -12,7 +12,7 @@ const CreatePost = () => {
 
   const [postFormData, setPostFormData] = useState({
     postTitle: "",
-    postCategory: "",
+    postCategory: "Uncategorized",
     postImg: null,
     postContent: ""
   })
@@ -61,7 +61,6 @@ const CreatePost = () => {
         [id]: value.trim()
       }));
     }
-
   }
 
 
@@ -94,7 +93,7 @@ const CreatePost = () => {
       const successMsg = res.data.message
       const slug = res.data.data.newPost.slug
 
-      // navigate(`/my-posts/${slug}`)
+      navigate(`/my-posts/${slug}`)
 
       setTimeout(() => {
         alert(successMsg)

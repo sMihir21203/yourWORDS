@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FaKey } from 'react-icons/fa'
-import { Input, Button, Loader } from "../../Components/CompsIndex.js"
+import { Input, Button, Loader } from "../CompsIndex.js"
 import { updateStart, updateSuccess, updateFailure, clearAllMessages } from "../../Store/User/userSlice.js"
 import { useDispatch, useSelector } from 'react-redux'
 import { API } from '../../API/API.js'

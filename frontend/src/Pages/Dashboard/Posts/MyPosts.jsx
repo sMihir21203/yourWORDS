@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import { DashContainer } from "./DashIndex.js";
-import { Button, Loader } from "../../Components/CompsIndex.js";
-import { API } from "../../API/API.js";
+import { DashContainer } from "../DashIndex.js";
+import { Button, DeletePost, Loader } from "../../../Components/CompsIndex.js";
+import { API } from "../../../API/API.js";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -11,8 +11,6 @@ const MyPosts = () => {
   const [loading, setLoading] = useState(false);
   const [firstFetchDone, setFirstFetchDone] = useState(false);
   const [showMore, setShowMore] = useState(false);
-  const [postToDelete, setPostToDelete] = useState(null);
-  const modalRef = useRef(null);
 
   useEffect(() => {
     if (userId) getUserPosts();
@@ -53,10 +51,6 @@ const MyPosts = () => {
     }
   };
 
-  const handleDelete = async () => {
-    return alert("Radhe Radhe")
-  };
-
   return (
     <DashContainer>
       {loading && <Loader />}
@@ -82,7 +76,7 @@ const MyPosts = () => {
                     <td>{index + 1}</td>
                     <td>{new Date(post.createdAt).toLocaleDateString()}</td>
                     <td>
-                      <Link to={`/post/${post.slug}`} className="link-hover border-b-base-content">
+                      <Link to={`/post/${post.slug}`} className="link-hover">
                         {post.postTitle}
                       </Link>
                     </td>
@@ -93,20 +87,12 @@ const MyPosts = () => {
                     </td>
                     <td>{post.postCategory}</td>
                     <td>
-                      <Link to={`/post/${post.slug}`} className="link-hover border-b-base-content text-success">
+                      <Link to={`/post/${post.slug}`} className="link-hover text-success">
                         Edit
                       </Link>
                     </td>
                     <td>
-                      <span
-                        onClick={() => {
-                          setPostToDelete(post._id);
-                          modalRef.current.showModal();
-                        }}
-                        className="link link-hover border-b-base-content text-error"
-                      >
-                        Delete
-                      </span>
+                      <DeletePost postId={post._id} userId={userId} />
                     </td>
                   </tr>
                 ))}
@@ -139,29 +125,6 @@ const MyPosts = () => {
           </Link>
         </div>
       )}
-
-      {/* Delete Confirmation Modal */}
-      <dialog ref={modalRef} className="modal text-center">
-        <div className="modal-box rounded-xl">
-          <form method="dialog" className="flex flex-col items-center space-y-2">
-            <p className="py-4 font-bold">Are You Sure?<br />You Want to Delete This Post?</p>
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="btn btn-dash btn-error h-8 w-28 text-nowrap rounded-lg"
-            >
-              Confirm Delete
-            </button>
-          </form>
-          <div className="modal-action">
-            <Button
-              text="Cancel"
-              className="w-20"
-              onClick={() => modalRef.current.close()}
-            />
-          </div>
-        </div>
-      </dialog>
     </DashContainer>
   );
 };

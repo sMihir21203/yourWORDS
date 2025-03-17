@@ -1,7 +1,4 @@
-import DashBoardPrivateRoute from './DashBoardPrivateRoute.jsx'
-import AdminDashPrivateRoute from './AdminDashPrivateRoute.jsx'
+import DashBoardPrivateRoute from "./DashBoardPrivateRoute.jsx";
+import PostPrivateRoute from "./PostPrivateRoute.jsx";
 
-export{
-    DashBoardPrivateRoute,
-    AdminDashPrivateRoute
-}
+export { DashBoardPrivateRoute, PostPrivateRoute };

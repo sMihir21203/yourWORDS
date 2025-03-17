@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Sidebar, Profile, MyPosts, CreatePost, Users } from './DashIndex.js'
+import { Sidebar, Profile, Users } from './DashIndex.js'
+import { MyPosts, CreatePost } from "./Posts/PostIndex.js"
 import { useSelector } from 'react-redux'
 
 const Dashboard = () => {

@@ -7,51 +7,58 @@ import {
   Home,
   NotFound,
   Portfolio,
+  Post,
   SignIn,
   SignUp,
 } from "../Pages/PagesIndex.js";
-import {DashBoardPrivateRoute,AdminDashPrivateRoute} from './RoutesIndex.js'
+import { DashBoardPrivateRoute, PostPrivateRoute } from './RoutesIndex.js'
 
 export const WebRoutes = () => {
   return (
     <>
       <BrowserRouter>
-        
-        
-          <Header/>
-          <Routes>
-            <Route 
-                  path='/' 
-                  element={<Home />} 
+
+
+        <Header />
+        <Routes>
+          <Route
+            path='/'
+            element={<Home />}
+          />
+          <Route
+            path='/about'
+            element={<About />}
+          />
+          <Route element={<DashBoardPrivateRoute />} >
+            <Route
+              path='/dashboard'
+              element={<Dashboard />}
             />
-            <Route 
-                  path='/about' 
-                  element={<About />} 
+          </Route>
+          <Route element={<PostPrivateRoute />} >
+            <Route
+              path='/post'
+              element={<Post />}
             />
-            <Route element={<DashBoardPrivateRoute />} >
-              <Route 
-                  path='/dashboard' 
-                  element={<Dashboard />} 
-              />
-            </Route>
-            <Route 
-                  path='/portfolio' 
-                  element={<Portfolio />} 
-            />
-            <Route 
-                  path='/sign_in' 
-                  element={<SignIn />} 
-           />
-            <Route 
-                  path='/sign_up' 
-                  element={<SignUp />} 
-           />
-            <Route 
-                  path='/*' 
-                  element={<NotFound />} 
-            />
-          </Routes>
-       
+          </Route>
+          <Route
+            path='/portfolio'
+            element={<Portfolio />}
+          />
+          <Route
+            path='/sign_in'
+            element={<SignIn />}
+          />
+          <Route
+            path='/sign_up'
+            element={<SignUp />}
+          />
+          <Route
+            path='/*'
+            element={<NotFound />}
+          />
+        </Routes>
+
         <Footer />
       </BrowserRouter>
     </>

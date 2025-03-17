@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Button, SignOutBtn } from "../../Components/CompsIndex.js";
-import { FaAngleDoubleRight,FaUser,FaRegNewspaper,FaPen,FaBars,FaUsers } from 'react-icons/fa';
-import { RiArticleLine, RiUserLine,RiEditBoxLine, RiTeamLine } from 'react-icons/ri';
-import { BiBookContent, BiGroup, BiPencil, BiUserCircle } from 'react-icons/bi';
+import { Button, SignOutBtn } from "../../../Components/CompsIndex.js";
+import { FaAngleDoubleRight, FaUser, FaRegNewspaper, FaPen, FaUsers } from 'react-icons/fa';
 
 const Sidebar = () => {
   const currentUser = useSelector(state => state.user?.currentUser?.data?.loggedInUser);
@@ -51,14 +49,14 @@ const Sidebar = () => {
                 <Link
                   to="/dashboard?tab=my-posts"
                   className={`${activeLink("?tab=my-posts")}`}>
-                 <FaRegNewspaper/> My Posts
+                  <FaRegNewspaper /> My Posts
                 </Link>
               </li>
               <li>
                 <Link
                   to="/dashboard?tab=create-post"
                   className={`${activeLink("?tab=create-post")}`}>
-                  <FaPen/>  Create Post
+                  <FaPen />  Create Post
                 </Link>
               </li>
 
@@ -68,7 +66,7 @@ const Sidebar = () => {
                   <Link
                     to="/dashboard?tab=users"
                     className={`${activeLink("?tab=users")}`}>
-                   <FaUsers/>  Users
+                    <FaUsers />  Users
                   </Link>
                 </li>
               )}
@@ -105,14 +103,14 @@ const Sidebar = () => {
                 <Link
                   to="/dashboard?tab=my-posts"
                   className={`${activeLink("?tab=my-posts")}`}>
-                 <FaRegNewspaper/> My Posts
+                  <FaRegNewspaper /> My Posts
                 </Link>
               </li>
               <li>
                 <Link
                   to="/dashboard?tab=create-post"
                   className={`${activeLink("?tab=create-post")}`}>
-                  <FaPen/>  Create Post
+                  <FaPen />  Create Post
                 </Link>
               </li>
 
@@ -122,7 +120,7 @@ const Sidebar = () => {
                   <Link
                     to="/dashboard?tab=users"
                     className={`${activeLink("?tab=users")}`}>
-                   <FaUsers/>  Users
+                    <FaUsers />  Users
                   </Link>
                 </li>
               )}

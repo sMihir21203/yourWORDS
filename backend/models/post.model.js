@@ -11,16 +11,14 @@ const postSchema = new Schema(
       required: true,
       unique: true,
       trim: true,
-      index: true
+      index: true,
     },
     postCategory: {
       type: String,
-      default: "Uncategorized",
+      index: true,
     },
     postImg: {
       type: String,
-      default:
-        "https://dinarakasko.com/image/cache/catalog/basel-demo/blog-1140x700.png",
     },
     postContent: {
       type: String,
