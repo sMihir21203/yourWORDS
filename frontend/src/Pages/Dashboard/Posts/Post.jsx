@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container } from "../Components/CompsIndex"
+import { Container } from "../../../Components/CompsIndex"
 
 const Post = () => {
   return (

@@ -4,6 +4,7 @@ import {
   ApiError,
   uploadOnCloudinary,
   welcomeEmail,
+  deleteFromCloudinary,
 } from "../utils/index.utils.js";
 import { User } from "../models/user.model.js";
 import { Post } from "../models/post.model.js";
@@ -242,27 +243,55 @@ const signOutUser = asyncHandler(async (req, res) => {
 });
 
 const deleteUser = asyncHandler(async (req, res, next) => {
+  //password -> req.body
+  //userId -> req.user._id
+  //getUser
+  //check Password Validation
+  //getUserAllPosts and userAvatar
+  //deleteThem
+  //now delete the user
+  //return res
   const { password } = req.body;
   const userId = req.user?._id;
+  const isAdmin = req.user?.isAdmin;
 
-  if (!password) {
-    return next(new ApiError(400, "Password is required for delete account"));
-  }
-  if (password.length < 6) {
-    return next(new ApiError(400, "Password should be at least 6 characters"));
-  }
+  try {
+    const user = await User.findById(userId).select("avatar password");
+    if (!user) {
+      return next(new ApiError(404, "User Not Found"));
+    }
 
-  const user = await User.findById(userId);
+    if (!isAdmin) {
+      if (!password) {
+        return next(
+          new ApiError(400, "Password is required to delete the account")
+        );
+      }
+      const isPasswordValid = await user.isPasswordTrue(password);
+      if (!isPasswordValid) {
+        return next(new ApiError(401, "Invalid password"));
+      }
+    }
 
-  const isPasswordValid = await user.isPasswordTrue(password);
+    const userPosts = await Post.find({ user: userId }).select("postImg");
+    const postImgUrls = userPosts.map((post) => post.postImg);
+    if (postImgUrls.length) {
+      await Promise.all(postImgUrls.map(deleteFromCloudinary));
+    }
+    if (user.avatar) {
+      await deleteFromCloudinary(user.avatar);
+    }
 
-  if (isPasswordValid) {
+    await Post.deleteMany({ user: userId });
     await User.findByIdAndDelete(userId);
-  } else {
-    return next(new ApiError(401, "Invalid password"));
-  }
 
-  return res.status(200).json(new ApiResponse(200, {}, "User Deleted"));
+    return res.status(200).json(new ApiResponse(200, {}, "User Deleted"));
+  } catch (error) {
+    // console.error("Delete User Error:", error.message);
+    return next(
+      new ApiError(500, "Something went wrong while deleting the account!")
+    );
+  }
 });
 
 const resetForgetPassword = asyncHandler(async () => {});
@@ -313,15 +342,13 @@ const updateUserAvatar = asyncHandler(async (req, res, next) => {
     return next(new ApiError(400, "Avatar file is missing"));
   }
 
-  const avatar = await uploadOnCloudinary(avatarLocalPath);
+  const userInfo = await User.findById(userId).select("avatar");
 
+  await deleteFromCloudinary(userInfo.avatar);
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
   if (!avatar.url) {
-    return next(
-      new ApiError(
-        400,
-        "Something went wrong while uploading avatar! please try again!"
-      )
-    );
+    return next(new ApiError(400, "Error uploading avatar. Try again!"));
   }
 
   const user = await User.findByIdAndUpdate(
@@ -406,94 +433,118 @@ const updateUserDetails = asyncHandler(async (req, res, next) => {
   return res.status(200).json(new ApiResponse(200, updatedUser, message));
 });
 
-const getUserAllPosts = asyncHandler(async (req, res, next) => {
-  //setStartIndex -> req.query & convert into ObjectId
-  //userId -> req.body & convert into ObjectId
-  //lastWeek dates
-  //fetch posts using aggregationPipelines
-  //$match matchPosts belong to userId
-  //check user have posts or not
-  //setALL data
-  //give res
+const getUserPosts = asyncHandler(async (req, res, next) => {
+  const toObjectId = (id) => (id ? new mongoose.Types.ObjectId(id) : null);
+  const getQueryValue = (value) => value || null;
 
+  const userId = toObjectId(req.params.userId);
+  const postId = toObjectId(req.query.postId);
+  const slug = getQueryValue(req.query.slug);
+  const category = getQueryValue(req.query.category);
+  const searchQuery = getQueryValue(req.query.search);
   const setStartIndex = parseInt(req.query.setStartIndex) || 0;
-  const userId = new mongoose.Types.ObjectId(req.user?._id);
 
-  const LastWeek = new Date();
-  LastWeek.setDate(LastWeek.getDate() - 7);
+  const lastWeek = new Date();
+  lastWeek.setDate(lastWeek.getDate() - 7);
 
-  const userAllPosts = await Post.aggregate([
-    {
-      $match: { userId }, //filter all post belongs to thisUserId
-    },
-    // 2 separate dataSets using facet
-    {
-      $facet: {
-        // 1 dataSet: Fetch paginated user posts
-        userAllPostsData: [
-          { $sort: { createdAt: -1 } },
-          { $skip: setStartIndex },
-          { $limit: 9 },
-          {
-            $project: {
-              _id: 1,
-              createdAt: 1,
-              updatedAt: 1,
-              slug: 1,
-              postTitle: 1,
-              postImg: 1,
-              postCategory: 1,
-              postContent: 1,
+  let matchCondition = {};
+  if (userId) matchCondition.userId = userId;
+  if (postId) matchCondition._id = postId;
+  if (slug) matchCondition.slug = slug;
+  if (category) matchCondition.postCategory = category;
+  if (searchQuery)
+    matchCondition.postContent = { $regex: searchQuery, $options: "i" };
+
+  try {
+    const userAllPosts = await Post.aggregate([
+      {
+        $match: matchCondition, // Filters based on query params
+      },
+      {
+        $facet: {
+          userAllPostsData: [
+            { $sort: { createdAt: -1 } },
+            { $skip: setStartIndex },
+            { $limit: 9 },
+            {
+              $project: {
+                _id: 1,
+                createdAt: 1,
+                updatedAt: 1,
+                slug: 1,
+                postTitle: 1,
+                postImg: 1,
+                postCategory: 1,
+                postContent: 1,
+              },
             },
-          },
-        ],
-        //2nd dataSet: totalCounts and lastWeekTotalPosts
-        counts: [
-          {
-            $group: {
-              _id: null,
-              totalPosts: { $sum: 1 },
-              lastWeekTotalPosts: {
-                $sum: {
-                  $cond: {
-                    if: { $gte: ["createdAt", LastWeek] },
-                    then: 1,
-                    else: 0,
+          ],
+          counts: [
+            {
+              $group: {
+                _id: null,
+                totalPosts: { $sum: 1 },
+                lastWeekTotalPosts: {
+                  $sum: {
+                    $cond: {
+                      if: { $gte: ["$createdAt", lastWeek] },
+                      then: 1,
+                      else: 0,
+                    },
                   },
                 },
               },
             },
-          },
-        ],
+          ],
+        },
       },
-    },
-  ]);
+    ]);
 
-  if (!userAllPosts[0].userAllPostsData.length) {
-    return next(new ApiError(404, "You Have Not Created Any Posts Yet!"));
+    const userPosts = userAllPosts?.[0]?.userAllPostsData || [];
+    if (!userPosts.length) {
+      return next(new ApiError(404, "No Posts Found!"));
+    }
+    const totalPosts = userAllPosts?.[0]?.counts?.[0]?.totalPosts || 0;
+    const lastWeekTotalPosts =
+      userAllPosts?.[0]?.counts?.[0]?.lastWeekTotalPosts || 0;
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          userPosts,
+          totalPosts,
+          lastWeekTotalPosts,
+        },
+        "User Posts Fetched Successfully"
+      )
+    );
+  } catch (error) {
+    return next(
+      new ApiError(500, "Something went wrong while fetching posts!")
+    );
+  }
+});
+
+const getUsers = asyncHandler(async (req, res, next) => {
+  const isAdmin = req.user?.isAdmin;
+  if (!isAdmin) {
+    return next(
+      new ApiError(403, "You Are Not Allowed to Access! Admins only.")
+    );
   }
 
-  const userPosts = userAllPosts[0].userAllPostsData;
-  const totalPosts =
-    userAllPosts[0].counts.length > 0
-      ? userAllPosts[0].counts[0].totalPosts
-      : 0;
-  const lastWeekTotalPosts =
-    userAllPosts[0].counts.length > 0
-      ? userAllPosts[0].counts[0].lastWeekTotalPosts
-      : 0;
-
-  return res.status(200).json(
-    new ApiResponse(
-      200,
-      {
-        userPosts,
-        totalPosts,
-        lastWeekTotalPosts,
-      },
-      "User Posts Fetched SuccessFully"
-    )
-  );
+  try {
+    const users = await User.find({}).select("-password");
+    if (!users.length) {
+      return next(new ApiError(404, "No Users Found"));
+    }
+    return res
+      .status(200)
+      .json(new ApiResponse(200, users, "Users Fetched Successfully"));
+  } catch (error) {
+    return next(new ApiError(500, "Failed To Fetch Users!"));
+  }
 });
 
 export {
@@ -506,5 +557,6 @@ export {
   updateUserPassword,
   updateUserAvatar,
   updateUserDetails,
-  getUserAllPosts,
+  getUserPosts,
+  getUsers,
 };

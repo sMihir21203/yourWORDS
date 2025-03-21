@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
 import { updateStart, updateSuccess, updateFailure, clearAllMessages } from "../../../Store/User/userSlice.js"
 import { Input, Button, Loader, ChangePassword, DeleteAccount } from '../../../Components/CompsIndex.js'
-import { DashContainer } from '../DashIndex.js'
 import { FaUser } from 'react-icons/fa'
 import { AiFillMail } from 'react-icons/ai'
 import { API } from '../../../API/API.js'
@@ -23,7 +22,6 @@ const Profile = () => {
   }, [errorMsg, successMsg]);
 
   // Avatar update data
-  const [avatarLoader, setAvatarLoader] = useState(false)
   const [updateAvatarProgress, setUpdateAvatarProgress] = useState(0)
   const [avatarFileUrl, setAvatarFileUrl] = useState(currentUser?.avatar)
   const avatarFilePickerRef = useRef()
@@ -32,55 +30,36 @@ const Profile = () => {
     e.preventDefault()
 
     const file = e.target.files[0]
-    if (!file) {
-      return alert("No file selected!")
-    }
-
     const validImgTypes = ["image/jpeg", "image/png", "image/jpg"]
-
-    if (!validImgTypes.includes(file.type)) {
-      return alert("Invalid file type! Please upload JPEG,JPG, PNG!");
-    }
-
     const maxSize = 1 * 1024 * 1024 //1mb
 
-    if (file.size > maxSize) {
-      return alert("Avatar Image size Must be less than 1mb")
-    }
+    //file validations
+    if (!file) return alert("No file selected!");
+    if (!validImgTypes.includes(file.type)) return alert("Invalid file type! Please upload JPEG,JPG, PNG!");
+    if (file.size > maxSize) return alert("Avatar Image size Must be less than 1mb");
 
     setAvatarFileUrl(URL.createObjectURL(file)) //preview avatar
-    setAvatarLoader(true)
 
     const formData = new FormData()
     formData.append("avatar", file)
 
-    let interval;
     try {
-      interval = setInterval(() => {
-        setUpdateAvatarProgress((prev) => (prev < 100 ? prev + 10 : prev))
-      }, 200);
-      console.log(interval)
 
-      const res = await API.post('user/update-avatar', formData)
-      if (!res.ok) {
-        clearInterval(interval)
-        setUpdateAvatarProgress(0)
+      const { data } = await API.post('user/update-avatar', formData, {
+        onUploadProgress: (progress) => {
+          const percent = Math.round((progress.loaded * 100) / progress.total);
+          setUpdateAvatarProgress(percent);
+        },
+      });
+      if (data) {
+        dispatch(updateSuccess({ ...data.data, message: data.message || "Avatar Updated" }))
       }
 
-      setTimeout(() => {
-        clearInterval(interval)
-        setAvatarLoader(false)
-        setUpdateAvatarProgress(0)
-      }, 1000);
-
-      const updatedData = res?.data?.data
-      const successMessage = res?.data?.message || "Avatar updated"
-
-      dispatch(updateSuccess({ ...updatedData, message: successMessage }))
-
+      setUpdateAvatarProgress(100)
+      setTimeout(() => setUpdateAvatarProgress(0), 200);
     } catch (error) {
-      setAvatarLoader(false)
-      dispatch(updateFailure(error.response?.data?.message || "Something went wrong while updating avatar! please try again!"))
+      const errMsg = error.response?.data?.message || "Avatar Update Failed Try Again.";
+      dispatch(updateFailure(errMsg));
     }
   }
 
@@ -120,9 +99,8 @@ const Profile = () => {
 
 
   return (
-    <DashContainer>
-
-      <h1 className='font-semibold text-3xl mb-2'>Profile</h1>
+    <div className='flex flex-col justify-center items-center'>
+      <h1 className='font-semibold text-3xl mb-8'>Profile</h1>
       {/* Avatar Section */}
       <div
         className="relative tooltip tooltip-info tooltip-side h-32 w-32 cursor-pointer shadow-2xl rounded-full border-2 border-slate-300 mb-12"
@@ -133,13 +111,14 @@ const Profile = () => {
           type="file"
           accept='image/*'
           name='avatar'
-          className="hidden file-input file-input-secondary"
+          className="hidden"
           onChange={handleUpdateAvatar}
           ref={avatarFilePickerRef}
         />
+        {/* progressBar While uploading */}
         {updateAvatarProgress > 0 && (
           <div
-            className="radial-progress font-extrabold text-xl"
+            className={`radial-progress font-extrabold text-xl ${updateAvatarProgress ? "opacity-100" : ""}`}
             style={{
               "--value": updateAvatarProgress.toString(),
               "--size": "8rem",
@@ -156,14 +135,12 @@ const Profile = () => {
           </div>
         )}
 
-
+        {/* avatarImg */}
         <img
           src={avatarFileUrl || currentUser.avatar}
           alt="avatar"
-          className={`rounded-full w-full h-full hover:opacity-50 ${updateAvatarProgress ? "opacity-50" : "opacity-100"}`}
-
+          className={`rounded-full w-full h-full hover:opacity-50 ${updateAvatarProgress ? "opacity-50" : ""}`}
         />
-
       </div>
 
       <form onSubmit={handleUpdateOnSubmit}>
@@ -210,21 +187,18 @@ const Profile = () => {
         )}
       </form>
       {/* Change Password & Delete Account */}
-      <div className="flex flex-col items-center -mt-4">
+      <div className="flex flex-col items-center">
 
         {showChangePass && <ChangePassword setShowChangePass={setShowChangePass} />}
-
         <div className="flex gap-x-32 md:gap-x-48  mt-4">
           <DeleteAccount />
           <p className="cursor-pointer  font-bold hover:scale-110 hover:bg-gradient-to-b from-[#ff007f] via-sky-300 to-[#003cff] hover:text-transparent bg-clip-text" onClick={() => setShowChangePass(!showChangePass)}>
             {showChangePass ? "Update Details" : "Change Password"}
           </p>
-
-
         </div>
       </div>
 
-    </DashContainer>
+    </div>
   )
 }
 

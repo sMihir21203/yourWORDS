@@ -9,7 +9,7 @@ const themeSlice = createSlice({
   initialState,
   reducers: {
     toggleThemeBtn: (state) => {
-      state.theme = state.theme === "luxury" ? "light" : "luxury";
+      state.theme = state.theme === "abyss" ? "light" : "abyss";
       
     },
   },

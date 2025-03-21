@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { DashContainer } from '../DashIndex.js';
 import { Button, Loader, TextEditor } from '../../../Components/CompsIndex.js';
 import { API } from '../../../API/API.js';
 import { useNavigate } from 'react-router-dom';
 
 
 const CreatePost = () => {
-  const navigate = useNavigate()
-  const [postErrMsg, setPostErrMsg] = useState(null)
-  const [loading, setLoading] = useState(false)
-
   const [postFormData, setPostFormData] = useState({
     postTitle: "",
     postCategory: "Uncategorized",
     postImg: null,
     postContent: ""
   })
+  const [previewPostImg, setPreviewPostImg] = useState(null)
+  const [postErrMsg, setPostErrMsg] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const validImgTypes = ["image/jpeg", "image/png", "image/jpg"]
   const maxSize = 1 * 1024 * 1024 //1mb
@@ -49,6 +48,7 @@ const CreatePost = () => {
       }
 
       //postImg setup
+      setPreviewPostImg(URL.createObjectURL(file))
       setPostFormData((prev) => ({
         ...prev,
         postImg: file
@@ -62,7 +62,6 @@ const CreatePost = () => {
       }));
     }
   }
-
 
   const handleOnSubmitPostData = async (e) => {
     e.preventDefault();
@@ -114,75 +113,76 @@ const CreatePost = () => {
 
 
   return (
-    <DashContainer>
-      <form
-        onSubmit={handleOnSubmitPostData}
-        className='w-sm md:w-lg xl:w-5xl space-y-2'>
+    <form
+      onSubmit={handleOnSubmitPostData}
+      className='w-sm md:w-lg lg:w-full space-y-2'>
 
-        <div className={`${!loading ? "" : "opacity-50"}`}>
+      <div className={`${!loading ? "" : "opacity-50"}`}>
 
-          <h1 className='text-center text-2xl md:text-3xl font-semibold mb-8'>Create Post</h1>
+        <h1 className='text-center text-2xl md:text-3xl font-semibold mb-8'>Create Post</h1>
 
-          {/* error msg */}
-          {postErrMsg && (
-            <div className='alert alert-error self-center justify-self-center text-lg w-sm md:w-lg lg:w-fit mb-2'>{`👀 ${postErrMsg}`}</div>
-          )}
-
-          {/* Title and Category */}
-          <div className='flex flex-col md:flex-row space-y-1 md:space-x-2'>
-            <input
-              onChange={handleOnChangePostData}
-              id='postTitle'
-              required
-              type="text"
-              placeholder="YourWORDS Title"
-              className="input w-full border-2 rounded-lg"
-            />
-
-            <select
-              onChange={handleOnChangePostData}
-              id='postCategory'
-              required
-              className='select w-full md:w-fit rounded-lg border-2'
-            >
-              <option value="Uncategorized">Uncategorized</option>
-              <option value="Mythology">Mythology</option>
-              <option value="Web Development">Web Development</option>
-            </select>
-          </div>
-
-          {/* Blog Image */}
-
-          <input
-            required
-            onChange={handleOnChangePostData}
-            accept='image/*'
-            id='postImg'
-            type="file"
-            className='file-input file-input-lg mt-2 min-w-full border-2 rounded-lg'
-          />
-
-          {/* proccessing msg */}
-
-
-          {/* Lexical Editor with onChange */}
-          <TextEditor
-            onChange={(editorContent) => handleOnChangePostData(null, editorContent)}
-            className='my-4'
-          />
-
-        </div>
-        {loading && (
-          <p className='text-center font-bold text-2xl md:text-5xl animate-pulse'>Creating Your Post...</p>
+        {/* error msg */}
+        {postErrMsg && (
+          <div className='alert alert-error self-center justify-self-center text-lg w-sm md:w-lg lg:w-fit mb-2'>{`👀 ${postErrMsg}`}</div>
         )}
-        {/* Submit Button */}
-        <Button
-          type="submit"
-          text={loading ? <Loader /> : "Publish"}
-          style='imp'
+
+        {/* Title and Category */}
+        <div className='flex flex-col md:flex-row space-y-1 md:space-x-2'>
+          <input
+            onChange={handleOnChangePostData}
+            id='postTitle'
+            required
+            type="text"
+            placeholder="YourWORDS Title"
+            className="input w-full border-2 rounded-lg"
+          />
+
+          <select
+            onChange={handleOnChangePostData}
+            id='postCategory'
+            required
+            className='select w-full md:w-fit rounded-lg border-2'
+          >
+            <option value="Uncategorized">Uncategorized</option>
+            <option value="Mythology">Mythology</option>
+            <option value="Web Development">Web Development</option>
+          </select>
+        </div>
+
+        {/* Post Image */}
+        {previewPostImg && (
+          <img
+            src={previewPostImg}
+            className='rounded-lg my-1 self-center justify-self-center'
+          />
+        )}
+
+        < input
+          required
+          onChange={handleOnChangePostData}
+          accept='image/*'
+          id='postImg'
+          type="file"
+          className='file-input file-input-lg mt-1  min-w-full border-2 rounded-lg'
         />
-      </form>
-    </DashContainer>
+
+        {/* textEditor */}
+        <TextEditor
+          onChange={(editorContent) => handleOnChangePostData(null, editorContent)}
+          className='mt-2 mb-4'
+        />
+
+      </div>
+      {loading && (
+        <p className='text-center font-bold text-2xl md:text-5xl animate-pulse'>Creating Your Post...</p>
+      )}
+      {/* Submit Button */}
+      <Button
+        type="submit"
+        text={loading ? <Loader /> : "Publish"}
+        style='imp'
+      />
+    </form>
   );
 };
 

@@ -9,11 +9,12 @@ import Logo from "./Logo.jsx";
 import Menu from "./Menu.jsx";
 import SignOutBtn from "./SignOutBtn.jsx";
 import GoogleAuth from "./GoogleAuth/GoogleAuth.jsx";
+import Sidebar from "./Sidebar/Sidebar.jsx";
 import TextEditor from "./TextEditor/TextEditor.jsx";
 import ChangePassword from "./Password/ChangePassword.jsx";
 import ForgotPassword from "./Password/ForgotPassword.jsx";
 import DeleteAccount from "./Delete/DeleteAccount.jsx";
-import DeletePost from "./Delete/DeletePost.jsx"
+import DeletePost from "./Delete/DeletePost.jsx";
 
 export {
   Header,
@@ -28,8 +29,9 @@ export {
   SignOutBtn,
   GoogleAuth,
   TextEditor,
+  Sidebar,
   ChangePassword,
   ForgotPassword,
   DeleteAccount,
-  DeletePost
+  DeletePost,
 };

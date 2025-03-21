@@ -5,6 +5,5 @@ import NotFound from "./NotFound.jsx";
 import Portfolio from "./Portfolio.jsx";
 import SignIn from "./SignIn.jsx";
 import SignUp from "./SignUp.jsx";
-import Post from "./Post.jsx";
 
-export { About, Dashboard, Home, NotFound, Portfolio, SignIn, SignUp, Post };
+export { About, Dashboard, Home, NotFound, Portfolio, SignIn, SignUp };

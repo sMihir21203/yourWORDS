@@ -10,7 +10,7 @@ const Button = ({
 }) => {
 
     const styles = {
-        default: "w-9 h-8.5  ",
+        default: "w-9 h-8.5 ",
 
         imp: "min-w-full h-10 text-xl hover:pb-1",
 

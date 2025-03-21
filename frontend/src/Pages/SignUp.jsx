@@ -75,7 +75,7 @@ const SignUp = () => {
 
 
         <div className='hero-content flex-col lg:flex-row'>
-          <div className='text-center lg:text-left lg:mr-2 lg:-mt-16 -mt-4'>
+          <div className='text-center lg:text-left lg:mr-2'>
             <h1 className="text-5xl font-bold text-nowrap"><span className='bg-gradient-to-r hover:bg-gradient-to-l  from-[#ff007f] via-sky-400 to-[#003cff] text-transparent bg-clip-text'>signUp </span>Now!</h1>
             <p className='py-6'>
               to Share <span className='font-extrabold'>YourWords...</span>

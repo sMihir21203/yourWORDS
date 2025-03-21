@@ -1,9 +1,8 @@
 import React from 'react'
-import {DashContainer} from '../DashIndex.js'
 
 const Users = () => {
   return (
-    <DashContainer>Users</DashContainer>
+    <div>Users</div>
   )
 }
 

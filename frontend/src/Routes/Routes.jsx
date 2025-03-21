@@ -7,11 +7,11 @@ import {
   Home,
   NotFound,
   Portfolio,
-  Post,
   SignIn,
   SignUp,
 } from "../Pages/PagesIndex.js";
-import { DashBoardPrivateRoute, PostPrivateRoute } from './RoutesIndex.js'
+import { DashBoardPrivateRoute, PostPrivateRoute } from './RoutesIndex.js';
+import { Post, UpdatePost } from '../Pages/Dashboard/Posts/PostIndex.js'
 
 export const WebRoutes = () => {
   return (
@@ -37,8 +37,12 @@ export const WebRoutes = () => {
           </Route>
           <Route element={<PostPrivateRoute />} >
             <Route
-              path='/post'
+              path='/post/:slug'
               element={<Post />}
+            />
+            <Route
+              path='/update-post/:slug'
+              element={<UpdatePost />}
             />
           </Route>
           <Route

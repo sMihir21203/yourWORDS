@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { AiOutlineSearch, AiOutlineSelect } from "react-icons/ai";
+import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun, FaListUl } from "react-icons/fa";
 import { Button, Logo, Menu, SignOutBtn } from "../CompsIndex.js"
 import { useDispatch, useSelector } from "react-redux"
@@ -29,7 +29,7 @@ const Header = () => {
 
   return (
     <>
-      <div className='navbar fixed top-0 left-0 right-0 z-10 bg-base-100 shadow-md p-4 items-center'>
+      <div className='navbar fixed top-0 left-0 right-0 z-10 bg-base-100 shadow-md p-2 items-center'>
         {/* logo */}
         <div className='flex-1 '>
           <Logo className="md:ml-12 " />
@@ -37,7 +37,7 @@ const Header = () => {
 
         {/* searchBar */}
         <div className='mr-14 hidden lg:inline'>
-          <form className='max-w-fit flex items-center input input-secondary rounded-2xl p-2 m-0 h-12 bg-base-200 '>
+          <form className='max-w-fit flex items-center input input-secondary rounded-2xl h-12 bg-base-200 '>
             <input
               placeholder='FIND your READ...'
               className='border-0 outline-0 text-md  w-70 '
@@ -64,7 +64,7 @@ const Header = () => {
             signInBtn &
             SM:dropDownMenu 
         */}
-        <div className='flex gap-1.5 mr-4 md:mt-1.5 md:mr-12 '>
+        <div className='flex gap-2 mr-4 mt-1.5 md:mr-12 '>
           {/* SM:searchBtn */}
           <div className='lg:hidden'>
             <Button icon={AiOutlineSearch} iconSize={25} onClick={Radhe} />
@@ -82,7 +82,7 @@ const Header = () => {
 
             <div 
             className="dropdown dropdown-bottom dropdown-end ">
-                <div tabIndex={0} role="button" className="btn btn-circle avatar h-12 w-12 -mt-2 border-none shadow hover:shadow-md shadow-base-content">
+                <div tabIndex={0} role="button" className="btn btn-circle avatar -mt-2 h-12 w-12  border-none shadow hover:shadow-md shadow-base-content">
                   <div className="rounded-full">
                     <img
                       src={avatar} alt="avatar"

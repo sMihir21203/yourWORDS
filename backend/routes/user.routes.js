@@ -8,7 +8,8 @@ import {
   updateUserAvatar,
   updateUserDetails,
   updateUserPassword,
-  getUserAllPosts,
+  getUserPosts,
+  getUsers,
 } from "../controllers/user.controller.js";
 import { upload, veryfyJWT } from "../middlewares/index.middlewares.js";
 
@@ -24,4 +25,5 @@ userRouter
   .route("/update-avatar")
   .post(veryfyJWT, upload.single("avatar"), updateUserAvatar);
 userRouter.route("/update-details").post(veryfyJWT, updateUserDetails);
-userRouter.route("/:userId/posts").get(veryfyJWT,getUserAllPosts);
+userRouter.route("/:userId/posts").get(veryfyJWT, getUserPosts);
+userRouter.route("/:userId/users").get(veryfyJWT, getUsers);

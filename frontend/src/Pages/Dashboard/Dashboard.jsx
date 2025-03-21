@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Sidebar, Profile, Users } from './DashIndex.js'
+import { Profile, Users } from './DashIndex.js'
 import { MyPosts, CreatePost } from "./Posts/PostIndex.js"
 import { useSelector } from 'react-redux'
+import { Container, Sidebar } from '../../Components/CompsIndex.js'
 
 const Dashboard = () => {
   const admin = useSelector(state => state.user.currentUser.data.admin)
@@ -13,28 +14,28 @@ const Dashboard = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search)
     const tabFromUrl = urlParams.get('tab')
-    // console.log(tabFromUrl)
-    if (tabFromUrl) {
 
+    if (tabFromUrl) {
       if (tabFromUrl === "users" && !admin) {
         navigate("/dashboard?tab=profile", { replace: true })
       }
       else {
         setTab(tabFromUrl);
       }
-
     }
   }, [location.search, admin, navigate])
 
 
   return (
-    <div className='md:flex  md:flex-row'>
+    <>
       <Sidebar />
-      {tab === 'profile' && <Profile />}
-      {tab === 'my-posts' && <MyPosts />}
-      {tab === 'create-post' && <CreatePost />}
-      {tab === 'users' && admin && <Users />}
-    </div>
+      <Container>
+          {tab === 'profile' && <Profile />}
+          {tab === 'my-posts' && <MyPosts />}
+          {tab === 'create-post' && <CreatePost />}
+          {tab === 'users' && admin && <Users />}
+      </Container>
+    </>
   )
 }
 
