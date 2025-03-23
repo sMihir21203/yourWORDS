@@ -155,7 +155,6 @@ const deletePost = asyncHandler(async (req, res, next) => {
     const isAdmin = req.user?.isAdmin;
     const reqUserId = req.params?.userId;
     const postId = req.params?.postId;
-    // console.log(userId, isAdmin, postId, reqUserId);
 
     const isAuthor = userId.toString() === reqUserId.toString();
     if (!isAdmin && !isAuthor) {

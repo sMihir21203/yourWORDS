@@ -191,8 +191,13 @@ const Profile = () => {
 
         {showChangePass && <ChangePassword setShowChangePass={setShowChangePass} />}
         <div className="flex gap-x-32 md:gap-x-48  mt-4">
-          <DeleteAccount />
-          <p className="cursor-pointer  font-bold hover:scale-110 hover:bg-gradient-to-b from-[#ff007f] via-sky-300 to-[#003cff] hover:text-transparent bg-clip-text" onClick={() => setShowChangePass(!showChangePass)}>
+          <DeleteAccount
+            userId={currentUser._id}
+            showInput={true}
+            text='Delete Account'
+            className='hover:text-error'
+          />
+          <p className="cursor-pointer link-hover font-bold hover:text-secondary" onClick={() => setShowChangePass(!showChangePass)}>
             {showChangePass ? "Update Details" : "Change Password"}
           </p>
         </div>

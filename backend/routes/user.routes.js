@@ -19,11 +19,11 @@ userRouter.route("/sign-up").post(signUpUser);
 userRouter.route("/sign-in").post(signInUser);
 userRouter.route("/google-auth").post(googleAuth);
 userRouter.route("/sign-out").get(veryfyJWT, signOutUser);
-userRouter.route("/delete-user").post(veryfyJWT, deleteUser);
+userRouter.route("/:userId/delete-user").post(veryfyJWT, deleteUser);
 userRouter.route("/update-password").post(veryfyJWT, updateUserPassword);
 userRouter
   .route("/update-avatar")
   .post(veryfyJWT, upload.single("avatar"), updateUserAvatar);
 userRouter.route("/update-details").post(veryfyJWT, updateUserDetails);
 userRouter.route("/:userId/posts").get(veryfyJWT, getUserPosts);
-userRouter.route("/:userId/users").get(veryfyJWT, getUsers);
+userRouter.route("/get-users").get(veryfyJWT, getUsers);

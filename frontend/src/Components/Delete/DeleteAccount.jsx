@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input } from '../CompsIndex.js';
 import { API } from '../../API/API.js';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteAccountSuccess } from '../../Store/User/userSlice.js';
 
-const DeleteAccount = () => {
+const DeleteAccount = ({
+    text = "Delete",
+    className = "",
+    showInput = false,
+    userId = {}
+}) => {
+    const loggedInUser = useSelector(state => state.user?.currentUser?.data?.loggedInUser);
+    const isAdmin = loggedInUser?.isAdmin;
+    const selfDelete = loggedInUser?._id === userId;
+
     const [formData, setFormData] = useState({ password: "" });
     const [errorMsg, setErrorMsg] = useState(null);
+    const [refreshPage, setRefreshPage] = useState(false);
     const dispatch = useDispatch();
 
-    const clearError = () => {
-        setTimeout(() => setErrorMsg(null), 2000);
-    };
-
     useEffect(() => {
-        if (errorMsg) clearError();
-    }, [errorMsg]);
+        if (refreshPage) {
+            window.location.reload();
+        }
+    }, [refreshPage]);
 
     const handleOnChange = (e) => {
         setFormData({ password: e.target.value.trim() });
@@ -23,17 +31,16 @@ const DeleteAccount = () => {
 
     const handleOnSubmit = async (e) => {
         e.preventDefault();
-
-        if (!formData.password) {
-            setErrorMsg("Password is required!");
-            return;
-        }
-
         try {
-            const deletedAccount = await API.post("/user/delete-user", formData);
-            if (deletedAccount) {
-                dispatch(deleteAccountSuccess());
-                window.location.href = "/sign_up";
+            const deleteRes = await API.post(`/user/${userId}/delete-user`, formData);
+            if (deleteRes.status === 200) {
+                handleClose();
+                if (selfDelete) {
+                    dispatch(deleteAccountSuccess());
+                    window.location.href = "/sign_up";
+                } else {
+                    setRefreshPage(true);
+                }
             }
         } catch (error) {
             setErrorMsg(error?.response?.data?.message || "Delete User Issue");
@@ -41,62 +48,58 @@ const DeleteAccount = () => {
     };
 
     const handleClose = () => {
-        setErrorMsg(null); // Clear error when closing modal
-        setFormData({ password: "" }); // Reset form data
-        document.getElementById("deleteAccount").close(); // Close the modal
+        setErrorMsg(null);
+        setFormData({ password: "" });
+        document.getElementById("deleteAccount").close();
     };
 
     return (
-        <div>
+        <>
             <p
                 onClick={() => document.getElementById('deleteAccount').showModal()}
-                className='cursor-pointer hover:text-red-600 font-bold hover:scale-110'
+                className={`cursor-pointer link-hover font-bold ${className}`}
             >
-                Delete Account
+                {text}
             </p>
 
             <dialog id="deleteAccount" className="modal text-center">
-                <div className="modal-box rounded-xl">
-                    <p className="py-4 font-bold">Are You Sure?<br />You Want to Delete This Account?</p>
-                    <p className='mb-1'>Enter Your Password to Confirm Delete your account.</p>
-
-                    <form onSubmit={handleOnSubmit} className='flex flex-col items-center space-y-2'>
-                        {errorMsg && (
-                            <div
-                                role="alert"
-                                className="alert alert-error alert-soft flex justify-center text-center"
-                            >
-                                {`👀 ${errorMsg}`}
-                            </div>
-                        )}
-                        <Input
-                            placeholder='Your Password'
-                            type='password'
-                            onChange={handleOnChange}
-                            value={formData.password} // ✅ Controlled input
-                            id='password'
-                        />
-                        <button
-                            type="submit"
-                            text=""
-                            className="btn btn-dash btn-error h-8 w-28 text-nowrap rounded-lg"
-                        >
-                            Confirm Delete
-                        </button>
-                    </form>
-                    <div className="modal-action">
+                <form onSubmit={handleOnSubmit} className='modal-box rounded-xl w-sm md:w-md flex flex-col items-center space-y-2'>
+                    {errorMsg && (
+                        <div role="alert" className="alert alert-error alert-soft flex justify-center text-center">
+                            {`👀 ${errorMsg}`}
+                        </div>
+                    )}
+                    <p className="font-bold">Are You Sure?<br />You Want to Delete This Account?</p>
+                    {(!isAdmin || showInput) && (
+                        <div className='w-full py-2'>
+                            Enter Password To Delete Account!
+                            <Input
+                                required
+                                placeholder='Your Password'
+                                type='password'
+                                onChange={handleOnChange}
+                                value={formData.password}
+                                id='password'
+                            />
+                        </div>
+                    )}
+                    <div className='flex gap-2'>
                         <Button
+                            text="Delete"
+                            type="submit"
+                            className="text-[1rem] w-20 text-error shadow-error"
+                        />
+                        <Button
+                            type="button"
                             text="Cancel"
                             onClick={handleClose}
-                            className="w-20"
+                            className="text-[1rem] w-20 text-success shadow-success"
                         />
-
-
                     </div>
-                </div>
+                </form>
             </dialog>
-        </div>
+        </>
     );
-}
+};
 
-export default DeleteAccount
+export default DeleteAccount;

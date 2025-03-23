@@ -18,16 +18,16 @@ const MyPosts = () => {
   const getUserPosts = async () => {
     setLoading(true);
     try {
-      const res = await API.get(`/user/${userId}/posts`);
+      const { data } = await API.get(`/user/${userId}/posts`);
       // console.log("API Response: ", res.data.data);
 
-      const posts = res.data.data?.userPosts || [];
+      const posts = data.data?.userPosts || [];
       setUserPosts(posts);
       setFirstFetchDone(true);
       setShowMore(posts.length >= 9);
     } catch (error) {
       console.log(error.response?.data?.message || "No posts found.");
-      setFirstFetchDone(true);  // ✅ Ensure message shows when no posts
+      setFirstFetchDone(true);
     } finally {
       setLoading(false);
     }
@@ -37,10 +37,8 @@ const MyPosts = () => {
     const setStartIndex = userPosts.length;
     setLoading(true);
     try {
-      const res = await API.get(`/user/${userId}/posts?setStartIndex=${setStartIndex}`);
-      console.log("More User Posts: ", res.data.data);
-
-      const morePosts = res.data.data?.userPosts || [];
+      const { data } = await API.get(`/user/${userId}/posts?setStartIndex=${setStartIndex}`);
+      const morePosts = data.data?.userPosts || [];
       setUserPosts((prev) => [...prev, ...morePosts]);
       setShowMore(morePosts.length >= 9);
     } catch (error) {
@@ -66,14 +64,14 @@ const MyPosts = () => {
                     <th>Post</th>
                     <th>Image</th>
                     <th>Category</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th className="text-success">Edit</th>
+                    <th className="text-error">Delete</th>
                   </tr>
                 </thead>
                 <tbody className="font-semibold">
-                  {userPosts.map((post, index) => (
+                  {userPosts.map((post, i) => (
                     <tr key={post._id}>
-                      <td>{index + 1}</td>
+                      <td>{i + 1}</td>
                       <td>{new Date(post.createdAt).toLocaleDateString()}</td>
                       <td>
                         <Link to={`/post/${post.slug}`} className="link-hover">
@@ -100,7 +98,7 @@ const MyPosts = () => {
               </table>
             </div>
 
-            {/* ✅ Show More Button (Only when needed) */}
+            {/*showMore postss*/}
             {showMore && (
               <Button
                 onClick={handleShowMore}

@@ -35,15 +35,11 @@ const ChangePassword = () => {
         e.preventDefault();
 
         try {
-            if (!formData.currentPassword) {
-                return dispatch(updateFailure("Current password is required!"));
-            }
+
             if (formData.currentPassword.length < 6) {
                 return dispatch(updateFailure("Current password should be 6 characters!"));
             }
-            if (!formData.newPassword) {
-                return dispatch(updateFailure("New Password is required"));
-            }
+
             if (formData.newPassword.length < 6) {
                 return dispatch(updateFailure("New password should be 6 characters!"));
             }
@@ -72,6 +68,7 @@ const ChangePassword = () => {
             className='space-y-2 w-sm md:w-md flex flex-col items-center'>
 
             <Input
+                required
                 icon={FaKey}
                 type="password"
                 placeholder="Current Password"
@@ -80,6 +77,7 @@ const ChangePassword = () => {
                 value={formData.currentPassword}
             />
             <Input
+                required
                 icon={FaKey}
                 type="password"
                 placeholder="New Password"

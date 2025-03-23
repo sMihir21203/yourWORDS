@@ -243,51 +243,68 @@ const signOutUser = asyncHandler(async (req, res) => {
 });
 
 const deleteUser = asyncHandler(async (req, res, next) => {
-  //password -> req.body
-  //userId -> req.user._id
-  //getUser
-  //check Password Validation
-  //getUserAllPosts and userAvatar
-  //deleteThem
-  //now delete the user
-  //return res
   const { password } = req.body;
+  const reqUserId = req.params?.userId;
   const userId = req.user?._id;
   const isAdmin = req.user?.isAdmin;
+  const isSelfDelete = reqUserId === userId.toString();
 
   try {
-    const user = await User.findById(userId).select("avatar password");
-    if (!user) {
-      return next(new ApiError(404, "User Not Found"));
+    // getUser
+    const user = await User.findById(reqUserId).select("avatar password");
+    if (!user) return next(new ApiError(404, "User Not Found"));
+
+    // check isAdmin or not
+    if (!isAdmin && !isSelfDelete) {
+      return next(
+        new ApiError(403, "Unauthorized: You can only delete your own account!")
+      );
     }
 
-    if (!isAdmin) {
-      if (!password) {
+    // check if isSelfDeletion
+    if (isSelfDelete) {
+      if (!password)
         return next(
-          new ApiError(400, "Password is required to delete the account")
+          new ApiError(
+            400,
+            "Password is required to delete your own admin account"
+          )
         );
-      }
       const isPasswordValid = await user.isPasswordTrue(password);
-      if (!isPasswordValid) {
-        return next(new ApiError(401, "Invalid password"));
-      }
+      if (!isPasswordValid) return next(new ApiError(401, "Invalid password"));
     }
 
-    const userPosts = await Post.find({ user: userId }).select("postImg");
-    const postImgUrls = userPosts.map((post) => post.postImg);
-    if (postImgUrls.length) {
-      await Promise.all(postImgUrls.map(deleteFromCloudinary));
+    // getUsersPosts
+    const userPosts = await Post.find({ userId: reqUserId }).select(
+      "_id postImg"
+    );
+
+    console.log(userPosts);
+    if (!userPosts.length) {
+      console.log("no posts found", userPosts);
     }
+    // delete postImgs and userPosts
+    if (userPosts.length > 0) {
+      const postImgUrls = userPosts.map((post) => post.postImg);
+      await Promise.all(postImgUrls.map(deleteFromCloudinary));
+      await Post.deleteMany({ userId: reqUserId });
+    }
+
+    // Delete userAvatar
     if (user.avatar) {
       await deleteFromCloudinary(user.avatar);
     }
 
-    await Post.deleteMany({ user: userId });
-    await User.findByIdAndDelete(userId);
+    // finally deleteUser
+    await User.findByIdAndDelete(reqUserId);
 
-    return res.status(200).json(new ApiResponse(200, {}, "User Deleted"));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, {}, "User and all posts deleted successfully")
+      );
   } catch (error) {
-    // console.error("Delete User Error:", error.message);
+    console.error("Delete User Error:", error.message);
     return next(
       new ApiError(500, "Something went wrong while deleting the account!")
     );
@@ -379,11 +396,6 @@ const updateUserDetails = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const user = await User.findById(userId);
-  if (!user) {
-    return next(new ApiError(404, "User not found!"));
-  }
-
   // Check if the new username or email already exists in the database
   if (username || email) {
     const existedInfo = await User.findOne({
@@ -452,18 +464,21 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
   if (postId) matchCondition._id = postId;
   if (slug) matchCondition.slug = slug;
   if (category) matchCondition.postCategory = category;
-  if (searchQuery)
-    matchCondition.postContent = { $regex: searchQuery, $options: "i" };
+  if (searchQuery) {
+    matchCondition.$or = [
+      { postTitle: { $regex: searchQuery, $options: "i" } },
+      { postContent: { $regex: searchQuery, $options: "i" } },
+      { postCategory: { $regex: searchQuery, $options: "i" } },
+    ];
+  }
 
   try {
-    const userAllPosts = await Post.aggregate([
-      {
-        $match: matchCondition, // Filters based on query params
-      },
+    const posts = await Post.aggregate([
+      { $match: matchCondition },
+      { $sort: { createdAt: -1 } },
       {
         $facet: {
-          userAllPostsData: [
-            { $sort: { createdAt: -1 } },
+          postsData: [
             { $skip: setStartIndex },
             { $limit: 9 },
             {
@@ -479,34 +494,21 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
               },
             },
           ],
-          counts: [
-            {
-              $group: {
-                _id: null,
-                totalPosts: { $sum: 1 },
-                lastWeekTotalPosts: {
-                  $sum: {
-                    $cond: {
-                      if: { $gte: ["$createdAt", lastWeek] },
-                      then: 1,
-                      else: 0,
-                    },
-                  },
-                },
-              },
-            },
+          totalCount: [{ $count: "totalPosts" }],
+          lastWeekCount: [
+            { $match: { createdAt: { $gte: lastWeek } } },
+            { $count: "lastWeekPosts" },
           ],
         },
       },
     ]);
 
-    const userPosts = userAllPosts?.[0]?.userAllPostsData || [];
+    const userPosts = posts?.[0]?.postsData || [];
     if (!userPosts.length) {
       return next(new ApiError(404, "No Posts Found!"));
     }
-    const totalPosts = userAllPosts?.[0]?.counts?.[0]?.totalPosts || 0;
-    const lastWeekTotalPosts =
-      userAllPosts?.[0]?.counts?.[0]?.lastWeekTotalPosts || 0;
+    const totalPosts = posts?.[0]?.totalCount?.[0]?.totalPosts || 0;
+    const lastWeekPosts = posts?.[0]?.lastWeekCount?.[0]?.lastWeekPosts || 0;
 
     return res.status(200).json(
       new ApiResponse(
@@ -514,7 +516,7 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
         {
           userPosts,
           totalPosts,
-          lastWeekTotalPosts,
+          lastWeekPosts,
         },
         "User Posts Fetched Successfully"
       )
@@ -528,6 +530,10 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
 
 const getUsers = asyncHandler(async (req, res, next) => {
   const isAdmin = req.user?.isAdmin;
+  const setStartIndex = parseInt(req.query?.setStartIndex) || 0;
+  const lastWeek = new Date();
+  lastWeek.setDate(lastWeek.getDate() - 7);
+
   if (!isAdmin) {
     return next(
       new ApiError(403, "You Are Not Allowed to Access! Admins only.")
@@ -535,13 +541,50 @@ const getUsers = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const users = await User.find({}).select("-password");
+    const allUsers = await User.aggregate([
+      {
+        $facet: {
+          usersData: [
+            { $sort: { createdAt: -1 } },
+            { $skip: setStartIndex },
+            { $limit: 9 },
+            {
+              $project: {
+                _id: 1,
+                createdAt: 1,
+                username: 1,
+                email: 1,
+                avatar: 1,
+                isAdmin: 1,
+              },
+            },
+          ],
+          totalCount: [{ $count: "totalUsers" }],
+          lastWeekCount: [
+            { $match: { createdAt: { $gte: lastWeek } } },
+            { $count: "lastWeekUsers" },
+          ],
+        },
+      },
+    ]);
+
+    const users = allUsers?.[0]?.usersData || [];
     if (!users.length) {
       return next(new ApiError(404, "No Users Found"));
     }
-    return res
-      .status(200)
-      .json(new ApiResponse(200, users, "Users Fetched Successfully"));
+    const totalUsers = allUsers?.[0]?.totalCount?.[0]?.totalUsers || 0;
+    const lastWeekUsers = allUsers?.[0]?.lastWeekCount?.[0]?.lastWeekUsers || 0;
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          users,
+          totalUsers,
+          lastWeekUsers,
+        },
+        "Users Fetched Successfully"
+      )
+    );
   } catch (error) {
     return next(new ApiError(500, "Failed To Fetch Users!"));
   }
