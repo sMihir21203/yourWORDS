@@ -6,7 +6,7 @@ import { FaInstagram, FaLinkedinIn, FaYoutube } from 'react-icons/fa'
 const Footer = () => {
   return (
 
-    <footer className="footer z-10 footer-horizontal p-6 border-[0.5px] border-transparent  border-t-current  items-center">
+    <footer className="footer footer-horizontal p-6 items-center border-t-1">
 
       <div className="grid-flow-col items-center lg:pl-8">
         <p>Copyright © {new Date().getFullYear()} - All right reserved by <span className='font-bold' >YourWORDS</span> Ltd</p>

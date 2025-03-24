@@ -52,7 +52,7 @@ const SignUp = () => {
       const data = res.data;
 
       dispatch(signInSuccess(data))
-      navigate('/sign_in')
+      navigate('/sign-in')
       alert("SignUp Successfully")
     } catch (error) {
       dispatch(signInFailure(error.response?.data?.message || "oops something went wrong while signUp please try again!"))
@@ -133,7 +133,7 @@ const SignUp = () => {
                 <p className='pl-1 mt-2'>
                   Already a User?
                   <Link
-                    to="/sign_in"
+                    to="/sign-in"
                     className='ml-1 text-blue-600 link-hover font-semibold'
                   >Sign In
                   </Link>

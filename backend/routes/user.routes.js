@@ -10,6 +10,7 @@ import {
   updateUserPassword,
   getUserPosts,
   getUsers,
+  getUser,
 } from "../controllers/user.controller.js";
 import { upload, veryfyJWT } from "../middlewares/index.middlewares.js";
 
@@ -27,3 +28,4 @@ userRouter
 userRouter.route("/update-details").post(veryfyJWT, updateUserDetails);
 userRouter.route("/posts").get(veryfyJWT, getUserPosts);
 userRouter.route("/get-users").get(veryfyJWT, getUsers);
+userRouter.route("/:userId").get(getUser);

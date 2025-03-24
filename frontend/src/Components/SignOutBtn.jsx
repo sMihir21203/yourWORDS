@@ -17,7 +17,7 @@ const SignOutBtn = ({
             const signOutedUser = await API.get("/user/sign-out")
             if (signOutedUser) {
                 dispatch(signOutSuccess())
-                window.location.href = "/sign_in"
+                window.location.href = "/sign-in"
             }
         } catch (error) {
             dispatch(signOutFailure(error.response.data.message || "User SignOut Issue!"))

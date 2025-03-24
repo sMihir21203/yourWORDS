@@ -15,6 +15,8 @@ import ChangePassword from "./Password/ChangePassword.jsx";
 import ForgotPassword from "./Password/ForgotPassword.jsx";
 import DeleteAccount from "./Delete/DeleteAccount.jsx";
 import DeletePost from "./Delete/DeletePost.jsx";
+import AddCommentSection from "./Comments/AddCommentSection.jsx";
+import DeleteComment from "./Delete/DeleteComment.jsx";
 
 export {
   Header,
@@ -34,4 +36,6 @@ export {
   ForgotPassword,
   DeleteAccount,
   DeletePost,
+  AddCommentSection,
+  DeleteComment,
 };

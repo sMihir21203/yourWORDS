@@ -50,11 +50,11 @@ export const WebRoutes = () => {
             element={<Portfolio />}
           />
           <Route
-            path='/sign_in'
+            path='/sign-in'
             element={<SignIn />}
           />
           <Route
-            path='/sign_up'
+            path='/sign-up'
             element={<SignUp />}
           />
           <Route

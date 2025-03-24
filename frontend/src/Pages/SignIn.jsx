@@ -140,7 +140,7 @@ const SignIn = () => {
                 <p className='pl-1 mt-2'>
                   Don't Have An Account?
                   <Link
-                    to="/sign_up"
+                    to="/sign-up"
                     className='ml-1 text-blue-600 link-hover font-semibold'
                   >
                     Sign Up

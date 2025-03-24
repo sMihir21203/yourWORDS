@@ -590,6 +590,23 @@ const getUsers = asyncHandler(async (req, res, next) => {
   }
 });
 
+const getUser = asyncHandler(async (req, res, next) => {
+  const userId = req?.params?.userId;
+
+  try {
+    if (!userId) return next(new ApiError(400, "userId is missing"));
+
+    const user = await User.findById(userId).select("username avatar");
+    if (!user) return next(new ApiError(404, "user not found"));
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, user, "fetched user successfully!"));
+  } catch (error) {
+    console.log(error);
+    return next(new ApiError(500, "failed to getUser! backend issue!"));
+  }
+});
 export {
   signUpUser,
   signInUser,
@@ -602,4 +619,5 @@ export {
   updateUserDetails,
   getUserPosts,
   getUsers,
+  getUser,
 };

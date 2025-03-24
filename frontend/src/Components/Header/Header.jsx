@@ -99,7 +99,7 @@ const Header = () => {
                 <SignOutBtn/>
               </ul>
             </div>) : (
-            <Link to='/sign_in' >
+            <Link to='/sign-in' >
               <Button
                 text="Sign In"
                 style="gradient"

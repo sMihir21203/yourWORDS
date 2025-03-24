@@ -1,13 +1,11 @@
 import "./PostPage.css"
 import React, { useEffect, useState } from 'react'
-import { Container } from "../../../Components/CompsIndex"
+import { AddCommentSection, Container } from "../../../Components/CompsIndex"
 import { useParams, Link } from 'react-router-dom'
 import { API } from '../../../API/API'
-import { useSelector } from 'react-redux'
-import MoreUserPosts from "./MoreUserPosts"
+import { MoreUserPosts } from "./PostIndex.js"
 
 const PostPage = () => {
-  const userId = useSelector(state => state.user.currentUser.data.loggedInUser._id)
   const { slug } = useParams()
   const [postInfo, setPostInfo] = useState([])
   const [loading, setLoading] = useState(false)
@@ -44,7 +42,7 @@ const PostPage = () => {
           className='rounded-md shadow-sm shadow-base-content'
         />
         <p
-          className='border-b-1 px-1 flex justify-between font-semibold text-xs md:text-sm'
+          className='border-b-1 flex justify-between font-semibold text-xs md:text-sm'
         >
           <span>{new Date(postInfo.createdAt).toLocaleDateString()}</span>
           <Link
@@ -58,8 +56,10 @@ const PostPage = () => {
           className='postContent text-start md:text-lg'
           dangerouslySetInnerHTML={{ __html: postInfo.postContent }}
         />
-
         <MoreUserPosts />
+        <AddCommentSection
+          postId={postInfo._id}
+        />
       </div>
     </Container>
   )
