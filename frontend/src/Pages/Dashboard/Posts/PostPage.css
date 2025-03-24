@@ -1,0 +1,14 @@
+.postContent h2,
+h3 {
+  font-size: 1.5rem;
+  font-family:sans-serif;
+  margin: 0.2rem 0;
+}
+
+.postContent a {
+  color: blue;
+}
+
+.postContent a:hover {
+  text-decoration: underline;
+}

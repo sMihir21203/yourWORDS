@@ -18,7 +18,7 @@ const MyPosts = () => {
   const getUserPosts = async () => {
     setLoading(true);
     try {
-      const { data } = await API.get(`/user/${userId}/posts`);
+      const { data } = await API.get(`/user/posts?userId=${userId}`);
       // console.log("API Response: ", res.data.data);
 
       const posts = data.data?.userPosts || [];
@@ -37,7 +37,7 @@ const MyPosts = () => {
     const setStartIndex = userPosts.length;
     setLoading(true);
     try {
-      const { data } = await API.get(`/user/${userId}/posts?setStartIndex=${setStartIndex}`);
+      const { data } = await API.get(`/user/posts?userId=${userId}?setStartIndex=${setStartIndex}`);
       const morePosts = data.data?.userPosts || [];
       setUserPosts((prev) => [...prev, ...morePosts]);
       setShowMore(morePosts.length >= 9);
@@ -54,7 +54,7 @@ const MyPosts = () => {
 
       {
         userPosts.length > 0 && (
-          <div className="w-sm md:w-2xl lg:w-7xl h-auto">
+          <div className="mt-12 md:mt-0 w-full h-auto">
             <div className="overflow-x-auto overflow-y-auto border-none shadow-md shadow-base-content rounded-sm">
               <table className="table text-nowrap">
                 <thead className="bg-base-300 text-lg text-base-content">

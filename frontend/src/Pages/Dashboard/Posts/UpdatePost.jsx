@@ -32,7 +32,7 @@ const UpdatePost = () => {
 
     const getPost = async () => {
       try {
-        const res = await API.get(`/user/${userId}/posts?slug=${slug}`);
+        const res = await API.get(`/user/posts?slug=${slug}`);
         if (res?.data?.data?.userPosts?.length > 0) {
           const post = res.data.data.userPosts[0];
           // console.log("Fetched post:", post);
@@ -58,7 +58,7 @@ const UpdatePost = () => {
     };
 
     getPost();
-  }, [userId, slug]);
+  }, [slug]);
 
   const handleOnChangeUpdatePostData = (e, editorContent = null) => {
     if (editorContent !== null) {
@@ -99,33 +99,33 @@ const UpdatePost = () => {
 
   const handleOnSubmitUpdatePostData = async (e) => {
     e.preventDefault();
-  
+
     if (!updatePostData.postContent || updatePostData.postContent.trim() === "") {
       setPostErrMsg("Write Something About Your Post!");
       return;
     }
-  
+
     try {
       setLoading(true);
-  
+
       const formData = new FormData();
       formData.append("postTitle", updatePostData.postTitle);
       formData.append("postCategory", updatePostData.postCategory);
       formData.append("postContent", updatePostData.postContent);
-  
+
       if (updatePostData.postImg instanceof File) {
         formData.append("postImg", updatePostData.postImg);
       } else if (updatePostData.postImg) {
         // ✅ Send the old image name so backend knows to keep it
         formData.append("postImg", updatePostData.postImg);
       }
-  
+
       const res = await API.post(`/post/${userId}/${slug}/update-post`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-  
+
       console.log(res);
       const updatedPost = res.data?.data;
       const message = res.data?.message;
@@ -136,7 +136,7 @@ const UpdatePost = () => {
       setLoading(false);
     }
   };
-  
+
   return (
     <Container>
       <form onSubmit={handleOnSubmitUpdatePostData} className="w-sm md:w-lg lg:w-full space-y-2">
@@ -160,7 +160,7 @@ const UpdatePost = () => {
               required
               value={updatePostData.postTitle}
               type="text"
-              placeholder="Post Title"
+              placeholder={updatePostData.postTitle}
               className="input w-full border-2 rounded-lg"
             />
             <select

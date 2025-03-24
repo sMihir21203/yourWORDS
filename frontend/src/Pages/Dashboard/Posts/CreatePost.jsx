@@ -92,7 +92,7 @@ const CreatePost = () => {
       const successMsg = res.data.message
       const slug = res.data.data.newPost.slug
 
-      navigate(`/my-posts/${slug}`)
+      navigate(`/post/${slug}`)
 
       setTimeout(() => {
         alert(successMsg)

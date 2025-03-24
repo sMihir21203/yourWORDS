@@ -45,7 +45,8 @@ const Users = () => {
     <>
       {loading && <Loader />}
       {users.length > 0 ? (
-        <div className="w-full md:w-2xl lg:w-7xl h-auto">
+
+        <div className="mt-12 md:mt-0 w-full h-auto">
           <div className="overflow-x-auto overflow-y-auto border-none shadow-md shadow-base-content rounded-sm">
             <table className="table text-nowrap">
               <thead className="bg-base-300 text-lg text-base-content">
