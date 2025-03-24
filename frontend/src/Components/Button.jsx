@@ -14,7 +14,7 @@ const Button = ({
 
         imp: "min-w-full h-10 text-xl hover:pb-1",
 
-        gradient: "w-18 md:w-24 h-10 md:pb-1 -mt-1 text-nowrap text-[1.1rem] md:text-xl text-white bg-gradient-to-br from-[#ff007f] via-sky-300 to-[#003cff]"
+        gradient: "w-fit px-2 text-xl text-white pb-1 bg-gradient-to-br hover:bg-gradient-to-r from-[#ff007f] via-sky-300 to-[#003cff] hover:text-transparent hover:bg-clip-text"
     }
 
     return <button className={` btn px-0 font-bold  border-none bg-base-100 rounded-lg  shadow hover:shadow-md shadow-base-content ${styles[style]} ${className}`} {...props}>

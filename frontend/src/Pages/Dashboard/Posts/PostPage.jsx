@@ -4,6 +4,7 @@ import { Container } from "../../../Components/CompsIndex"
 import { useParams, Link } from 'react-router-dom'
 import { API } from '../../../API/API'
 import { useSelector } from 'react-redux'
+import MoreUserPosts from "./MoreUserPosts"
 
 const PostPage = () => {
   const userId = useSelector(state => state.user.currentUser.data.loggedInUser._id)
@@ -57,6 +58,8 @@ const PostPage = () => {
           className='postContent text-start md:text-lg'
           dangerouslySetInnerHTML={{ __html: postInfo.postContent }}
         />
+
+        <MoreUserPosts />
       </div>
     </Container>
   )

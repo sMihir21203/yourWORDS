@@ -103,6 +103,7 @@ const Header = () => {
               <Button
                 text="Sign In"
                 style="gradient"
+                className="h-10 md:pb-1 -mt-1 md:px-4"
                 onClick={Radhe}
               />
             </Link>)
