@@ -92,4 +92,50 @@ const getPostComments = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { addComment, getPostComments };
+const likeComment = asyncHandler(async (req, res, next) => {
+  const commentId = req.params?.commentId;
+  const userId = req.user?._id;
+
+  if (!userId || !commentId) {
+    return next(new ApiError(400, "U need to signIn to likeComment"));
+  }
+
+  try {
+    const comment = await Comment.findOneAndUpdate(
+      { _id: commentId },
+      [
+        {
+          $set: {
+            likes: {
+              $cond: {
+                if: { $in: [userId, "$likes"] },
+                then: { $setDifference: ["$likes", [userId]] },
+                else: { $concatArrays: ["$likes", [userId]] },
+              },
+            },
+            totalLikes: {
+              $cond: {
+                if: { $in: [userId, "$likes"] },
+                then: { $subtract: ["$totalLikes", 1] },
+                else: { $add: ["$totalLikes", 1] },
+              },
+            },
+          },
+        },
+      ],
+      { new: true }
+    );
+
+    if (!comment) {
+      return next(new ApiError(500, "failed to like comment,Backend"));
+    }
+
+    const message = comment.likes.includes(userId) ? "Liked" : "Unliked";
+    res.status(200).json(new ApiResponse(200, comment, message));
+  } catch (error) {
+    console.log(error);
+    return next(new ApiError(500, "failed to likeComment! backend issue!"));
+  }
+});
+
+export { addComment, getPostComments, likeComment };

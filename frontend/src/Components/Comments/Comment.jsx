@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { API } from '../../API/API'
 import moment from "moment"
+import { FaThumbsUp } from "react-icons/fa"
 
-const Comment = ({ comment }) => {
+const Comment = ({ currentUser, comment, like }) => {
   const [user, setUser] = useState({})
 
   useEffect(() => {
@@ -21,23 +22,45 @@ const Comment = ({ comment }) => {
   }, [comment])
 
   return (
-    <div className='flex p-4 border-b-3 border-base-300'>
-      <div className='flex shrink-0 mr-2'>
-        <img
-          src={user.avatar}
-          alt={user.username}
-          className='w-10 h-10 rounded-full shadow-xs shadow-base-content'
-        />
-      </div>
-      <div className='flex-1 text-start'>
-        <div className='flex items-center mb-1  text-xs'>
-          <span className='font-bold truncate mr-2'>@{user.username} </span>
-          <span >{moment(comment.createdAt).fromNow()}</span>
+    <li className='list-row items-center'>
+      <div className='flex flex-col items-start'>
+        <div className='flex items-center'>
+          <img
+            src={user.avatar}
+            alt={user.username}
+            className='w-10 h-10 rounded-full shadow-xs shadow-base-content mr-2'
+          />
+          <div className='text-start'>
+            <div className='flex items-center my-1  text-xs'>
+              <span className='font-bold truncate mr-2'>@{user.username} </span>
+              <span >{moment(comment.createdAt).fromNow()}</span>
+            </div>
+            <p className='pb-2'>
+              {comment.comment}
+            </p>
+          </div>
         </div>
-        <p className='pb-2'>
-          {comment.comment}</p>
+        <div className='ml-12 mt-2 flex items-center'>
+          <div className='flex items-center'>
+            <FaThumbsUp
+              onClick={() => like(comment._id)}
+              size={18}
+              className={`cursor-pointer text-slate-400 hover:text-[#003cff] hover:scale-105 mr-2 ${currentUser && comment.likes.includes(currentUser._id) && "!text-[#003cff]"}`}
+            />
+            <p>
+              {
+                comment.totalLikes > 0 &&
+                comment.totalLikes + " " + (
+                  comment.totalLikes === 1
+                    ? "like"
+                    : "likes"
+                )
+              }
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    </li>
   )
 }
 

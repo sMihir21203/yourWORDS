@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import Button from '../Button'
+import { Button, Loader } from "../CompsIndex.js"
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { API } from '../../API/API.js'
-import Loader from '../Loader.jsx'
 import Comment from './Comment.jsx'
+
 
 const AddCommentSection = ({
     postId,
@@ -16,6 +16,7 @@ const AddCommentSection = ({
     const [loading, setLoading] = useState(false)
     const maxChar = 200;
     const [postComments, setPostComments] = useState([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (!postId) return;
@@ -48,6 +49,26 @@ const AddCommentSection = ({
             console.error(error.response?.data?.message || "Failed to add Comment! try again!")
         } finally {
             setLoading(false)
+        }
+    }
+
+    const handleLikeComment = async (commentId) => {
+        if (!currentUser) return navigate('/sign-in');
+        try {
+            const { data } = await API.put(`/comment/${commentId}/like`)
+            if (data) {
+                const updatedCom = data?.data
+                setPostComments(prevCom => prevCom.map(com =>
+                    com._id === commentId
+                        ? {
+                            ...com,
+                            likes: updatedCom.likes,
+                            totalLikes: updatedCom.totalLikes
+                        } : com
+                ));
+            }
+        } catch (error) {
+            console.error(error.response?.data?.message || "failed to likeComment")
         }
     }
     return (
@@ -120,17 +141,21 @@ const AddCommentSection = ({
                     <p className='mt-4 text-xl font-semibold'>No Comments!</p>
                 ) : (
                     <>
-                        <div className='flex items-center mt-4 gap-1'>
+                        <div className='flex items-center mt-4 mb-2 gap-1'>
                             <p className='mb-0.5'>Comments: </p>
                             <p className='px-2 shadow-xs shadow-base-content'>{postComments.length}</p>
                         </div>
                         {
-                            postComments.map(com => (
-                                <Comment
-                                    key={com._id}
-                                    comment={com}
-                                />
-                            ))
+                            <ul className='list bg-base-100 rounded-box shadow-md'>
+                                {postComments.map(com => (
+                                    <Comment
+                                        key={com._id}
+                                        currentUser={currentUser}
+                                        comment={com}
+                                        like={handleLikeComment}
+                                    />
+                                ))}
+                            </ul>
                         }
                     </>
                 )
