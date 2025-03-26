@@ -138,4 +138,83 @@ const likeComment = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { addComment, getPostComments, likeComment };
+const editComment = asyncHandler(async (req, res, next) => {
+  const { editedComment } = req.body;
+  const commentId = req.params.commentId;
+  const reqUserId = req.params.userId;
+  const userId = req.user._id;
+  const isAdmin = req.user.isAdmin;
+  const author = reqUserId.toString() === userId.toString();
+
+  try {
+    if (!editedComment) {
+      return next(new ApiError(400, "type something to edit the comment"));
+    }
+
+    if (!isAdmin && !author) {
+      return next(new ApiError(400, "You are not allowed to edit this post"));
+    }
+
+    const comment = await Comment.findByIdAndUpdate(
+      commentId,
+      {
+        $set: {
+          comment: editedComment,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!comment) {
+      return next(new ApiError(500, "failed to getUpdatedComment"));
+    }
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, comment, "comment successfully edited"));
+  } catch (error) {
+    console.error(error);
+    return next(new ApiError(500, "Failed to update Comment! backend Issue!"));
+  }
+});
+
+const deleteComment = asyncHandler(async (req, res, next) => {
+  const commentId = req.params.commentId;
+  const reqUserId = req.params.userId;
+  const postId = req.params.postId;
+  const userId = req.user._id;
+  const isAdmin = req.user.isAdmin;
+
+  try {
+    const comment = await Comment.findById(commentId).select("postId");
+    if (!comment) {
+      return next(new ApiError(404, "Comment not Found!"));
+    }
+    const commentAuthor = reqUserId.toString() === userId.toString();
+    const postAuthor = postId.toString() === comment.postId.toString();
+
+    if (!isAdmin && !postAuthor && !commentAuthor) {
+      return next(
+        new ApiError(400, "you are not allowed to delete this comment!")
+      );
+    }
+
+    const deletedComment = await Comment.findByIdAndDelete(commentId);
+    if (!deletedComment) {
+      return next(
+        new ApiError(500, "Failed to delete comment! backend issue!")
+      );
+    }
+
+    return res.status(200).json(new ApiResponse(200, {}, "Comment Deleted"));
+  } catch (error) {
+    console.error(error);
+    return next(
+      new ApiError(500, "Something gone wrong while deleting the comment!")
+    );
+  }
+});
+
+export { addComment, getPostComments, likeComment, editComment, deleteComment };

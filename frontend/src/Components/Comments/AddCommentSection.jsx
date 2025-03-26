@@ -23,18 +23,6 @@ const AddCommentSection = ({
         getPostComments();
     }, [postId])
 
-    const getPostComments = async () => {
-        try {
-            const { data } = await API.get(`/comment/${postId}/comments`)
-            if (data) {
-                const comments = data?.data || []
-                setPostComments(comments)
-            }
-        } catch (error) {
-            console.log(error?.response?.data?.message || "failed to getPostComments")
-        }
-    }
-
     const handleOnSubmitAddComment = async (e) => {
         e.preventDefault()
         if (!comment.trim()) return;
@@ -49,6 +37,18 @@ const AddCommentSection = ({
             console.error(error.response?.data?.message || "Failed to add Comment! try again!")
         } finally {
             setLoading(false)
+        }
+    }
+
+    const getPostComments = async () => {
+        try {
+            const { data } = await API.get(`/comment/${postId}/comments`)
+            if (data) {
+                const comments = data?.data || []
+                setPostComments(comments)
+            }
+        } catch (error) {
+            console.log(error?.response?.data?.message || "failed to getPostComments")
         }
     }
 
@@ -71,6 +71,16 @@ const AddCommentSection = ({
             console.error(error.response?.data?.message || "failed to likeComment")
         }
     }
+
+    const handleEditComment = (comment, editedComment) => {
+        setPostComments(prevCom => prevCom.map(com =>
+            com._id === comment._id
+                ? {
+                    ...com,
+                    comment: editedComment
+                } : com
+        ))
+    };
     return (
         <div
             className={`${className}mt-8 self-center justify-self-center`}
@@ -121,13 +131,13 @@ const AddCommentSection = ({
                             value={comment}
                             className='w-xs md:w-2xl rounded-sm h-16 p-2 border-none outline-none shadow-xs shadow-base-content text-sm'
                         />
-                        <div className='flex justify-between mt-4 items-center'>
-                            <p className='text-sm'>
+                        <div className='flex justify-between mt-2 items-center mx-2'>
+                            <p className="text-xs opacity-70">
                                 {maxChar - comment.length} characters remaining
                             </p>
                             <Button
                                 text={loading ? <Loader /> : "Comment"}
-                                className='w-20 h-10 px-2 rounded-sm hover:text-info'
+                                className='w-fit px-2 rounded-sm bg-gradient-to-r from-[#ff007f] via-sky-300 to-[#003cff] text-transparent bg-clip-text shadow-sky-300'
                                 disabled={!comment.trim()}
                             />
                         </div>
@@ -151,8 +161,11 @@ const AddCommentSection = ({
                                     <Comment
                                         key={com._id}
                                         currentUser={currentUser}
+                                        postId={postId}
                                         comment={com}
                                         like={handleLikeComment}
+                                        edit={handleEditComment}
+                                        setComments={setPostComments}
                                     />
                                 ))}
                             </ul>
