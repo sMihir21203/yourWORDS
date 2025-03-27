@@ -3,32 +3,62 @@ import React, { useEffect, useState } from 'react'
 import { AddCommentSection, Container } from "../../../Components/CompsIndex"
 import { useParams, Link } from 'react-router-dom'
 import { API } from '../../../API/API'
-import { MoreUserPosts } from "./PostIndex.js"
+import { MoreUserPosts, PostCard } from "./PostIndex.js"
 
 const PostPage = () => {
   const { slug } = useParams()
-  const [postInfo, setPostInfo] = useState([])
   const [loading, setLoading] = useState(false)
+  const [postInfo, setPostInfo] = useState([])
+  const [authorInfo, setAuthorInfo] = useState([])
+  const [recentPostsInfo, setRecentPostsInfo] = useState([])
 
   useEffect(() => {
     if (!slug) return
+
+    const getPostInfo = async () => {
+      setLoading(true)
+      try {
+        const { data } = await API.get(`/user/posts?slug=${slug}`)
+        if (data) {
+          const postData = data?.data?.userPosts?.[0] || []
+          getAuthorInfo(postData.userId)
+          setPostInfo(postData);
+        }
+      } catch (error) {
+        console.log(error?.response?.data?.message || "Failed to getPostInfo! try again!")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    const getAuthorInfo = async (authorId) => {
+      try {
+        const { data } = await API.get(`/user/${authorId}`)
+        if (data) {
+          setAuthorInfo(data.data)
+        }
+      } catch (error) {
+        console.error(error?.response?.data?.message || "failed to get author info")
+      }
+    }
+
     getPostInfo()
   }, [slug])
 
-  const getPostInfo = async () => {
-    setLoading(true)
-    try {
-      const { data } = await API.get(`/user/posts?slug=${slug}`)
-      if (data) {
-        const postInfo = data?.data?.userPosts?.[0] || []
-        setPostInfo(postInfo);
+  useEffect(() => {
+    const getRecentPosts = async () => {
+      try {
+        const { data } = await API.get(`/user/posts/?setLimit=${3}`)
+        if (data) {
+          setRecentPostsInfo(data.data.userPosts)
+        }
+      } catch (error) {
+        console.error(error?.response?.data?.message || "failed to fetch recent post")
       }
-    } catch (error) {
-      console.log(error?.response?.data?.message || "Failed to getPostInfo! try again!")
-    } finally {
-      setLoading(false)
     }
-  }
+    getRecentPosts()
+  }, [])
+
   return (
     <Container>
       <div className='text-center space-y-2'>
@@ -39,7 +69,7 @@ const PostPage = () => {
         <img
           src={postInfo.postImg}
           alt={postInfo.postTitle}
-          className='rounded-md shadow-sm shadow-base-content'
+          className='rounded-md shadow-sm shadow-base-content self-center justify-self-center'
         />
         <p
           className='border-b-1 flex justify-between font-semibold text-xs md:text-sm'
@@ -56,10 +86,29 @@ const PostPage = () => {
           className='postContent text-start md:text-lg'
           dangerouslySetInnerHTML={{ __html: postInfo.postContent }}
         />
-        <MoreUserPosts />
+        <MoreUserPosts author={authorInfo} />
+
+        {/* commentSection */}
         <AddCommentSection
           postId={postInfo._id}
         />
+
+        
+        {/* recentPosts */}
+        <div className="flex flex-col items-center justify-center">
+          <h1 className="text-2xl font-semibold mt-9 mb-4">Recent WORDS</h1>
+          <div className=" flex flex-wrap justify-center">
+            {
+              recentPostsInfo &&
+              recentPostsInfo.map(post => (
+                <PostCard
+                  key={post._id}
+                  post={post}
+                />
+              ))
+            }
+          </div>
+        </div>
       </div>
     </Container>
   )

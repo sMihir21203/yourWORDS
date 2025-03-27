@@ -28,7 +28,7 @@ const SignOutBtn = ({
             onClick={SignOutHandler}
             icon={AiOutlineSelect}
             text="SignOut"
-            className={`${className} w-25 mx-auto`}
+            className={`${className} flex items-center text-center justify-center w-25 mx-auto`}
             {...props}
         />
     )

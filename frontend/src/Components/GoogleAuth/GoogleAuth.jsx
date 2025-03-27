@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Loader } from "../CompsIndex.js"
-import {FcGoogle} from "react-icons/fc"
+import { FcGoogle } from "react-icons/fc"
 import { app } from './fireBase.js'
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { useDispatch } from "react-redux"
@@ -47,13 +47,13 @@ const GoogleAuth = () => {
         }
     }
     return (
-        < Button
-            text={ loading ? <Loader/> : <FcGoogle size={40}/> }
+        <Button
+            text={loading ? <Loader /> : <FcGoogle size={40} />}
             alt="Google"
-            style='imp'
-            className='mt-1'
+            className="w-full h-10 flex items-center justify-center"
             onClick={googleClickHandler}
         />
+
     )
 }
 

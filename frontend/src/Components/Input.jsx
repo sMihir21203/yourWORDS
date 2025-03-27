@@ -8,7 +8,7 @@ const Input = ({ icon: Icon, iconSize = 20, label, type = "text", className = ""
           {label}
         </label>
       )}
-      <div className="flex border rounded-lg p-2 input input-secondary w-full">
+      <div className="flex border-none outline-none shadow-xs shadow-base-content rounded-lg p-2  w-full">
         <input
           type={type}
           className={`border-0 outline-0 text-md w-full ${className}`} // Ensuring full width

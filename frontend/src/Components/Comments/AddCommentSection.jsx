@@ -83,7 +83,7 @@ const AddCommentSection = ({
     };
     return (
         <div
-            className={`${className}mt-8 self-center justify-self-center`}
+            className={`${className} mt-8 self-center justify-self-center shadow-lg  p-4 rounded-box `}
             {...props}>
 
             {/* toShow signed in user */}
@@ -156,7 +156,7 @@ const AddCommentSection = ({
                             <p className='px-2 shadow-xs shadow-base-content'>{postComments.length}</p>
                         </div>
                         {
-                            <ul className='list bg-base-100 rounded-box shadow-md'>
+                            <ul className='list'>
                                 {postComments.map(com => (
                                     <Comment
                                         key={com._id}

@@ -33,7 +33,7 @@ const DeletePost = ({ userId, postId }) => {
           <p className="pb-4 font-bold text-xl">
             Are You Sure!<br />You Want to Delete This Post?
           </p>
-          <div className='space-x-2'>
+          <div className='space-x-2 flex justify-center'>
             <Button
               text="I'm Sure"
               type="submit"

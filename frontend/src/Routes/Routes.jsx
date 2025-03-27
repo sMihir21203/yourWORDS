@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Header, Footer } from "../Components/CompsIndex.js";
+import { Header, Footer, ThemeProvider } from "../Components/CompsIndex.js";
 import {
   About,
   Dashboard,
@@ -16,55 +16,54 @@ import { PostPage, UpdatePost } from '../Pages/Dashboard/Posts/PostIndex.js'
 export const WebRoutes = () => {
   return (
     <>
-      <BrowserRouter>
-
-
-        <Header />
-        <Routes>
-          <Route
-            path='/'
-            element={<Home />}
-          />
-          <Route
-            path='/about'
-            element={<About />}
-          />
-          <Route element={<DashBoardPrivateRoute />} >
+      <ThemeProvider>
+        <BrowserRouter>
+          <Header />
+          <Routes>
             <Route
-              path='/dashboard'
-              element={<Dashboard />}
-            />
-          </Route>
-          <Route element={<PostPrivateRoute />} >
-            <Route
-              path='/post/:slug'
-              element={<PostPage />}
+              path='/'
+              element={<Home />}
             />
             <Route
-              path='/update-post/:slug'
-              element={<UpdatePost />}
+              path='/about'
+              element={<About />}
             />
-          </Route>
-          <Route
-            path='/portfolio'
-            element={<Portfolio />}
-          />
-          <Route
-            path='/sign-in'
-            element={<SignIn />}
-          />
-          <Route
-            path='/sign-up'
-            element={<SignUp />}
-          />
-          <Route
-            path='/*'
-            element={<NotFound />}
-          />
-        </Routes>
-
-        <Footer />
-      </BrowserRouter>
+            <Route element={<DashBoardPrivateRoute />} >
+              <Route
+                path='/dashboard'
+                element={<Dashboard />}
+              />
+            </Route>
+            <Route element={<PostPrivateRoute />} >
+              <Route
+                path='/post/:slug'
+                element={<PostPage />}
+              />
+              <Route
+                path='/update-post/:slug'
+                element={<UpdatePost />}
+              />
+            </Route>
+            <Route
+              path='/portfolio'
+              element={<Portfolio />}
+            />
+            <Route
+              path='/sign-in'
+              element={<SignIn />}
+            />
+            <Route
+              path='/sign-up'
+              element={<SignUp />}
+            />
+            <Route
+              path='/*'
+              element={<NotFound />}
+            />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </ThemeProvider>
     </>
   );
 };

@@ -29,7 +29,7 @@ const Header = () => {
 
   return (
     <>
-      <div className='navbar fixed top-0 left-0 right-0 z-10 bg-base-100 shadow-md p-2 items-center'>
+      <div className='navbar bg-base-100 fixed top-0 left-0 right-0 z-10  shadow-md p-2 items-center'>
         {/* logo */}
         <div className='flex-1 '>
           <Logo className="md:ml-12 " />
@@ -37,12 +37,12 @@ const Header = () => {
 
         {/* searchBar */}
         <div className='mr-14 hidden lg:inline'>
-          <form className='max-w-fit flex items-center input input-secondary rounded-2xl h-12 bg-base-200 '>
+          <form className='p-2 max-w-fit flex items-center rounded-2xl h-12 shadow-xs shadow-base-content'>
             <input
               placeholder='FIND your READ...'
               className='border-0 outline-0 text-md  w-70 '
             />
-            <AiOutlineSearch size={30} className='cursor-pointer text-[#ff007f] ' onClick={Radhe} />
+            <AiOutlineSearch size={30} className='cursor-pointer text-[#ff007f] ' />
           </form>
         </div>
 

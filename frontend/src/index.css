@@ -2,7 +2,3 @@
 @plugin "daisyui" {
     themes: all;
 }
-
-*{
-    transition: background-color 1s ease
-}

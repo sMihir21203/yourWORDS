@@ -454,6 +454,7 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
   const slug = getQueryValue(req.query.slug);
   const category = getQueryValue(req.query.category);
   const searchQuery = getQueryValue(req.query.search);
+  const setLimit = parseInt(req.query?.setLimit) || 9;
   const setStartIndex = parseInt(req.query.setStartIndex) || 0;
 
   const lastWeek = new Date();
@@ -480,10 +481,11 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
         $facet: {
           postsData: [
             { $skip: setStartIndex },
-            { $limit: 9 },
+            { $limit: setLimit },
             {
               $project: {
                 _id: 1,
+                userId:1,
                 createdAt: 1,
                 updatedAt: 1,
                 slug: 1,

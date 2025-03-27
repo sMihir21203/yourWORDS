@@ -82,7 +82,7 @@ const SignUp = () => {
             </p>
           </div>
 
-          <div className='card bg-base-100 w-sm  shrink-0 shadow-2xl'>
+          <div className='card  w-sm  shrink-0 shadow-2xl'>
             <div className='card-body flex items-center justify-center'>
               <fieldset className='fieldset w-full'>
                 <form
