@@ -19,7 +19,7 @@ const PostCard = ({ post }) => {
         getAuthoInfo()
     }, [post])
     return (
-        <div className='group relative w-xs h-[450px] overflow-hidden p-3 shadow-md shadow-base-content mx-2 my-2 rounded-md rounded-br-none rounded-tl-none'>
+        <div className='group relative w-xs h-[450px] overflow-hidden p-3 shadow-sm shadow-base-content mx-2 my-2 rounded-md rounded-br-none rounded-tl-none'>
             <Link to={`/post/${post.slug}`}>
                 <img
                     src={post.postImg}

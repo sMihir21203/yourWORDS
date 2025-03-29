@@ -99,7 +99,7 @@ const AddCommentSection = ({
                             />
                             <Link
                                 to='/dashboard?tab=profile'
-                                className='text-xs link-hover text-accent-content mt-[2px]'
+                                className='text-xs link-hover font-bold italic mt-[2px]'
                             >
                                 @{currentUser.username}
                             </Link>
@@ -137,7 +137,7 @@ const AddCommentSection = ({
                             </p>
                             <Button
                                 text={loading ? <Loader /> : "Comment"}
-                                className='w-fit px-2 rounded-sm bg-gradient-to-r from-[#ff007f] via-sky-300 to-[#003cff] text-transparent bg-clip-text shadow-sky-300'
+                                className='w-fit px-2 rounded-sm bg-gradient-to-r from-[#ff007f] via-sky-300 to-[#003cff] text-transparent bg-clip-text shadow-base-content cursor-pointer'
                                 disabled={!comment.trim()}
                             />
                         </div>

@@ -217,4 +217,108 @@ const deleteComment = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { addComment, getPostComments, likeComment, editComment, deleteComment };
+const getCommentsOfUserPosts = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id;
+  const isAdmin = req.user.isAdmin;
+  const reqUserId = req.query.userId
+    ? new mongoose.Types.ObjectId(req.query.userId)
+    : null;
+  const setLimit = parseInt(req.query?.setLimit) || 9;
+  const setStartIndex = parseInt(req.query?.setStartIndex) || 0;
+  console.log(setLimit);
+  console.log(setStartIndex);
+
+  if (!isAdmin && reqUserId?.toString() !== userId.toString()) {
+    return next(
+      new ApiError(
+        403,
+        "You are not allowed to access other users' post comments."
+      )
+    );
+  }
+
+  const matchCond = isAdmin
+    ? reqUserId
+      ? { "postsInfo.userId": reqUserId }
+      : {}
+    : { "postsInfo.userId": userId };
+
+  try {
+    const coms = await Comment.aggregate([
+      {
+        $lookup: {
+          from: "posts",
+          localField: "postId",
+          foreignField: "_id",
+          as: "postsInfo",
+        },
+      },
+      { $unwind: "$postsInfo" },
+      { $match: matchCond },
+      {
+        $facet: {
+          totalComs: [{ $count: "count" }],
+          comments: [
+            { $sort: { createdAt: -1 } },
+            { $skip: setStartIndex },
+            { $limit: setLimit },
+            {
+              $lookup: {
+                from: "users",
+                localField: "userId",
+                foreignField: "_id",
+                as: "usersInfo",
+              },
+            },
+            { $unwind: "$usersInfo" },
+            {
+              $project: {
+                _id: 1,
+                createdAt: 1,
+                comment: 1,
+                totalLikes: 1,
+                slug: "$postsInfo.slug",
+                postTitle: "$postsInfo.postTitle",
+                postImg: "$postsInfo.postImg",
+                userId: "$usersInfo._id",
+                username: "$usersInfo.username",
+                avatar: "$usersInfo.avatar",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+
+    const comments = coms?.[0]?.comments || [];
+    const totalComments = coms?.[0]?.totalComs?.[0]?.count || 0;
+
+    if (!comments.length) {
+      return next(new ApiError(404, "Comments not found"));
+    }
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { comments, totalComments },
+          "All comments fetched successfully"
+        )
+      );
+  } catch (error) {
+    console.error(error);
+    return next(
+      new ApiError(500, "failed to fetch all posts comment! backend issue!")
+    );
+  }
+});
+
+export {
+  addComment,
+  getPostComments,
+  likeComment,
+  editComment,
+  deleteComment,
+  getCommentsOfUserPosts,
+};

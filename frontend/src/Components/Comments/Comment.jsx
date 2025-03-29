@@ -130,7 +130,10 @@ const Comment = ({ currentUser, comment, postId, like, edit, setComments }) => {
                 )}
 
                 {(comment.userId === currentUser._id || currentUser.isAdmin || comment.postId === postId) && (
-                  <DeleteComment comment={comment} setComments={setComments} />
+                  <DeleteComment 
+                  comment={comment} 
+                  setComments={setComments} 
+                  className='opacity-70 hover:text-error hover:opacity-100'/>
                 )}
               </>
             )}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Profile, Users } from './DashIndex.js'
+import { Comments, Profile, Users } from './DashIndex.js'
 import { MyPosts, CreatePost } from "./Posts/PostIndex.js"
 import { useSelector } from 'react-redux'
 import { Container, Sidebar } from '../../Components/CompsIndex.js'
@@ -30,10 +30,11 @@ const Dashboard = () => {
     <>
       <Sidebar />
       <Container>
-          {tab === 'profile' && <Profile />}
-          {tab === 'my-posts' && <MyPosts />}
-          {tab === 'create-post' && <CreatePost />}
-          {tab === 'users' && admin && <Users />}
+        {tab === 'profile' && <Profile />}
+        {tab === 'my-posts' && <MyPosts />}
+        {tab === 'create-post' && <CreatePost />}
+        {tab === 'comments' && <Comments />}
+        {tab === 'users' && admin && <Users />}
       </Container>
     </>
   )

@@ -6,6 +6,7 @@ import {
   getPostComments,
   likeComment,
   deleteComment,
+  getCommentsOfUserPosts,
 } from "../controllers/comment.controller.js";
 
 export const commentRouter = Router();
@@ -17,3 +18,4 @@ commentRouter.route("/:commentId/:userId/edit").post(veryfyJWT, editComment);
 commentRouter
   .route("/:commentId/:userId/:postId/delete")
   .get(veryfyJWT, deleteComment);
+commentRouter.route("/comments").get(veryfyJWT, getCommentsOfUserPosts);

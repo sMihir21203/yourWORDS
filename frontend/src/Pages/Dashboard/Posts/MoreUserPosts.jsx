@@ -7,7 +7,7 @@ const MoreUserPosts = ({
     ...props
 }) => {
     return (
-        <div className='text-lg flex flex-col-reverse md:flex-row text-center text-nowrap  w-full p-4 md:p-6 px-6 md:px-48 mt-12 self-center justify-self-center place-content-center items-center shadow-md shadow-base-content gap-2 md:gap-8 rounded-tr-2xl rounded-bl-2xl'>
+        <div className='text-lg flex flex-col-reverse md:flex-row text-center text-nowrap  w-full p-4 md:p-6 px-6 md:px-48 mt-12 self-center justify-self-center place-content-center items-center shadow-sm shadow-base-content gap-2 md:gap-8 rounded-tr-2xl rounded-bl-2xl'>
             <div>
                 <p>Want See More Posts From <span className='font-bold text-xl'>{author.username}?<br /></span>Checkout Here!</p>
                 <Button
@@ -19,7 +19,7 @@ const MoreUserPosts = ({
             <img
                 src={author.avatar}
                 alt={author.username}
-                className='w-24 h-24 rounded-full'
+                className='w-24 h-24 rounded-full shadow-sm shadow-base-content'
             />
         </div>
     )

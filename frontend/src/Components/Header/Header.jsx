@@ -29,7 +29,7 @@ const Header = () => {
 
   return (
     <>
-      <div className='navbar bg-base-100 fixed top-0 left-0 right-0 z-10  shadow-md p-2 items-center'>
+      <div className='navbar bg-base-100 fixed top-0 left-0 right-0 z-10  shadow-[-0px_7px_7px_-11px] shadow-base-content p-2 items-center'>
         {/* logo */}
         <div className='flex-1 '>
           <Logo className="md:ml-12 " />
@@ -89,7 +89,7 @@ const Header = () => {
                     />
                   </div>
               </div>
-              <ul className="menu dropdown-content bg-base-100 shadow-md shadow-accent-content rounded-lg max-w-auto p-4 mt-1 gap-y-2  place-items-center">
+              <ul className="menu dropdown-content bg-base-100 shadow-sm shadow-base-content rounded-lg max-w-auto p-4 mt-1 gap-y-2  place-items-center">
                 <p className="font-bold mb-2">@{username}</p>
                 <Menu
                   links={[
@@ -117,7 +117,7 @@ const Header = () => {
               role='button'
               icon={FaListUl}
             />
-            <ul className="menu dropdown-content mt-1 bg-base-100 shadow-md shadow-accent-content rounded-lg w-24 p-6 gap-y-2 place-items-start">
+            <ul className="menu dropdown-content mt-1 bg-base-100 shadow-md shadow-base-content rounded-lg w-24 p-6 gap-y-2 place-items-start">
               <Menu
                 links={[
                   { name: "Home", path: "/" },

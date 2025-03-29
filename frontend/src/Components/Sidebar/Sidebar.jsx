@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Button, SignOutBtn } from "../CompsIndex.js";
-import { FaAngleDoubleRight, FaUser, FaRegNewspaper, FaPen, FaUsers } from 'react-icons/fa';
+import { FaAngleDoubleRight, FaUser, FaRegNewspaper, FaPen, FaUsers, FaComment } from 'react-icons/fa';
 
 const Sidebar = () => {
   const currentUser = useSelector(state => state.user?.currentUser?.data?.loggedInUser);
@@ -39,6 +39,7 @@ const Sidebar = () => {
             tabIndex={0}
             role='button'
             icon={FaAngleDoubleRight}
+            className='bg-base-100'
           />
         </div>
         <ul className="dropdown-content w-52 md:w-xs menu p-4 bg-base-300 rounded-box shadow-sm space-y-4 text-nowrap">
@@ -54,21 +55,6 @@ const Sidebar = () => {
                 <FaUser />  Profile <span className='-mr-2 py-1 px-1.5 rounded-lg text-sm font-bold bg-base-100'>{admin ? "Admin" : "User"}</span>
               </Link>
             </li>
-            <li>
-              <Link
-                to="/dashboard?tab=my-posts"
-                className={`${activeLink("?tab=my-posts")}`}>
-                <FaRegNewspaper /> My Posts
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/dashboard?tab=create-post"
-                className={`${activeLink("?tab=create-post")}`}>
-                <FaPen />  Create Post
-              </Link>
-            </li>
-
             {/* onlyAdmin Access */}
             {admin && (
               <li>
@@ -79,6 +65,27 @@ const Sidebar = () => {
                 </Link>
               </li>
             )}
+            <li>
+              <Link
+                to="/dashboard?tab=create-post"
+                className={`${activeLink("?tab=create-post")}`}>
+                <FaPen />  Create Post
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/dashboard?tab=my-posts"
+                className={`${activeLink("?tab=my-posts")}`}>
+                <FaRegNewspaper /> My Posts
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/dashboard?tab=comments"
+                className={`${activeLink("?tab=comments")}`}>
+                <FaComment />  Comments
+              </Link>
+            </li>
           </ul>
           <SignOutBtn className='w-full' />
         </ul>

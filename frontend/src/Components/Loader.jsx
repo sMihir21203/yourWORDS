@@ -9,7 +9,7 @@ const Loader = ({
         <img
             src={loader_img}
             alt="Loading..."
-            className={`animate-spin h-10 w-auto ${className}`}
+            className={`self-center justify-self-center animate-spin h-10 w-auto ${className}`}
             {...props}
         />
     )
