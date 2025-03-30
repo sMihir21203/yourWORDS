@@ -225,8 +225,8 @@ const getCommentsOfUserPosts = asyncHandler(async (req, res, next) => {
     : null;
   const setLimit = parseInt(req.query?.setLimit) || 9;
   const setStartIndex = parseInt(req.query?.setStartIndex) || 0;
-  console.log(setLimit);
-  console.log(setStartIndex);
+  const lastWeek = new Date();
+  lastWeek.setDate(lastWeek.getDate() - 7);
 
   if (!isAdmin && reqUserId?.toString() !== userId.toString()) {
     return next(
@@ -257,7 +257,6 @@ const getCommentsOfUserPosts = asyncHandler(async (req, res, next) => {
       { $match: matchCond },
       {
         $facet: {
-          totalComs: [{ $count: "count" }],
           comments: [
             { $sort: { createdAt: -1 } },
             { $skip: setStartIndex },
@@ -286,26 +285,34 @@ const getCommentsOfUserPosts = asyncHandler(async (req, res, next) => {
               },
             },
           ],
+          totalComs: [{ $count: "totalComs" }],
+          lastWeekComs: [
+            { $match: { createdAt: { $gte: lastWeek } } },
+            { $count: "lastWeekComs" },
+          ],
         },
       },
     ]);
 
     const comments = coms?.[0]?.comments || [];
-    const totalComments = coms?.[0]?.totalComs?.[0]?.count || 0;
+    const totalComments = coms?.[0]?.totalComs?.[0]?.totalComs || 0;
+    const lastWeekComments = coms?.[0]?.lastWeekComs?.[0]?.lastWeekComs || 0;
 
     if (!comments.length) {
       return next(new ApiError(404, "Comments not found"));
     }
 
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          { comments, totalComments },
-          "All comments fetched successfully"
-        )
-      );
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          comments,
+          totalComments,
+          lastWeekComments,
+        },
+        "All comments fetched successfully"
+      )
+    );
   } catch (error) {
     console.error(error);
     return next(

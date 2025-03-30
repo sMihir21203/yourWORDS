@@ -485,7 +485,7 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
             {
               $project: {
                 _id: 1,
-                userId:1,
+                userId: 1,
                 createdAt: 1,
                 updatedAt: 1,
                 slug: 1,
@@ -533,6 +533,7 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
 const getUsers = asyncHandler(async (req, res, next) => {
   const isAdmin = req.user?.isAdmin;
   const setStartIndex = parseInt(req.query?.setStartIndex) || 0;
+  const setLimit = parseInt(req.query?.setLimit) || 9;
   const lastWeek = new Date();
   lastWeek.setDate(lastWeek.getDate() - 7);
 
@@ -549,7 +550,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
           usersData: [
             { $sort: { createdAt: -1 } },
             { $skip: setStartIndex },
-            { $limit: 9 },
+            { $limit: setLimit },
             {
               $project: {
                 _id: 1,
