@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const CreatePost = () => {
   const [postFormData, setPostFormData] = useState({
     postTitle: "",
-    postCategory: "Uncategorized",
+    postCategory: "uncategorized",
     postImg: null,
     postContent: ""
   })
@@ -115,7 +115,7 @@ const CreatePost = () => {
   return (
     <form
       onSubmit={handleOnSubmitPostData}
-      className='w-sm md:w-lg lg:w-full space-y-2'>
+      className='w-sm md:w-lg lg:w-7xl space-y-2'>
 
       <div className={`${!loading ? "" : "opacity-50"}`}>
 
@@ -143,9 +143,11 @@ const CreatePost = () => {
             required
             className='select w-full md:w-fit rounded-lg border-2'
           >
-            <option value="Uncategorized">Uncategorized</option>
-            <option value="Mythology">Mythology</option>
-            <option value="Web Development">Web Development</option>
+            <option>Uncategorized</option>
+            <option value="mythology">Mythology</option>
+            <option value="sports">Sports</option>
+            <option value="reactjs">React JS</option>
+            <option value="web-evelopment">Web Development</option>
           </select>
         </div>
 

@@ -447,15 +447,16 @@ const updateUserDetails = asyncHandler(async (req, res, next) => {
 
 const getUserPosts = asyncHandler(async (req, res, next) => {
   const toObjectId = (id) => (id ? new mongoose.Types.ObjectId(id) : null);
-  const getQueryValue = (value) => value || null;
+  const getQueryValue = (value) => (value ? value : null);
 
   const userId = toObjectId(req.query.userId);
   const postId = toObjectId(req.query.postId);
   const slug = getQueryValue(req.query.slug);
   const category = getQueryValue(req.query.category);
-  const searchQuery = getQueryValue(req.query.search);
-  const setLimit = parseInt(req.query?.setLimit) || 9;
+  const searchQuery = getQueryValue(req.query.searchTerm);
+  const setLimit = parseInt(req.query.setLimit) || 9;
   const setStartIndex = parseInt(req.query.setStartIndex) || 0;
+  const sortDirection = req.query?.sort === "asc" ? 1 : -1;
 
   const lastWeek = new Date();
   lastWeek.setDate(lastWeek.getDate() - 7);
@@ -476,7 +477,7 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
   try {
     const posts = await Post.aggregate([
       { $match: matchCondition },
-      { $sort: { createdAt: -1 } },
+      { $sort: { updatedAt: sortDirection } },
       {
         $facet: {
           postsData: [

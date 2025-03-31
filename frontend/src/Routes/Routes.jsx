@@ -7,6 +7,7 @@ import {
   Home,
   NotFound,
   Portfolio,
+  Search,
   SignIn,
   SignUp,
 } from "../Pages/PagesIndex.js";
@@ -36,14 +37,18 @@ export const WebRoutes = () => {
             </Route>
             <Route element={<PostPrivateRoute />} >
               <Route
-                path='/post/:slug'
-                element={<PostPage />}
-              />
-              <Route
                 path='/update-post/:slug'
                 element={<UpdatePost />}
               />
             </Route>
+            <Route
+              path='/post/:slug'
+              element={<PostPage />}
+            />
+            <Route
+              path='/search'
+              element={<Search />}
+            />
             <Route
               path='/portfolio'
               element={<Portfolio />}

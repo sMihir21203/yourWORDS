@@ -51,7 +51,7 @@ const Comment = ({ currentUser, comment, postId, like, edit, setComments }) => {
   }
 
   return (
-    <li className='list-row'>
+    <li className='list-row text-wrap'>
       <div className='flex flex-col'>
         <div className='flex items-center'>
           <img
@@ -93,7 +93,7 @@ const Comment = ({ currentUser, comment, postId, like, edit, setComments }) => {
                     </div>
                   </div>
                 </form>
-                : <p className='text-[13.5px] pb-2 opacity-80'>
+                : <p className='text-[13.5px] pb-2 opacity-80 '>
                   {comment.comment}
                 </p>
             }

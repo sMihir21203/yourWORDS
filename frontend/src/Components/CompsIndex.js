@@ -17,6 +17,7 @@ import DeleteAccount from "./Delete/DeleteAccount.jsx";
 import DeletePost from "./Delete/DeletePost.jsx";
 import AddCommentSection from "./Comments/AddCommentSection.jsx";
 import DeleteComment from "./Delete/DeleteComment.jsx";
+import Searchbar from "./Searchbar/Searchbar.jsx";
 
 export {
   Header,
@@ -38,4 +39,5 @@ export {
   DeletePost,
   AddCommentSection,
   DeleteComment,
+  Searchbar,
 };
