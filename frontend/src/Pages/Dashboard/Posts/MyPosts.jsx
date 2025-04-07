@@ -54,7 +54,7 @@ const MyPosts = () => {
 
       {
         userPosts.length > 0 && (
-          <div className="mt-12 lg:mt-0 w-full h-auto">
+          <div className="mt-12 lg:mt-0 w-full lg:w-7xl h-auto">
             <div className="overflow-x-auto overflow-y-auto border-none shadow-md shadow-base-content rounded-sm">
               <table className="table text-nowrap">
                 <thead className="bg-base-300 text-lg text-base-content">

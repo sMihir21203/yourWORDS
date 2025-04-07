@@ -11,6 +11,8 @@ import {
   getUserPosts,
   getUsers,
   getUser,
+  sendResetPassLink,
+  resetPassword,
 } from "../controllers/user.controller.js";
 import { upload, veryfyJWT } from "../middlewares/index.middlewares.js";
 
@@ -21,6 +23,8 @@ userRouter.route("/sign-in").post(signInUser);
 userRouter.route("/google-auth").post(googleAuth);
 userRouter.route("/sign-out").get(veryfyJWT, signOutUser);
 userRouter.route("/:userId/delete-user").post(veryfyJWT, deleteUser);
+userRouter.route("/reset-link").post(sendResetPassLink);
+userRouter.route("/:resetPassToken/reset-pass").post(resetPassword);
 userRouter.route("/update-password").post(veryfyJWT, updateUserPassword);
 userRouter
   .route("/update-avatar")

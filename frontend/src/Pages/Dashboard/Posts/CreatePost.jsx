@@ -41,11 +41,11 @@ const CreatePost = () => {
         return
       }
 
-      if (file.size < minSize || file.size > maxSize) {
-        alert("Post Image size must be between 500KB and 2MB.");
-        e.target.value = null
-        return
-      }
+      // if (file.size < minSize || file.size > maxSize) {
+      //   alert("Post Image size must be between 500KB and 2MB.");
+      //   e.target.value = null
+      //   return
+      // }
 
       //postImg setup
       setPreviewPostImg(URL.createObjectURL(file))
@@ -144,10 +144,11 @@ const CreatePost = () => {
             className='select w-full md:w-fit rounded-lg border-2'
           >
             <option>Uncategorized</option>
-            <option value="mythology">Mythology</option>
+            <option value="Mythology">Mythology</option>
             <option value="sports">Sports</option>
             <option value="reactjs">React JS</option>
             <option value="web-evelopment">Web Development</option>
+            <option value="marvel">Marvel</option>
           </select>
         </div>
 

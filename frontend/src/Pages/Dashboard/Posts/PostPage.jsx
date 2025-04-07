@@ -61,15 +61,15 @@ const PostPage = () => {
 
   return (
     <Container>
-      <div className='text-center space-y-2'>
+      <div className='space-y-2'>
         <h1
-          className='text-xl md:text-3xl font-bold shadow-sm rounded-sm'
+          className='text-center text-xl md:text-3xl font-bold shadow-sm rounded-sm'
         >{postInfo.postTitle}
         </h1>
         <img
           src={postInfo.postImg}
           alt={postInfo.postTitle}
-          className='rounded-md shadow-sm shadow-base-content self-center justify-self-center'
+          className='w-full rounded-md shadow-sm shadow-base-content self-center justify-self-center'
         />
         <p
           className='border-b-1 flex justify-between font-semibold text-xs md:text-sm'

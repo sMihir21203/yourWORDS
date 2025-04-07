@@ -76,4 +76,16 @@ userSchema.methods.generateRefreshToken = function () {
   );
 };
 
+userSchema.methods.generateResetPassToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    process.env.RESETPASS_TOKEN_SECRET,
+    {
+      expiresIn: process.env.RESETPASS_TOKEN_EXPIRY,
+    }
+  );
+};
+
 export const User = model("User", userSchema);

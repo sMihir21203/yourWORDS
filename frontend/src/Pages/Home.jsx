@@ -14,7 +14,7 @@ const Home = () => {
 
   const getRecentPosts = async () => {
     try {
-      const { data } = await API.get(`user/posts?setLimit=5`);
+      const { data } = await API.get(`user/posts?setLimit=8`);
       if (data) {
         const recentPosts = data.data.userPosts || [];
         setRecentPostsData(recentPosts);
@@ -42,11 +42,12 @@ const Home = () => {
 
   return (
     <div className='p-4 pt-21 space-y-8 flex flex-col items-center'>
-      <div className='flex flex-col justify-between items-center p-4 w-full h-[400px] shadow-md shadow-base-content rounded-md'>
-        <div>
+      <div className='flex flex-col justify-between items-center p-4 w-full h-[264px] shadow-md shadow-base-content rounded-md'>
+        <div className="flex flex-col items-center gap-4">
           <h1 className='text-7xl'>
             Welcome to YourWORDS
           </h1>
+          <p className='text-2xl'>"Write Freely. Speak Boldly. Live YourWORDS."</p>
         </div>
         <Searchbar />
       </div>
@@ -56,20 +57,6 @@ const Home = () => {
           {
             recentPostsData &&
             recentPostsData.map(post => (
-              <PostCard
-                key={post._id}
-                post={post}
-              />
-            ))
-          }
-        </div>
-      </div>
-      <div className="flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-semibold mb-2">Mythology WORDS</h1>
-        <div className=" flex flex-wrap justify-center">
-          {
-            mythologyPostsData &&
-            mythologyPostsData.map(post => (
               <PostCard
                 key={post._id}
                 post={post}

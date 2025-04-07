@@ -2,7 +2,7 @@ import { asyncHandler } from "./asyncHandler.js";
 import { ApiResponse } from "./apiResponse.js";
 import { ApiError } from "./ApiError.js";
 import { uploadOnCloudinary, deleteFromCloudinary } from "./cloudinary.js";
-import { welcomeEmail } from "./welcomeEmail.js";
+import { welcomeEmail, sendResetPassLinkEmail } from "./email.js";
 
 export {
   asyncHandler,
@@ -11,4 +11,5 @@ export {
   uploadOnCloudinary,
   deleteFromCloudinary,
   welcomeEmail,
+  sendResetPassLinkEmail,
 };

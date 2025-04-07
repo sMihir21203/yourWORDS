@@ -13,6 +13,7 @@ import Sidebar from "./Sidebar/Sidebar.jsx";
 import TextEditor from "./TextEditor/TextEditor.jsx";
 import ChangePassword from "./Password/ChangePassword.jsx";
 import ForgotPassword from "./Password/ForgotPassword.jsx";
+import ResetPassword from "./Password/ResetPassword.jsx";
 import DeleteAccount from "./Delete/DeleteAccount.jsx";
 import DeletePost from "./Delete/DeletePost.jsx";
 import AddCommentSection from "./Comments/AddCommentSection.jsx";
@@ -35,6 +36,7 @@ export {
   Sidebar,
   ChangePassword,
   ForgotPassword,
+  ResetPassword,
   DeleteAccount,
   DeletePost,
   AddCommentSection,

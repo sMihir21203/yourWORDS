@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Links, useNavigate } from 'react-router-dom'
 import { Button, Input, GoogleAuth, Container, Loader } from '../Components/CompsIndex.js'
 import { FaUser, FaKey } from 'react-icons/fa'
 import { useDispatch, useSelector } from "react-redux"
@@ -117,9 +117,11 @@ const SignIn = () => {
 
 
                   <div className="w-full flex justify-start">
-                    <span className="link link-hover hover:text-blue-600 hover:font-bold">
+                    <Link
+                      to='/forgot-password'
+                      className="link-hover hover:text-blue-600 hover:font-bold">
                       Forgot password?
-                    </span>
+                    </Link>
                   </div>
 
 

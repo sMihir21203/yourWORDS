@@ -5,10 +5,12 @@ import {
   uploadOnCloudinary,
   welcomeEmail,
   deleteFromCloudinary,
+  sendResetPassLinkEmail,
 } from "../utils/index.utils.js";
 import { User } from "../models/user.model.js";
 import { Post } from "../models/post.model.js";
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -311,7 +313,98 @@ const deleteUser = asyncHandler(async (req, res, next) => {
   }
 });
 
-const resetForgetPassword = asyncHandler(async () => {});
+const sendResetPassLink = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+  if (!email) {
+    return next(new ApiError(400, "Email id is required"));
+  }
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return next(new ApiResponse(404, "User Not Found"));
+    }
+
+    const resetPassToken = user.generateResetPassToken();
+    if (!resetPassToken) {
+      return next(new ApiError(500, "failed to generate resetPassToken"));
+    }
+
+    const resetPassLink = `http://localhost:5173/reset-password/${resetPassToken}`;
+
+    await sendResetPassLinkEmail(email, resetPassLink);
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Reset pass link sent successfully"));
+  } catch (error) {
+    console.error("failed to resetpass backend issue", error);
+    return next(
+      new ApiError(
+        500,
+        "Something gone wrong while send the reset link from server"
+      )
+    );
+  }
+});
+
+const resetPassword = asyncHandler(async (req, res, next) => {
+  const { newPass, confirmNewPass } = req.body;
+  const { resetPassToken } = req.params;
+  if (!newPass || !confirmNewPass) {
+    return next(
+      new ApiError(
+        400,
+        "New password and Confirm New Password both required for change password"
+      )
+    );
+  }
+  if (!(newPass === confirmNewPass)) {
+    return next(
+      new ApiError(400, "New password and Confirm New Password must be same")
+    );
+  }
+  if (!resetPassToken) {
+    return next(new ApiError(400, "Invalid resetPassToken"));
+  }
+
+  try {
+    const decodedToken = jwt.verify(
+      resetPassToken,
+      process.env.RESETPASS_TOKEN_SECRET
+    );
+    const user = await User.findById(decodedToken?._id).select("password");
+    if (!user) {
+      return next(new ApiError(404, "User Not Found"));
+    }
+
+    const isPasswordValid = await user.isPasswordTrue(newPass);
+    if (isPasswordValid) {
+      return next(new ApiError(401, "New Password must be unique then previous one"));
+    }
+
+    user.password = newPass;
+    await user.save({ validateBeforeSave: true });
+
+    return res
+      .status(201)
+      .json(new ApiResponse(201, {}, "Password changed successfully"));
+  } catch (error) {
+    console.error("failed to reset pass", error);
+    if (error.name === "TokenExpiredError") {
+      return next(
+        new ApiError(
+          400,
+          "Your reset password link has expired. Please request a new one."
+        )
+      );
+    }
+    if (error.name === "JsonWebTokenError") {
+      return next(new ApiError(400, "Invalid reset password link."));
+    }
+    return next(
+      new ApiError(500, "something gone wrong while reseting pass from backend")
+    );
+  }
+});
 
 const updateUserPassword = asyncHandler(async (req, res, next) => {
   //check password is available
@@ -617,7 +710,8 @@ export {
   googleAuth,
   signOutUser,
   deleteUser,
-  resetForgetPassword,
+  sendResetPassLink,
+  resetPassword,
   updateUserPassword,
   updateUserAvatar,
   updateUserDetails,

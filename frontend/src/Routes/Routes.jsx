@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Header, Footer, ThemeProvider } from "../Components/CompsIndex.js";
+import { Header, Footer, ThemeProvider, ForgotPassword, ResetPassword } from "../Components/CompsIndex.js";
 import {
   About,
   Dashboard,
@@ -60,6 +60,14 @@ export const WebRoutes = () => {
             <Route
               path='/sign-up'
               element={<SignUp />}
+            />
+            <Route
+              path='/forgot-password'
+              element={<ForgotPassword />}
+            />
+            <Route
+              path='/reset-password/:resetPassToken'
+              element={<ResetPassword />}
             />
             <Route
               path='/*'

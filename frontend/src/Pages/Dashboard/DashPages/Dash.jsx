@@ -38,7 +38,7 @@ const Dash = () => {
     }
     const getPosts = async () => {
       try {
-        const { data } = await API.get(`/user/posts?userId=${currentUser._id}&setLimit=${5}`)
+        const { data } = await API.get(`/user/posts?setLimit=${5}`)
         if (data) {
           const postData = data.data?.userPosts
           const totalPosts = data.data?.totalPosts
@@ -54,7 +54,7 @@ const Dash = () => {
     }
     const getComments = async () => {
       try {
-        const { data } = await API.get(`comment/comments?userId=${currentUser._id}&setLimit=${5}`)
+        const { data } = await API.get(`comment/comments?setLimit=${5}`)
         if (data) {
           const commentsData = data.data?.comments
           const totalComments = data.data?.totalComments

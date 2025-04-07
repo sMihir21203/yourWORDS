@@ -130,10 +130,11 @@ const Search = () => {
                             onChange={handleOnChange}
                             className="select rounded-lg">
                             <option>Uncategorized</option>
-                            <option value="Mythology">Mythology</option>
+                            <option value="mythology">Mythology</option>
                             <option value="sports">Sports</option>
                             <option value="reactjs">React JS</option>
                             <option value="web-development">Web Development</option>
+                            <option value="marvel">Marvel</option>
                         </select>
                     </div>
                     <div className="flex items-center gap-1">

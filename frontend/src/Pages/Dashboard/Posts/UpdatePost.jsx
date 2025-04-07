@@ -172,7 +172,10 @@ const UpdatePost = () => {
             >
               <option value="Uncategorized">Uncategorized</option>
               <option value="Mythology">Mythology</option>
-              <option value="Web Development">Web Development</option>
+              <option value="sports">Sports</option>
+              <option value="reactjs">React JS</option>
+              <option value="web-evelopment">Web Development</option>
+              <option value="marvel">Marvel</option>
             </select>
           </div>
 
