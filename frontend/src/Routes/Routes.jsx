@@ -1,15 +1,17 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Header, Footer, ThemeProvider, ForgotPassword, ResetPassword } from "../Components/CompsIndex.js";
+import { Header, Footer, ThemeProvider, ForgotPassword, ResetPassword, ScrollToTop } from "../Components/CompsIndex.js";
 import {
-  About,
+  AboutUs,
+  ContactUs,
   Dashboard,
   Home,
   NotFound,
-  Portfolio,
+  Privacy_and_Policy,
   Search,
   SignIn,
   SignUp,
+  Terms_and_Conditions,
 } from "../Pages/PagesIndex.js";
 import { DashBoardPrivateRoute, PostPrivateRoute } from './RoutesIndex.js';
 import { PostPage, UpdatePost } from '../Pages/Dashboard/Posts/PostIndex.js'
@@ -19,6 +21,7 @@ export const WebRoutes = () => {
     <>
       <ThemeProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <Header />
           <Routes>
             <Route
@@ -26,8 +29,8 @@ export const WebRoutes = () => {
               element={<Home />}
             />
             <Route
-              path='/about'
-              element={<About />}
+              path='/about-us'
+              element={<AboutUs />}
             />
             <Route element={<DashBoardPrivateRoute />} >
               <Route
@@ -50,8 +53,16 @@ export const WebRoutes = () => {
               element={<Search />}
             />
             <Route
-              path='/portfolio'
-              element={<Portfolio />}
+              path='/terms-and-conditions'
+              element={<Terms_and_Conditions />}
+            />
+            <Route
+              path='/privacy-policy'
+              element={<Privacy_and_Policy />}
+            />
+            <Route
+              path='/contact-us'
+              element={<ContactUs />}
             />
             <Route
               path='/sign-in'

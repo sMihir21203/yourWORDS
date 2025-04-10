@@ -19,6 +19,7 @@ import DeletePost from "./Delete/DeletePost.jsx";
 import AddCommentSection from "./Comments/AddCommentSection.jsx";
 import DeleteComment from "./Delete/DeleteComment.jsx";
 import Searchbar from "./Searchbar/Searchbar.jsx";
+import ScrollToTop from "./ScrollToTop.jsx";
 
 export {
   Header,
@@ -37,6 +38,7 @@ export {
   ChangePassword,
   ForgotPassword,
   ResetPassword,
+  ScrollToTop,
   DeleteAccount,
   DeletePost,
   AddCommentSection,

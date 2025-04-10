@@ -72,9 +72,9 @@ const Sidebar = () => {
             )}
             <li>
               <Link
-                to="/dashboard?tab=create-post"
-                className={`${activeLink("?tab=create-post")}`}>
-                <FaPen />  Create Post
+                to="/dashboard?tab=share-words"
+                className={`${activeLink("?tab=share-words")}`}>
+                <FaPen />  Share WORDS
               </Link>
             </li>
             <li>

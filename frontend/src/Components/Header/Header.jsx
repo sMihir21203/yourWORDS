@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaMoon, FaSun, FaListUl } from "react-icons/fa";
 import { Button, Logo, Menu, SignOutBtn } from "../CompsIndex.js"
 import { useDispatch, useSelector } from "react-redux"
@@ -7,12 +7,13 @@ import { toggleThemeBtn } from '../../Store/Theme/themeSlice.js'
 
 
 const Header = () => {
-
   const currentUser = useSelector(state => state.user?.currentUser?.data?.loggedInUser);
   const dispatch = useDispatch()
   const { theme } = useSelector(state => state.theme)
-  const [avatar, setAvatar] = useState("");
-  const [username, setUsername] = useState("");
+  const [avatar, setAvatar] = useState(null);
+  const [username, setUsername] = useState(null);
+  const [errMsg, setErrMsg] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (currentUser) {
@@ -41,8 +42,8 @@ const Header = () => {
               <Menu
                 links={[
                   { name: "Home", path: "/" },
-                  { name: "About", path: "/about" },
-                  { name: "Portfolio", path: "/portfolio" }
+                  { name: "About Us", path: "/about-us" },
+                  { name: "ShareWORDS", path: '/dashboard?tab=share-words' }
                 ]}
               />
             </ul>
@@ -106,8 +107,8 @@ const Header = () => {
                 <Menu
                   links={[
                     { name: "Home", path: "/" },
-                    { name: "About", path: "/about" },
-                    { name: "Portfolio", path: "/portfolio" }
+                    { name: "About Us", path: "/about-us" },
+                    { name: "ShareWORDS", path: '/dashboard?tab=share-words' }
                   ]}
                 />
                 <Button

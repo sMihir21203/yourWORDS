@@ -5,11 +5,9 @@ import { Searchbar } from '../Components/CompsIndex.js';
 
 const Home = () => {
   const [recentPostsData, setRecentPostsData] = useState([]);
-  const [mythologyPostsData, setMythologyPostsData] = useState([]);
 
   useEffect(() => {
     getRecentPosts();
-    getMythologyPosts();
   }, []);
 
   const getRecentPosts = async () => {
@@ -21,22 +19,6 @@ const Home = () => {
       }
     } catch (error) {
       console.error(error?.response?.data?.message || "Failed to get posts for home page");
-    }
-  };
-
-  const getMythologyPosts = async () => {
-    try {
-      const category = "Mythology";  // Define the category
-      const limit = 5;
-
-      const { data } = await API.get(`user/posts?category=${category}&setLimit=${limit}`);
-
-      if (data) {
-        const mythologyPosts = data.data.userPosts || [];
-        setMythologyPostsData(mythologyPosts);
-      }
-    } catch (error) {
-      console.error(error?.response?.data?.message || "Failed to get mythology posts");
     }
   };
 

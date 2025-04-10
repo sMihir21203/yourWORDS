@@ -2,34 +2,39 @@ import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 const Menu = ({
-    className="",
+    className = "",
     links = [],
+    makeActive,
     ...props
 }) => {
     const location = useLocation();
 
-    // activeLink
+    // Default active link style
     const activeLink = (path) => {
         return location.pathname === path
-            ? "px-1 pb-1 font-bold rounded-md shadow-sm shadow-base-content bg-gradient-to-r  from-[#ff007f] via-sky-300 to-[#003cff] text-transparent bg-clip-text "
-            : "px-1 pb-1 font-bold rounded-md hover:bg-gradient-to-r from-[#ff007f] via-sky-300 to-[#003cff] hover:text-transparent hover:bg-clip-text";
+            ? "px-1 pb-1 font-semibold text-[#ff007f]"
+            : "px-1 pb-1 font-semibold hover:text-[#ff007f]";
     };
+
+    // Plain link (no active logic)
+    const plainLink = () => "px-1 pb-1 font-semibold hover:text-[#ff007f]";
+
+    // Decide which function to use
+    const getLinkClass = makeActive === "no" ? plainLink : activeLink;
 
     return (
         <>
-            {
-                links.map(({ name, path }, index) => (
-                    <Link
-                        key={index}
-                        className={`${activeLink(path)} ${className}`}
-                        to={path}
-                        {...props}>
-                        {name}
-                    </Link>
-                ))
-            }
+            {links.map(({ name, path }, index) => (
+                <Link
+                    key={index}
+                    className={`${getLinkClass(path)} ${className}`}
+                    to={path}
+                    {...props}>
+                    {name}
+                </Link>
+            ))}
         </>
-    )
-}
+    );
+};
 
-export default Menu
+export default Menu;

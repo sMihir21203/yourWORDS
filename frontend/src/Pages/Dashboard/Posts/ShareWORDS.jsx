@@ -4,7 +4,7 @@ import { API } from '../../../API/API.js';
 import { useNavigate } from 'react-router-dom';
 
 
-const CreatePost = () => {
+const ShareWORDS = () => {
   const [postFormData, setPostFormData] = useState({
     postTitle: "",
     postCategory: "uncategorized",
@@ -189,4 +189,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default ShareWORDS;
