@@ -5,8 +5,12 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const AllPosts = () => {
+  const searchParams = new URLSearchParams(window.location.search)
+  const tab = searchParams.get('tab')
+  const userInfoId = tab?.includes('/') ? tab.split('/')[1] : null
   const userId = useSelector(state => state.user?.currentUser?.data?.loggedInUser?._id)
   const [posts, setPosts] = useState([])
+  const [userInfo, setUserInfo] = useState([])
   const [totalPosts, setTotalPosts] = useState(0)
   const [fetchCount, setFetchCount] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -16,11 +20,23 @@ const AllPosts = () => {
   const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const { data } = await API.get(`/user/${userInfoId}`)
+        if (data) {
+          const userInfo = data.data
+          setUserInfo(userInfo)
+        }
+      } catch (error) {
+        console.error(error?.response?.data?.message || "failed to get author info")
+      }
+    }
+
     const getPosts = async () => {
       try {
         if (!firstFetchDone) setLoading(true)
 
-        const { data } = await API.get(`/user/posts?userId=${userId}`)
+        const { data } = await API.get(`/user/posts?userId=${userInfoId}`)
         if (data) {
           const postsInfo = data?.data?.userPosts || []
           const totalPosts = data?.data?.totalPosts || 0
@@ -38,6 +54,7 @@ const AllPosts = () => {
         setFirstFetchDone(true)
       }
     }
+    getUserInfo()
     getPosts()
   }, [refresh])
 
@@ -45,7 +62,7 @@ const AllPosts = () => {
     const setStartIndex = posts.length
     try {
       setLoadingMore(true)
-      const { data } = await API.get(`/user/posts?setStartIndex=${setStartIndex}`)
+      const { data } = await API.get(`/user/posts?userId=${userInfoId}&setStartIndex=${setStartIndex}`)
       if (data) {
         const morePostsInfo = data?.data?.userPosts || []
         setPosts((prev) => [...prev, ...morePostsInfo])
@@ -64,7 +81,20 @@ const AllPosts = () => {
       {loading && <Loader />}
       {posts.length > 0 ? (
 
-        <div className="mt-12 lg:mt-0 lg:w-7xl w-full h-auto">
+        <div className="lg:mt-0 lg:w-7xl w-full h-auto">
+          <div className='text-center font-semibold text-4xl'>Posts</div>
+          {/* userinfo */}
+          <div className='flex flex-row items-center gap-2 mb-4'>
+            <div className='text-3xl font-bold'>
+              @{userInfo.username}
+            </div>
+            <div>
+              <img
+                src={userInfo.avatar}
+                alt="user"
+                className='w-15 h-15 rounded-full object-cover shadow-md shadow-base-content' />
+            </div>
+          </div>
           <div className="overflow-x-auto overflow-y-auto border-none shadow-md shadow-base-content rounded-sm">
             <table className="table text-nowrap">
               <thead className="bg-base-300 text-lg text-base-content">
@@ -74,7 +104,6 @@ const AllPosts = () => {
                   <th>Post</th>
                   <th>Image</th>
                   <th>Category</th>
-                  <th className="text-success">Author</th>
                   <th className="text-error">Delete</th>
                 </tr>
               </thead>
@@ -94,11 +123,6 @@ const AllPosts = () => {
                       </Link>
                     </td>
                     <td>{post.postCategory}</td>
-                    <td>
-                      <Link to={`/update-post/${post.slug}`} className="link-hover text-success">
-                        Edit
-                      </Link>
-                    </td>
                     <td>
                       <DeletePost postId={post._id} userId={userId} />
                     </td>

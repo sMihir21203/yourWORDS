@@ -1,22 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { Button, DeleteAccount, Loader } from "../../../Components/CompsIndex.js";
-import { API } from "../../../API/API";
+import { API } from "../../../API/API.js";
+import { Link } from "react-router-dom";
 
-const Users = () => {
+const AllUsers = () => {
   const [users, setUsers] = useState([]);
-  const [showMore, setShowMore] = useState(false);
+  const [totalUsers, setTotalUsers] = useState(0)
+  const [fetchCount, setFetchCount] = useState(0)
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [showMore, setShowMore] = useState(false);
   const [firstFetchDone, setFirstFetchDone] = useState(false);
+  const [refresh, setRefresh] = useState(false)
+
 
   useEffect(() => {
     const getUsers = async () => {
-      setLoading(true);
       try {
+        if (!firstFetchDone) setLoading(true);
         const { data } = await API.get("/user/get-users");
-        const usersData = data.data?.users || [];
-        setUsers(usersData);
-        setShowMore(usersData.length >= 9);
+        if (data) {
+          const usersInfo = data.data?.users || [];
+          const totalUsers = data.data?.totalUsers || 0
+
+          setUsers(usersInfo);
+          setFetchCount(usersInfo.length)
+          setTotalUsers(totalUsers)
+          setShowMore(usersInfo.length < totalUsers);
+        }
       } catch (error) {
+        console.error(error)
         console.log(error.response?.data?.message || "Failed to fetch users! Try again.");
       } finally {
         setLoading(false);
@@ -24,20 +37,25 @@ const Users = () => {
       }
     };
     getUsers();
-  }, []);
+  }, [refresh]);
 
   const handleShowMore = async () => {
     const setStartIndex = users.length;
-    setLoading(true);
     try {
+      setLoadingMore(true)
       const { data } = await API.get(`/user/get-users?setStartIndex=${setStartIndex}`);
-      const moreUserData = data.data?.users || [];
-      setUsers((prev) => [...prev, ...moreUserData]);
-      setShowMore(moreUserData.length >= 9);
+      if (condition) {
+        const moreUsersInfo = data.data?.users || [];
+
+        setUsers((prev) => [...prev, ...moreUsersInfo]);
+        setFetchCount((prev) => prev + moreUsersInfo.length)
+        setShowMore(users.length + moreUsersInfo.length < totalUsers);
+      }
     } catch (error) {
+      console.error(error)
       console.log(error.response?.data?.message || "Failed to fetch more users! Try again.");
     } finally {
-      setLoading(false);
+      setLoadingMore(false);
     }
   };
 
@@ -73,7 +91,9 @@ const Users = () => {
                           Admin
                         </span>
                       )}
-                      {user.username}
+                      <Link to={`?tab=profile/${user._id}`} className="link-hover">
+                        {user.username}
+                      </Link>
                     </td>
                     <td>{user.email}</td>
                     <td >
@@ -110,4 +130,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default AllUsers;

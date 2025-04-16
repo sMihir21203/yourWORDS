@@ -30,6 +30,6 @@ userRouter
   .route("/update-avatar")
   .post(veryfyJWT, upload.single("avatar"), updateUserAvatar);
 userRouter.route("/update-details").post(veryfyJWT, updateUserDetails);
-userRouter.route("/posts").get(veryfyJWT, getUserPosts);
+userRouter.route("/posts").get(getUserPosts);
 userRouter.route("/get-users").get(veryfyJWT, getUsers);
 userRouter.route("/:userId").get(getUser);

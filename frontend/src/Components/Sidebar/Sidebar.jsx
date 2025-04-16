@@ -13,8 +13,8 @@ const Sidebar = () => {
 
   const activeLink = (path) => {
     return location.search === path
-      ? "w-full h-10 text-lg pl-8 md:pl-16 font-semibold shadow shadow-base-content rounded-md border-none"
-      : "w-full h-10 text-lg hover:bg-base-100 rounded-md";
+      ? "w-full h-10 md:text-lg pl-8 md:pl-16 font-semibold shadow shadow-base-content rounded-md border-none"
+      : "w-full h-10 md:text-lg hover:bg-base-100 rounded-md";
   };
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const Sidebar = () => {
             className='bg-base-100'
           />
         </div>
-        <ul className="dropdown-content w-52 md:w-xs menu p-4 bg-base-300 rounded-box shadow-sm space-y-4 text-nowrap">
+        <ul className="dropdown-content w-52 md:w-sm menu p-4 bg-base-300 rounded-box shadow-sm space-y-4 text-nowrap">
           <p className='font-bold text-xl'>
             @{currentUser.username}
           </p>
@@ -49,8 +49,8 @@ const Sidebar = () => {
               <Link
 
                 to="/dashboard?tab=profile"
-                className={`${activeLink("?tab=profile")}`}>
-                <FaUser />  Profile <span className='-mr-2 py-1 px-1.5 rounded-lg text-sm font-bold bg-base-100'>{admin ? "Admin" : "User"}</span>
+                className={`${activeLink("?tab=profile")} flex items-center justify-between`}>
+                <span className='flex items-center gap-2'><FaUser />  Profile</span> <span>{admin ? "Admin" : "User"}</span>
               </Link>
             </li>
             <li>
@@ -62,13 +62,36 @@ const Sidebar = () => {
             </li>
             {/* onlyAdmin Access */}
             {admin && (
-              <li>
-                <Link
-                  to="/dashboard?tab=users"
-                  className={`${activeLink("?tab=users")}`}>
-                  <FaUsers />  Users
-                </Link>
-              </li>
+              <>
+                <li>
+                  <Link
+                    to="/dashboard?tab=admin-dash"
+                    className={`${activeLink("?tab=admin-dash")}`}>
+                    <FaSlidersH />  Admin Dasboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/dashboard?tab=all-users"
+                    className={`${activeLink("?tab=all-users")}`}>
+                    <FaUsers />  All Users
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/dashboard?tab=all-posts"
+                    className={`${activeLink("?tab=all-posts")}`}>
+                    <FaRegNewspaper />  All Posts
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/dashboard?tab=all-comments"
+                    className={`${activeLink("?tab=all-comments")}`}>
+                    <FaComment />  All Comments
+                  </Link>
+                </li>
+              </>
             )}
             <li>
               <Link

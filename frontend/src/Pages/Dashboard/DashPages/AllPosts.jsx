@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const AllPosts = () => {
-  const userId = useSelector(state => state.user?.currentUser?.data?.loggedInUser?._id)
+  const userId = useSelector(state=>state.user?.currentUser?.data?.loggedInUser?._id)
   const [posts, setPosts] = useState([])
   const [totalPosts, setTotalPosts] = useState(0)
   const [fetchCount, setFetchCount] = useState(0)
@@ -20,7 +20,7 @@ const AllPosts = () => {
       try {
         if (!firstFetchDone) setLoading(true)
 
-        const { data } = await API.get(`/user/posts?userId=${userId}`)
+        const { data } = await API.get(`/user/posts`)
         if (data) {
           const postsInfo = data?.data?.userPosts || []
           const totalPosts = data?.data?.totalPosts || 0
@@ -74,7 +74,6 @@ const AllPosts = () => {
                   <th>Post</th>
                   <th>Image</th>
                   <th>Category</th>
-                  <th className="text-success">Author</th>
                   <th className="text-error">Delete</th>
                 </tr>
               </thead>
@@ -94,11 +93,7 @@ const AllPosts = () => {
                       </Link>
                     </td>
                     <td>{post.postCategory}</td>
-                    <td>
-                      <Link to={`/update-post/${post.slug}`} className="link-hover text-success">
-                        Edit
-                      </Link>
-                    </td>
+                  
                     <td>
                       <DeletePost postId={post._id} userId={userId} />
                     </td>

@@ -15,7 +15,7 @@ const ContactUs = () => {
                         <h1 className='font-bold md:text-2xl self-center justify-self-center p-2'>Have a Question?</h1>
                         <p>Reach out to us — we’re always happy to chat!</p>
                     </div>
-                    <div className='flex flex-wrap justify-center gap-12'>
+                    <div className='flex flex-col md:flex-row justify-center gap-12'>
                         <div className='flex flex-col items-center text-center space-y-4'>
                             <a 
                             href='mailto:yourword.project@gmail.com'

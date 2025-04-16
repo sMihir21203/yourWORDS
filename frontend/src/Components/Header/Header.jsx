@@ -103,7 +103,7 @@ const Header = () => {
                 role='button'
                 icon={FaListUl}
               />
-              <ul className="menu dropdown-content mt-1 bg-base-100 shadow-md shadow-base-content rounded-lg w-24 p-6 gap-y-2 place-items-start">
+              <ul className="menu dropdown-content mt-1 bg-base-100 shadow-md shadow-base-content rounded-lg w-fit p-6 gap-y-2 place-items-start">
                 <Menu
                   links={[
                     { name: "Home", path: "/" },

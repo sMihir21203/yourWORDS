@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { API } from '../../API/API'
 
 const Searchbar = ({
     className = ""
@@ -17,7 +16,6 @@ const Searchbar = ({
             setSearchTerm(searchTermFromURL)
         }
     }, [location.search])
-    console.log(searchTerm)
 
     const handleOnSubmit = (e) => {
         e.preventDefault()
@@ -30,7 +28,7 @@ const Searchbar = ({
     return (
         <form
             onSubmit={handleOnSubmit}
-            className='w-sm md:w-2xl lg:w-4xl p-2 flex items-center rounded-lg h-12 shadow-xs shadow-base-content'>
+            className={`${className}w-sm md:w-2xl lg:w-4xl p-2 flex items-center rounded-lg h-12 shadow-xs shadow-base-content`}>
             <input
                 placeholder='FIND your READ...'
                 className='border-none outline-none w-full'

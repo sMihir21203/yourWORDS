@@ -1,6 +1,6 @@
 import "./PostPage.css"
 import React, { useEffect, useState } from 'react'
-import { AddCommentSection, Container } from "../../../Components/CompsIndex"
+import { AddCommentSection, Container, Loader } from "../../../Components/CompsIndex"
 import { useParams, Link } from 'react-router-dom'
 import { API } from '../../../API/API'
 import { MoreUserPosts, PostCard } from "./PostIndex.js"
@@ -61,55 +61,59 @@ const PostPage = () => {
 
   return (
     <Container>
-      <div className='space-y-2'>
-        <h1
-          className='text-center text-xl md:text-3xl font-bold shadow-sm rounded-sm'
-        >{postInfo.postTitle}
-        </h1>
-        <img
-          src={postInfo.postImg}
-          alt={postInfo.postTitle}
-          className='w-full rounded-md shadow-sm shadow-base-content self-center justify-self-center'
-        />
-        <p
-          className='border-b-1 flex justify-between font-semibold text-xs md:text-sm'
-        >
-          <span>{new Date(postInfo.createdAt).toLocaleDateString()}</span>
-          <Link
-            className='tooltip tooltip-left hover:scale-105 hover:font-bold'
-            data-tip={`See More ${postInfo.postCategory} Related Post?`}
-          >
-            {postInfo.postCategory}
-          </Link>
-        </p>
-        <div
-          className='postContent text-start md:text-lg'
-          dangerouslySetInnerHTML={{ __html: postInfo.postContent }}
-        />
-        <MoreUserPosts author={authorInfo} />
+      {
+        loading
+          ? <Loader />
+          : <div className='space-y-2'>
+            <h1
+              className='text-center text-xl md:text-3xl font-bold shadow-sm rounded-sm'
+            >{postInfo.postTitle}
+            </h1>
+            <img
+              src={postInfo.postImg}
+              alt={postInfo.postTitle}
+              className='w-full rounded-md shadow-sm shadow-base-content self-center justify-self-center'
+            />
+            <p
+              className='border-b-1 flex justify-between font-semibold text-xs md:text-sm'
+            >
+              <span>{new Date(postInfo.createdAt).toLocaleDateString()}</span>
+              <Link
+                className='tooltip tooltip-left hover:scale-105 hover:font-bold'
+                data-tip={`See More ${postInfo.postCategory} Related Post?`}
+              >
+                {postInfo.postCategory}
+              </Link>
+            </p>
+            <div
+              className='postContent text-start md:text-lg'
+              dangerouslySetInnerHTML={{ __html: postInfo.postContent }}
+            />
+            <MoreUserPosts author={authorInfo} />
 
-        {/* commentSection */}
-        <AddCommentSection
-          postId={postInfo._id}
-        />
+            {/* commentSection */}
+            <AddCommentSection
+              postId={postInfo._id}
+            />
 
-        
-        {/* recentPosts */}
-        <div className="flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-semibold mt-9 mb-4">Recent WORDS</h1>
-          <div className=" flex flex-wrap justify-center">
-            {
-              recentPostsInfo &&
-              recentPostsInfo.map(post => (
-                <PostCard
-                  key={post._id}
-                  post={post}
-                />
-              ))
-            }
+
+            {/* recentPosts */}
+            <div className="flex flex-col items-center justify-center">
+              <h1 className="text-2xl font-semibold mt-9 mb-4">Recent WORDS</h1>
+              <div className=" flex flex-wrap justify-center">
+                {
+                  recentPostsInfo &&
+                  recentPostsInfo.map(post => (
+                    <PostCard
+                      key={post._id}
+                      post={post}
+                    />
+                  ))
+                }
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+      }
     </Container>
   )
 }

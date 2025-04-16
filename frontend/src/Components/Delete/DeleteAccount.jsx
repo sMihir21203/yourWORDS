@@ -8,8 +8,9 @@ const DeleteAccount = ({
     text = "Delete",
     className = "",
     showInput = false,
-    userId = {}
+    userId = " "
 }) => {
+    console.log(userId)
     const loggedInUser = useSelector(state => state.user?.currentUser?.data?.loggedInUser);
     const isAdmin = loggedInUser?.isAdmin;
     const selfDelete = loggedInUser?._id === userId;
@@ -50,19 +51,19 @@ const DeleteAccount = ({
     const handleClose = () => {
         setErrorMsg(null);
         setFormData({ password: "" });
-        document.getElementById("deleteAccount").close();
+        document.getElementById(`deleteAccount-${userId}`).close();
     };
 
     return (
         <>
             <p
-                onClick={() => document.getElementById('deleteAccount').showModal()}
+                onClick={() => document.getElementById(`deleteAccount-${userId}`).showModal()}
                 className={`cursor-pointer link-hover font-bold ${className}`}
             >
                 {text}
             </p>
 
-            <dialog id="deleteAccount" className="modal text-center">
+            <dialog id={`deleteAccount-${userId}`} className="modal text-center">
                 <form onSubmit={handleOnSubmit} className='modal-box rounded-xl w-sm md:w-md flex flex-col items-center space-y-2'>
                     {errorMsg && (
                         <div role="alert" className="alert alert-error alert-soft flex justify-center text-center">

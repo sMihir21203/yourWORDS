@@ -247,6 +247,7 @@ const signOutUser = asyncHandler(async (req, res) => {
 const deleteUser = asyncHandler(async (req, res, next) => {
   const { password } = req.body;
   const reqUserId = req.params?.userId;
+  console.log(reqUserId);
   const userId = req.user?._id;
   const isAdmin = req.user?.isAdmin;
   const isSelfDelete = reqUserId === userId.toString();
@@ -378,7 +379,9 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 
     const isPasswordValid = await user.isPasswordTrue(newPass);
     if (isPasswordValid) {
-      return next(new ApiError(401, "New Password must be unique then previous one"));
+      return next(
+        new ApiError(401, "New Password must be unique then previous one")
+      );
     }
 
     user.password = newPass;
@@ -554,23 +557,52 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
   const lastWeek = new Date();
   lastWeek.setDate(lastWeek.getDate() - 7);
 
+  // Initial match conditions on post fields
   let matchCondition = {};
   if (userId) matchCondition.userId = userId;
   if (postId) matchCondition._id = postId;
   if (slug) matchCondition.slug = slug;
   if (category) matchCondition.postCategory = category;
-  if (searchQuery) {
-    matchCondition.$or = [
-      { postTitle: { $regex: searchQuery, $options: "i" } },
-      { postContent: { $regex: searchQuery, $options: "i" } },
-      { postCategory: { $regex: searchQuery, $options: "i" } },
-    ];
-  }
 
   try {
     const posts = await Post.aggregate([
-      { $match: matchCondition },
+      // Join with users collection to get username
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'userInfo',
+        },
+      },
+      { $unwind: '$userInfo' }, // Flatten userInfo array
+
+      // Add username as a top-level field
+      {
+        $addFields: {
+          username: '$userInfo.username',
+        },
+      },
+
+      // Apply search query across multiple fields
+      {
+        $match: {
+          ...matchCondition,
+          ...(searchQuery && {
+            $or: [
+              { username: { $regex: searchQuery, $options: 'i' } },
+              { postTitle: { $regex: searchQuery, $options: 'i' } },
+              { postContent: { $regex: searchQuery, $options: 'i' } },
+              { postCategory: { $regex: searchQuery, $options: 'i' } },
+            ],
+          }),
+        },
+      },
+
+      // Sort by updatedAt
       { $sort: { updatedAt: sortDirection } },
+
+      // Pagination + counts
       {
         $facet: {
           postsData: [
@@ -587,13 +619,18 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
                 postImg: 1,
                 postCategory: 1,
                 postContent: 1,
+                username: 1, // Optional: return username with post
               },
             },
           ],
-          totalCount: [{ $count: "totalPosts" }],
+          totalCount: [{ $count: 'totalPosts' }],
           lastWeekCount: [
-            { $match: { createdAt: { $gte: lastWeek } } },
-            { $count: "lastWeekPosts" },
+            {
+              $match: {
+                createdAt: { $gte: lastWeek },
+              },
+            },
+            { $count: 'lastWeekPosts' },
           ],
         },
       },
@@ -601,8 +638,9 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
 
     const userPosts = posts?.[0]?.postsData || [];
     if (!userPosts.length) {
-      return next(new ApiError(404, "No Posts Found!"));
+      return next(new ApiError(404, 'No Posts Found!'));
     }
+
     const totalPosts = posts?.[0]?.totalCount?.[0]?.totalPosts || 0;
     const lastWeekPosts = posts?.[0]?.lastWeekCount?.[0]?.lastWeekPosts || 0;
 
@@ -614,15 +652,16 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
           totalPosts,
           lastWeekPosts,
         },
-        "User Posts Fetched Successfully"
+        'User Posts Fetched Successfully'
       )
     );
   } catch (error) {
     return next(
-      new ApiError(500, "Something went wrong while fetching posts!")
+      new ApiError(500, 'Something went wrong while fetching posts!')
     );
   }
 });
+
 
 const getUsers = asyncHandler(async (req, res, next) => {
   const isAdmin = req.user?.isAdmin;
@@ -704,6 +743,7 @@ const getUser = asyncHandler(async (req, res, next) => {
     return next(new ApiError(500, "failed to getUser! backend issue!"));
   }
 });
+
 export {
   signUpUser,
   signInUser,

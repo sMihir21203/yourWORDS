@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { API } from '../API/API.js'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Button } from '../Components/CompsIndex.js'
+import { Button, Loader } from '../Components/CompsIndex.js'
 import { PostCard } from './Dashboard/Posts/PostIndex.js'
 
 const Search = () => {
-
     const [filterData, setFilterData] = useState({
         searchTerm: "",
         sort: "desc",
-        category: "uncategorized"
+        category: ""  // Set category as empty string
     })
     const [loading, setLoading] = useState(false)
     const [showMoreloading, setShowMoreLoading] = useState(false)
@@ -24,9 +23,9 @@ const Search = () => {
 
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search)
-        const searchFromURL = urlParams.get('searchTerm')
-        const sortFromURL = urlParams.get('sort')
-        const categoryFromURL = urlParams.get('category')
+        const searchFromURL = urlParams.get('searchTerm') || ""
+        const sortFromURL = urlParams.get('sort') !== "null" ? urlParams.get('sort') : "desc"
+        const categoryFromURL = urlParams.get('category') !== "null" ? urlParams.get('category') : ""
 
         if (searchFromURL || sortFromURL || categoryFromURL) {
             setFilterData(prev => ({
@@ -36,9 +35,12 @@ const Search = () => {
                 category: categoryFromURL
             }))
         }
+
         const getPosts = async () => {
+            setLoading(true)
+            setPosts([])
+
             const searchQuery = urlParams.toString()
-            console.log(searchQuery)
             try {
                 const { data } = await API.get(`/user/posts?${searchQuery}`)
                 if (data) {
@@ -51,14 +53,16 @@ const Search = () => {
                 }
             } catch (error) {
                 console.log(error)
-                console.log(error?.response?.data?.message || "failed to fetch searchTerm Comment")
+                console.log(error?.response?.data?.message || "failed to fetch posts")
+            } finally {
+                setLoading(false)
             }
         }
         getPosts()
     }, [location.search])
 
     const handleOnChange = (e) => {
-        const { id, value } = e.target;
+        const { id, value } = e.target
         if (id === 'searchTerm') {
             setFilterData((prev) => ({ ...prev, searchTerm: value }))
         }
@@ -74,22 +78,33 @@ const Search = () => {
         e.preventDefault()
 
         const urlParams = new URLSearchParams()
-        urlParams.set('searchTerm', filterData.searchTerm)
-        urlParams.set('sort', filterData.sort)
-        urlParams.set('category', filterData.category)
+
+        // Only add values to query if they are non-null
+        if (filterData.searchTerm?.trim()) {
+            urlParams.set('searchTerm', filterData.searchTerm)
+        }
+
+        if (filterData.sort !== "null") {
+            urlParams.set('sort', filterData.sort)
+        }
+
+        if (filterData.category !== "null") {
+            urlParams.set('category', filterData.category)
+        }
 
         const searchQuery = urlParams.toString()
-        console.log(searchQuery)
+        console.log(searchQuery)  // Debug log to see the query
         navigate(`/search?${searchQuery}`)
     }
 
     const handleShowMore = async () => {
-        const setStartIndex = totalPosts;
+        setShowMoreLoading(true)
+        const setStartIndex = totalPosts
         const urlParams = new URLSearchParams()
         urlParams.set('setStartIndex', setStartIndex)
         const searchQuery = urlParams.toString()
         try {
-            const { data } = await API.get(`/user/posts/${searchQuery}`);
+            const { data } = await API.get(`/user/posts/${searchQuery}`)
             if (data) {
                 const morePosts = data?.data?.userPosts || []
                 setPosts(prev => [...prev, ...morePosts])
@@ -98,6 +113,8 @@ const Search = () => {
         } catch (error) {
             console.error(error)
             console.error(error?.response?.data?.message || "failed to fetch more posts")
+        } finally {
+            setShowMoreLoading(false)
         }
     }
 
@@ -106,8 +123,7 @@ const Search = () => {
             <form
                 onSubmit={handleOnSubmit}
                 className={`p-4 flex flex-col items-center justify-center gap-2 lg:gap-8 shadow-sm shadow-base-content rounded-md`}>
-                <div
-                    className='w-sm md:w-2xl lg:w-4xl p-2 flex items-center rounded-lg h-12 shadow-xs shadow-base-content'>
+                <div className='w-sm md:w-2xl lg:w-4xl p-2 flex items-center rounded-lg h-12 shadow-xs shadow-base-content'>
                     <input
                         placeholder='FIND your READ...'
                         className='border-none outline-none w-full'
@@ -129,8 +145,8 @@ const Search = () => {
                             id='category'
                             onChange={handleOnChange}
                             className="select rounded-lg">
-                            <option>Uncategorized</option>
-                            <option value="mythology">Mythology</option>
+                            <option value="">All Categories</option> {/* Default value is empty */}
+                            <option value="Mythology">Mythology</option>
                             <option value="sports">Sports</option>
                             <option value="reactjs">React JS</option>
                             <option value="web-development">Web Development</option>
@@ -158,42 +174,41 @@ const Search = () => {
                     </div>
                 </div>
             </form>
-            <div>
-                <h1 className='text-2xl font-semibold text-center'>Search Results:</h1>
-                <div>
-                    {
-                        loading && (
-                            <p className='text-center font-bold text-2xl md:text-5xl animate-pulse'>Creating Your Post...</p>
-                        )
-                    }
-                    {
-                        !loading && posts.length === 0 && (
-                            <h1>No Posts Found</h1>
-                        )
-                    }
-                    <div className='flex flex-wrap justify-center'>
-                        {
-                            !loading
-                            && posts
-                            && posts.map((post) => (
-                                <PostCard
-                                    key={post._id}
-                                    post={post}
-                                />
-                            ))
-                        }
+            {
+                loading
+                    ? <Loader />
+                    : <div>
+                        <h1 className='text-2xl font-semibold text-center'>Search Results:</h1>
+                        <div>
+                            {
+                                !loading && posts.length === 0 && (
+                                    <h1>No Posts Found</h1>
+                                )
+                            }
+                            <div className='flex flex-wrap justify-center'>
+                                {
+                                    !loading
+                                    && posts
+                                    && posts.map((post) => (
+                                        <PostCard
+                                            key={post._id}
+                                            post={post}
+                                        />
+                                    ))
+                                }
+                            </div>
+                            {
+                                showMore && (
+                                    <Button
+                                        onClick={handleShowMore}
+                                        text='Show More Posts'
+                                        style='imp'
+                                    />
+                                )
+                            }
+                        </div>
                     </div>
-                    {
-                        showMore && (
-                            <Button
-                                onClick={handleShowMore}
-                                text='Show More Posts'
-                                style='imp'
-                            />
-                        )
-                    }
-                </div>
-            </div>
+            }
         </div>
     )
 }
