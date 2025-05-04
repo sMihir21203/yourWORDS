@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { API } from '../API/API.js'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Button, Loader } from '../Components/CompsIndex.js'
+import { Button, Loader, PageTitle } from '../Components/CompsIndex.js'
 import { PostCard } from './Dashboard/Posts/PostIndex.js'
 
 const Search = () => {
@@ -110,6 +110,7 @@ const Search = () => {
                 setPosts(prev => [...prev, ...morePosts])
                 setShowMore(posts.length + morePosts.length < totalPosts)
             }
+
         } catch (error) {
             console.error(error)
             console.error(error?.response?.data?.message || "failed to fetch more posts")
@@ -119,97 +120,100 @@ const Search = () => {
     }
 
     return (
-        <div className='p-4 pt-21 flex flex-col justify-center items-center space-y-4'>
-            <form
-                onSubmit={handleOnSubmit}
-                className={`p-4 flex flex-col items-center justify-center gap-2 lg:gap-8 shadow-sm shadow-base-content rounded-md`}>
-                <div className='w-sm md:w-2xl lg:w-4xl p-2 flex items-center rounded-lg h-12 shadow-xs shadow-base-content'>
-                    <input
-                        placeholder='FIND your READ...'
-                        className='border-none outline-none w-full'
-                        id='searchTerm'
-                        value={filterData.searchTerm}
-                        onChange={handleOnChange}
-                    />
-                    <button
-                        type='submit'
-                    >
-                        <AiOutlineSearch size={30} className='cursor-pointer' />
-                    </button>
-                </div>
-                <div className='flex flex-wrap items-center gap-4 lg:gap-2'>
-                    <div className="flex items-center gap-1">
-                        <span>Category:</span>
-                        <select
-                            value={filterData.category}
-                            id='category'
+        <>
+            <PageTitle title={`Result for: "${filterData?.searchTerm || filterData?.category}"`} />
+            <div className='p-4 pt-21 flex flex-col justify-center items-center space-y-4'>
+                <form
+                    onSubmit={handleOnSubmit}
+                    className={`p-4 flex flex-col items-center justify-center gap-2 lg:gap-8 shadow-sm shadow-base-content rounded-md`}>
+                    <div className='w-sm md:w-2xl lg:w-4xl p-2 flex items-center rounded-lg h-12 shadow-xs shadow-base-content'>
+                        <input
+                            placeholder='FIND your READ...'
+                            className='border-none outline-none w-full'
+                            id='searchTerm'
+                            value={filterData.searchTerm}
                             onChange={handleOnChange}
-                            className="select rounded-lg">
-                            <option value="">All Categories</option> {/* Default value is empty */}
-                            <option value="Mythology">Mythology</option>
-                            <option value="sports">Sports</option>
-                            <option value="reactjs">React JS</option>
-                            <option value="web-development">Web Development</option>
-                            <option value="marvel">Marvel</option>
-                        </select>
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <span>Order:</span>
-                        <select
-                            value={filterData.sort}
-                            id='sort'
-                            onChange={handleOnChange}
-                            className="select rounded-lg">
-                            <option value="desc">Latest</option>
-                            <option value="asc">Oldest</option>
-                        </select>
-                    </div>
-                    <div>
-                        <Button
-                            text='Apply'
-                            type="submit"
-                            style='gradient'
-                            className='px-2 mb-1'
                         />
+                        <button
+                            type='submit'
+                        >
+                            <AiOutlineSearch size={30} className='cursor-pointer' />
+                        </button>
                     </div>
-                </div>
-            </form>
-            {
-                loading
-                    ? <Loader />
-                    : <div>
-                        <h1 className='text-2xl font-semibold text-center'>Search Results:</h1>
+                    <div className='flex flex-wrap items-center gap-4 lg:gap-2'>
+                        <div className="flex items-center gap-1">
+                            <span>Category:</span>
+                            <select
+                                value={filterData.category}
+                                id='category'
+                                onChange={handleOnChange}
+                                className="select rounded-lg">
+                                <option value="">All Categories</option> {/* Default value is empty */}
+                                <option value="Mythology">Mythology</option>
+                                <option value="sports">Sports</option>
+                                <option value="reactjs">React JS</option>
+                                <option value="web-development">Web Development</option>
+                                <option value="marvel">Marvel</option>
+                            </select>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <span>Order:</span>
+                            <select
+                                value={filterData.sort}
+                                id='sort'
+                                onChange={handleOnChange}
+                                className="select rounded-lg">
+                                <option value="desc">Latest</option>
+                                <option value="asc">Oldest</option>
+                            </select>
+                        </div>
                         <div>
-                            {
-                                !loading && posts.length === 0 && (
-                                    <h1>No Posts Found</h1>
-                                )
-                            }
-                            <div className='flex flex-wrap justify-center'>
-                                {
-                                    !loading
-                                    && posts
-                                    && posts.map((post) => (
-                                        <PostCard
-                                            key={post._id}
-                                            post={post}
-                                        />
-                                    ))
-                                }
-                            </div>
-                            {
-                                showMore && (
-                                    <Button
-                                        onClick={handleShowMore}
-                                        text='Show More Posts'
-                                        style='imp'
-                                    />
-                                )
-                            }
+                            <Button
+                                text='Apply'
+                                type="submit"
+                                style='gradient'
+                                className='px-2 mb-1'
+                            />
                         </div>
                     </div>
-            }
-        </div>
+                </form>
+                {
+                    loading
+                        ? <Loader />
+                        : <div>
+                            <h1 className='text-2xl font-semibold text-center'>Search Results:</h1>
+                            <div>
+                                {
+                                    !loading && posts.length === 0 && (
+                                        <h1>No Posts Found</h1>
+                                    )
+                                }
+                                <div className='flex flex-wrap justify-center'>
+                                    {
+                                        !loading
+                                        && posts
+                                        && posts.map((post) => (
+                                            <PostCard
+                                                key={post._id}
+                                                post={post}
+                                            />
+                                        ))
+                                    }
+                                </div>
+                                {
+                                    showMore && (
+                                        <Button
+                                            onClick={handleShowMore}
+                                            text='Show More Posts'
+                                            style='imp'
+                                        />
+                                    )
+                                }
+                            </div>
+                        </div>
+                }
+            </div>
+        </>
     )
 }
 

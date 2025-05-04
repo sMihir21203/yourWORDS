@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, DeleteAccount, Loader } from "../../../Components/CompsIndex.js";
+import { Button, DeleteAccount, Loader, PageTitle } from "../../../Components/CompsIndex.js";
 import { API } from "../../../API/API.js";
 import { Link } from "react-router-dom";
 
@@ -61,6 +61,7 @@ const AllUsers = () => {
 
   return (
     <>
+    <PageTitle title="All Users" />
       {loading && <Loader />}
       {users.length > 0 ? (
 

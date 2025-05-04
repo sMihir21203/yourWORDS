@@ -11,13 +11,14 @@ const Menu = ({
 
     // Default active link style
     const activeLink = (path) => {
-        return location.pathname === path
-            ? "px-1 pb-1 font-semibold text-[#ff007f]"
-            : "px-1 pb-1 font-semibold hover:text-[#ff007f]";
+        const fullPath = location.pathname + location.search
+        return fullPath === path
+            ? "px-1 pb-1 font-semibold underline"
+            : "px-1 pb-1 font-semibold hover:underline";
     };
 
     // Plain link (no active logic)
-    const plainLink = () => "px-1 pb-1 font-semibold hover:text-[#ff007f]";
+    const plainLink = () => "px-1 pb-1 font-semibold hover:underline";
 
     // Decide which function to use
     const getLinkClass = makeActive === "no" ? plainLink : activeLink;

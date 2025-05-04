@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaKey, FaUser } from "react-icons/fa"
 import { AiFillMail } from 'react-icons/ai'
-import { Button, Input, GoogleAuth, Container, Loader } from '../Components/CompsIndex.js'
+import { Button, Input, GoogleAuth, Container, Loader, PageTitle } from '../Components/CompsIndex.js'
 import { useDispatch, useSelector } from "react-redux"
 import { signInStart, signInSuccess, signInFailure, clearAllMessages } from "../Store/User/userSlice.js"
 import { API } from "../API/API.js"
@@ -61,6 +61,7 @@ const SignUp = () => {
 
   return (
     <Container>
+      <PageTitle title="SignUp"/>
       <div className="flex flex-col">
         {errorMsg && (
           <div role="alert" className="alert alert-error alert-soft flex justify-center text-center">
@@ -75,8 +76,8 @@ const SignUp = () => {
 
 
         <div className='hero-content flex-col lg:flex-row'>
-          <div className='text-center lg:text-left lg:mr-2'>
-            <h1 className="text-5xl font-bold text-nowrap"><span className='bg-gradient-to-r hover:bg-gradient-to-l  from-[#ff007f] via-sky-400 to-[#003cff] text-transparent bg-clip-text'>signUp </span>Now!</h1>
+          <div className='text-center lg:text-left lg:mr-2 font-semibold'>
+            <h1 className="text-5xl text-nowrap"><span className='font-bold'>signUp </span>Now!</h1>
             <p className='py-6'>
               to Share <span className='font-extrabold'>YourWords...</span>
             </p>

@@ -43,12 +43,13 @@ const PostCard = ({ post }) => {
                         <span className='mb-1'>{author.username}</span>
                     </div>
                 </div>
-                <Button
-                    text="Read WORDS"
-                    to={`/post/${post.slug}`}
-                    className='w-fit px-24 z-10 text-nowrap self-center justify-self-center -bottom-24 group-hover:bottom-4 absolute transition-all duration-300 rounded-md rounded-br-none rounded-tl-none'
-                />
-
+                <Link to={`/post/${post.slug}`}>
+                    <Button
+                        text="Read WORDS"
+                        to={`/post/${post.slug}`}
+                        className='w-fit px-24 z-10 text-nowrap self-center justify-self-center -bottom-24 group-hover:bottom-4 absolute transition-all duration-300 rounded-md rounded-br-none rounded-tl-none'
+                    />
+                </Link>
             </div>
         </div>
     )

@@ -244,6 +244,55 @@ const signOutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User LOGOUT"));
 });
 
+const refreshAccessToken = asyncHandler(async (req, res, next) => {
+  const incomingRefreshToken =
+    req.cookies.refreshToken || req.body.refreshToken;
+  if (!incomingRefreshToken) {
+    return next(new ApiError(401, "Invalid Refresh token or expired"));
+  }
+
+  try {
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+
+    const user = await User.findById(decodedToken._id);
+    if (!user) {
+      return next(new ApiError(404, "invalid refreshToken user not found"));
+    }
+
+    if (incomingRefreshToken !== user?.refreshToken) {
+      return next(new ApiError(401, "refreshToken is expired or used"));
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+      user._id
+    );
+    return res
+      .status(201)
+      .cookie("accessToken", accessToken, cookieOptions)
+      .cookie("refreshToken", refreshToken, cookieOptions)
+      .json(
+        new ApiResponse(
+          201,
+          {
+            accessToken,
+            refreshToken,
+          },
+          "accessToken Refreshed"
+        )
+      );
+  } catch (error) {
+    return next(
+      new ApiError(
+        500,
+        error.message || "Backend issue while genereating new access token"
+      )
+    );
+  }
+});
+
 const deleteUser = asyncHandler(async (req, res, next) => {
   const { password } = req.body;
   const reqUserId = req.params?.userId;
@@ -569,18 +618,18 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
       // Join with users collection to get username
       {
         $lookup: {
-          from: 'users',
-          localField: 'userId',
-          foreignField: '_id',
-          as: 'userInfo',
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userInfo",
         },
       },
-      { $unwind: '$userInfo' }, // Flatten userInfo array
+      { $unwind: "$userInfo" }, // Flatten userInfo array
 
       // Add username as a top-level field
       {
         $addFields: {
-          username: '$userInfo.username',
+          username: "$userInfo.username",
         },
       },
 
@@ -590,10 +639,10 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
           ...matchCondition,
           ...(searchQuery && {
             $or: [
-              { username: { $regex: searchQuery, $options: 'i' } },
-              { postTitle: { $regex: searchQuery, $options: 'i' } },
-              { postContent: { $regex: searchQuery, $options: 'i' } },
-              { postCategory: { $regex: searchQuery, $options: 'i' } },
+              { username: { $regex: searchQuery, $options: "i" } },
+              { postTitle: { $regex: searchQuery, $options: "i" } },
+              { postContent: { $regex: searchQuery, $options: "i" } },
+              { postCategory: { $regex: searchQuery, $options: "i" } },
             ],
           }),
         },
@@ -623,14 +672,14 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
               },
             },
           ],
-          totalCount: [{ $count: 'totalPosts' }],
+          totalCount: [{ $count: "totalPosts" }],
           lastWeekCount: [
             {
               $match: {
                 createdAt: { $gte: lastWeek },
               },
             },
-            { $count: 'lastWeekPosts' },
+            { $count: "lastWeekPosts" },
           ],
         },
       },
@@ -638,7 +687,7 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
 
     const userPosts = posts?.[0]?.postsData || [];
     if (!userPosts.length) {
-      return next(new ApiError(404, 'No Posts Found!'));
+      return next(new ApiError(404, "No Posts Found!"));
     }
 
     const totalPosts = posts?.[0]?.totalCount?.[0]?.totalPosts || 0;
@@ -652,16 +701,15 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
           totalPosts,
           lastWeekPosts,
         },
-        'User Posts Fetched Successfully'
+        "User Posts Fetched Successfully"
       )
     );
   } catch (error) {
     return next(
-      new ApiError(500, 'Something went wrong while fetching posts!')
+      new ApiError(500, "Something went wrong while fetching posts!")
     );
   }
 });
-
 
 const getUsers = asyncHandler(async (req, res, next) => {
   const isAdmin = req.user?.isAdmin;
@@ -749,6 +797,7 @@ export {
   signInUser,
   googleAuth,
   signOutUser,
+  refreshAccessToken,
   deleteUser,
   sendResetPassLink,
   resetPassword,

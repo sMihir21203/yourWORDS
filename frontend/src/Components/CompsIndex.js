@@ -20,6 +20,7 @@ import AddCommentSection from "./Comments/AddCommentSection.jsx";
 import DeleteComment from "./Delete/DeleteComment.jsx";
 import Searchbar from "./Searchbar/Searchbar.jsx";
 import ScrollToTop from "./ScrollToTop.jsx";
+import PageTitle from "./PageTitle.jsx";
 
 export {
   Header,
@@ -44,4 +45,5 @@ export {
   AddCommentSection,
   DeleteComment,
   Searchbar,
+  PageTitle,
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DeleteComment, Loader, Button } from '../../../Components/CompsIndex.js'
+import { DeleteComment, Loader, Button, PageTitle } from '../../../Components/CompsIndex.js'
 import { API } from "../../../API/API.js";
 import { useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
@@ -64,6 +64,7 @@ const Comments = () => {
     console.log(fetchCount)
     return (
         <>
+        <PageTitle title="Comments" />
             {loading && <Loader />}
             {comments.length > 0 ? (
 

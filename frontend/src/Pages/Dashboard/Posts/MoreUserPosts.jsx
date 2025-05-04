@@ -23,8 +23,7 @@ const MoreUserPosts = ({
                 <p>Want See More Posts From <span className='font-bold text-xl'>{author.username}?<br /></span>Checkout Here!</p>
                 <Button
                     text="More Posts"
-                    style='gradient'
-                    className='rounded-tl-none rounded-br-none'
+                    className='px-1 rounded-tl-none rounded-br-none w-fit self-center justify-self-center'
                     onClick={handleGetMoreUserPosts}
                 />
             </div>

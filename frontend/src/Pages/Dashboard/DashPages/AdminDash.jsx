@@ -3,7 +3,7 @@ import { API } from '../../../API/API.js'
 import { useSelector } from 'react-redux'
 import { FaArrowUp, FaComment, FaUsers } from 'react-icons/fa'
 import { HiDocumentText } from 'react-icons/hi'
-import { Button, Loader } from '../../../Components/CompsIndex.js'
+import { Button, Loader, PageTitle } from '../../../Components/CompsIndex.js'
 import { Link } from 'react-router-dom'
 
 const AdminDash = () => {
@@ -88,6 +88,7 @@ const AdminDash = () => {
 
   return (
     <>
+      <PageTitle title="Admin Dashboard" />
       {
         loading
           ? <Loader />

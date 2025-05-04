@@ -26,7 +26,7 @@ const addComment = asyncHandler(async (req, res, next) => {
 
     return res
       .status(200)
-      .json(new ApiResponse(200, newComment, "Radhe Radhe"));
+      .json(new ApiResponse(200, newComment, "comment added successfully"));
   } catch (error) {
     return next(
       new ApiError(

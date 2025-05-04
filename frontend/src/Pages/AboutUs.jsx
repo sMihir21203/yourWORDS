@@ -1,11 +1,12 @@
 import React from 'react'
-import { Container } from '../Components/CompsIndex.js'
+import { Container, PageTitle } from '../Components/CompsIndex.js'
 import { Link } from 'react-router-dom'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 
 const AboutUs = () => {
   return (
     <Container>
+      <PageTitle title="About Us" />
       <div className='flex flex-col gap-8 text-lg'>
         <div>
           <h1 className='font-bold text-2xl md:text-3xl self-center justify-self-center mb-2 shadow-xs shadow-base-content w-fit p-2 rounded-md'> About YourWORDS</h1>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Loader, TextEditor } from '../../../Components/CompsIndex.js';
+import { Button, Loader, PageTitle, TextEditor } from '../../../Components/CompsIndex.js';
 import { API } from '../../../API/API.js';
 import { useNavigate } from 'react-router-dom';
 
@@ -113,79 +113,82 @@ const ShareWORDS = () => {
 
 
   return (
-    <form
-      onSubmit={handleOnSubmitPostData}
-      className='w-sm md:w-lg lg:w-7xl space-y-2'>
+    <>
+      <PageTitle title="ShareWORDS" />
+      <form
+        onSubmit={handleOnSubmitPostData}
+        className='w-sm md:w-lg lg:w-7xl space-y-2'>
 
-      <div className={`${!loading ? "" : "opacity-50"}`}>
+        <div className={`${!loading ? "" : "opacity-50"}`}>
 
-        <h1 className='text-center text-2xl md:text-3xl font-semibold mb-8'>Create Post</h1>
+          <h1 className='text-center text-2xl md:text-3xl font-semibold mb-8'>ShareWORDS</h1>
 
-        {/* error msg */}
-        {postErrMsg && (
-          <div className='alert alert-error self-center justify-self-center text-lg w-sm md:w-lg lg:w-fit mb-2'>{`👀 ${postErrMsg}`}</div>
-        )}
+          {/* error msg */}
+          {postErrMsg && (
+            <div className='alert alert-error self-center justify-self-center text-lg w-sm md:w-lg lg:w-fit mb-2'>{`👀 ${postErrMsg}`}</div>
+          )}
 
-        {/* Title and Category */}
-        <div className='flex flex-col md:flex-row space-y-1 md:space-x-2'>
-          <input
-            onChange={handleOnChangePostData}
-            id='postTitle'
+          {/* Title and Category */}
+          <div className='flex flex-col md:flex-row space-y-1 md:space-x-2'>
+            <input
+              onChange={handleOnChangePostData}
+              id='postTitle'
+              required
+              type="text"
+              placeholder="YourWORDS Title"
+              className="input w-full border-2 rounded-lg"
+            />
+
+            <select
+              onChange={handleOnChangePostData}
+              id='postCategory'
+              required
+              className='select w-full md:w-fit rounded-lg border-2'
+            >
+              <option>Uncategorized</option>
+              <option value="Mythology">Mythology</option>
+              <option value="sports">Sports</option>
+              <option value="reactjs">React JS</option>
+              <option value="web-evelopment">Web Development</option>
+              <option value="marvel">Marvel</option>
+            </select>
+          </div>
+
+          {/* Post Image */}
+          {previewPostImg && (
+            <img
+              src={previewPostImg}
+              className='rounded-lg my-1 self-center justify-self-center'
+            />
+          )}
+
+          < input
             required
-            type="text"
-            placeholder="YourWORDS Title"
-            className="input w-full border-2 rounded-lg"
+            onChange={handleOnChangePostData}
+            accept='image/*'
+            id='postImg'
+            type="file"
+            className='file-input file-input-lg mt-1  min-w-full border-2 rounded-lg'
           />
 
-          <select
-            onChange={handleOnChangePostData}
-            id='postCategory'
-            required
-            className='select w-full md:w-fit rounded-lg border-2'
-          >
-            <option>Uncategorized</option>
-            <option value="Mythology">Mythology</option>
-            <option value="sports">Sports</option>
-            <option value="reactjs">React JS</option>
-            <option value="web-evelopment">Web Development</option>
-            <option value="marvel">Marvel</option>
-          </select>
+          {/* textEditor */}
+          <TextEditor
+            onChange={(editorContent) => handleOnChangePostData(null, editorContent)}
+            className='mt-2 mb-4'
+          />
+
         </div>
-
-        {/* Post Image */}
-        {previewPostImg && (
-          <img
-            src={previewPostImg}
-            className='rounded-lg my-1 self-center justify-self-center'
-          />
+        {loading && (
+          <p className='text-center font-bold text-2xl md:text-5xl animate-pulse'>Creating Your Post...</p>
         )}
-
-        < input
-          required
-          onChange={handleOnChangePostData}
-          accept='image/*'
-          id='postImg'
-          type="file"
-          className='file-input file-input-lg mt-1  min-w-full border-2 rounded-lg'
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          text={loading ? <Loader /> : "Publish"}
+          style='imp'
         />
-
-        {/* textEditor */}
-        <TextEditor
-          onChange={(editorContent) => handleOnChangePostData(null, editorContent)}
-          className='mt-2 mb-4'
-        />
-
-      </div>
-      {loading && (
-        <p className='text-center font-bold text-2xl md:text-5xl animate-pulse'>Creating Your Post...</p>
-      )}
-      {/* Submit Button */}
-      <Button
-        type="submit"
-        text={loading ? <Loader /> : "Publish"}
-        style='imp'
-      />
-    </form>
+      </form>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
 import { updateStart, updateSuccess, updateFailure, clearAllMessages } from "../../../Store/User/userSlice.js"
-import { Input, Button, Loader, ChangePassword, DeleteAccount } from '../../../Components/CompsIndex.js'
+import { Input, Button, Loader, ChangePassword, DeleteAccount, PageTitle } from '../../../Components/CompsIndex.js'
 import { FaUser } from 'react-icons/fa'
 import { AiFillMail } from 'react-icons/ai'
 import { API } from '../../../API/API.js'
@@ -99,6 +99,8 @@ const Profile = () => {
 
 
   return (
+    <>
+    <PageTitle title={`Profile: @${currentUser.username}`}/>
     <div className='flex flex-col justify-center items-center'>
       <h1 className='font-semibold text-3xl mb-8'>Profile</h1>
       {/* Avatar Section */}
@@ -197,13 +199,14 @@ const Profile = () => {
             text='Delete Account'
             className='hover:text-error'
           />
-          <p className="cursor-pointer link-hover font-bold hover:text-secondary" onClick={() => setShowChangePass(!showChangePass)}>
+          <p className="cursor-pointer link-hover font-bold hover:text-info" onClick={() => setShowChangePass(!showChangePass)}>
             {showChangePass ? "Update Details" : "Change Password"}
           </p>
         </div>
       </div>
 
     </div>
+    </>
   )
 }
 

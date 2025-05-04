@@ -1,9 +1,10 @@
 import React from 'react'
-import { Container } from '../Components/CompsIndex.js'
+import { Container, PageTitle } from '../Components/CompsIndex.js'
 
 const Terms_and_Conditions = () => {
   return (
     <Container>
+      <PageTitle title="Terms and Conditions" />
       <div className='flex flex-col gap-8 text-lg'>
         <h1 className='font-bold text-2xl md:text-3xl self-center justify-self-center mb-2 shadow-xs shadow-base-content w-fit p-2 rounded-md'>Terms and Conditions for YourWORDS</h1>
         <div>

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Loader, Button, DeletePost } from '../../../Components/CompsIndex.js'
+import { Loader, Button, DeletePost, PageTitle } from '../../../Components/CompsIndex.js'
 import { API } from "../../../API/API.js";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const AllPosts = () => {
-  const userId = useSelector(state => state.user?.currentUser?.data?.loggedInUser?._id)
+  const currentUser = useSelector(state => state.user?.currentUser?.data?.loggedInUser)
   const [posts, setPosts] = useState([])
   const [totalPosts, setTotalPosts] = useState(0)
   const [fetchCount, setFetchCount] = useState(0)
@@ -20,7 +20,7 @@ const AllPosts = () => {
       try {
         if (!firstFetchDone) setLoading(true)
 
-        const { data } = await API.get(`/user/posts?userId=${userId}`)
+        const { data } = await API.get(`/user/posts?userId=${currentUser._id}`)
         if (data) {
           const postsInfo = data?.data?.userPosts || []
           const totalPosts = data?.data?.totalPosts || 0
@@ -45,7 +45,7 @@ const AllPosts = () => {
     const setStartIndex = posts.length
     try {
       setLoadingMore(true)
-      const { data } = await API.get(`/user/posts?setStartIndex=${setStartIndex}`)
+      const { data } = await API.get(`/user/posts?userId=${currentUser._id}&setStartIndex=${setStartIndex}`)
       if (data) {
         const morePostsInfo = data?.data?.userPosts || []
         setPosts((prev) => [...prev, ...morePostsInfo])
@@ -61,6 +61,7 @@ const AllPosts = () => {
   }
   return (
     <>
+    <PageTitle title={`Posts: ${currentUser.username}`}/>
       {loading && <Loader />}
       {posts.length > 0 ? (
 
@@ -74,7 +75,7 @@ const AllPosts = () => {
                   <th>Post</th>
                   <th>Image</th>
                   <th>Category</th>
-                  <th className="text-success">Author</th>
+                  <th className="text-success">Edit</th>
                   <th className="text-error">Delete</th>
                 </tr>
               </thead>
@@ -100,7 +101,7 @@ const AllPosts = () => {
                       </Link>
                     </td>
                     <td>
-                      <DeletePost postId={post._id} userId={userId} />
+                      <DeletePost postId={post._id} userId={currentUser._id} />
                     </td>
                   </tr>
                 ))}

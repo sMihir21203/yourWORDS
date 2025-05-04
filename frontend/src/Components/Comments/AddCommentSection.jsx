@@ -7,25 +7,80 @@ import Comment from './Comment.jsx'
 
 
 const AddCommentSection = ({
-    postId,
+    post,
     className = "",
     ...props
 }) => {
+    const postId = post._id
     const currentUser = useSelector(state => state?.user?.currentUser?.data?.loggedInUser);
     const [comment, setComment] = useState("");
     const [loading, setLoading] = useState(false)
+    const [loadingMore, setLoadingMore] = useState(false)
+    const [errMsg, setErrMsg] = useState(null)
+    const [refresh, setRefresh] = useState(false)
+    const [firstFetchDone, setFirstFetchDone] = useState(false)
+    const [totalComs, setTotalComs] = useState(0)
+    const [fetchCount, setFetchCount] = useState(0)
+    const [showMore, setShowMore] = useState(false)
     const maxChar = 200;
     const [postComments, setPostComments] = useState([])
     const navigate = useNavigate()
 
     useEffect(() => {
+        setTimeout(() => {
+            setErrMsg(null)
+        }, 5000);
+    }, [errMsg])
+
+    useEffect(() => {
         if (!postId) return;
+        const getPostComments = async () => {
+            try {
+                if (!firstFetchDone) setLoading(true);
+                const res = await API.get(`/comment/${postId}/comments`)
+                // console.log(res)
+                const data = res.data
+                if (data) {
+                    const comments = data?.data || []
+                    const totalComs = data || 0
+                    // console.log(totalComs)
+                    setPostComments(comments)
+                    setFetchCount(comments.length)
+                    setTotalComs(totalComs)
+                    setShowMore(comments.length < totalComs)
+                }
+            } catch (error) {
+                console.log(error?.response?.data?.message || "failed to getPostComments")
+            } finally {
+                setLoading(false)
+                setFirstFetchDone(true)
+            }
+        }
         getPostComments();
-    }, [postId])
+    }, [postId, refresh])
+
+    const handleShowMore = async () => {
+        const setStartIndex = comment.length
+        try {
+            setLoadingMore(true)
+            const { data } = await API.get(`/comment/comments?setStartIndex=${setStartIndex}`)
+            if (data) {
+                const moreComments = data?.data?.comments || []
+                setComment((prev) => [...prev, ...moreComments])
+                setFetchCount((prev) => prev + moreComments.length)
+                setShowMore(comment.length + moreComments.length < totalComs)
+            }
+        } catch (error) {
+            console.error(error)
+            console.error(error?.response?.data?.message || "failed to fetch more posts comments")
+        } finally {
+            setLoadingMore(false)
+        }
+    }
 
     const handleOnSubmitAddComment = async (e) => {
         e.preventDefault()
-        if (!comment.trim()) return;
+        if (!comment.trim()) return setErrMsg("Write Something to comment!");
         setLoading(true)
         try {
             const { data } = await API.post(`/comment/${postId}/add-comment`, { comment: comment.trim() })
@@ -37,18 +92,6 @@ const AddCommentSection = ({
             console.error(error.response?.data?.message || "Failed to add Comment! try again!")
         } finally {
             setLoading(false)
-        }
-    }
-
-    const getPostComments = async () => {
-        try {
-            const { data } = await API.get(`/comment/${postId}/comments`)
-            if (data) {
-                const comments = data?.data || []
-                setPostComments(comments)
-            }
-        } catch (error) {
-            console.log(error?.response?.data?.message || "failed to getPostComments")
         }
     }
 
@@ -105,7 +148,7 @@ const AddCommentSection = ({
                             </Link>
                         </div>
                     ) : (
-                        <div className='text-lg text-accent-content'>
+                        <div className='text-lg'>
                             You must need to <span>
                                 <Link
                                     to='/sign-in'
@@ -117,6 +160,11 @@ const AddCommentSection = ({
             }
 
             {/* addComments section */}
+            {errMsg && (
+                <div role="alert" className="mb-2 alert alert-error alert-soft flex justify-center text-center">
+                    {`👀 ${errMsg}`}
+                </div>
+            )}
             {
                 currentUser &&
                 (
@@ -137,8 +185,7 @@ const AddCommentSection = ({
                             </p>
                             <Button
                                 text={loading ? <Loader /> : "Comment"}
-                                className='w-fit px-2 rounded-sm bg-gradient-to-r from-[#ff007f] via-sky-300 to-[#003cff] text-transparent bg-clip-text shadow-base-content cursor-pointer'
-                                disabled={!comment.trim()}
+                                className='w-25 rounded-sm shadow-base-content cursor-pointer'
                             />
                         </div>
                     </form>
@@ -147,31 +194,49 @@ const AddCommentSection = ({
 
             {/* showAllComments */}
             {
-                !postComments.length ? (
-                    <p className='mt-4 text-xl font-semibold'>No Comments!</p>
-                ) : (
-                    <>
-                        <div className='flex items-center mt-4 mb-2 gap-1'>
-                            <p className='mb-0.5'>Comments: </p>
-                            <p className='px-2 shadow-xs shadow-base-content'>{postComments.length}</p>
-                        </div>
-                        {
-                            <ul className='list'>
-                                {postComments.map(com => (
-                                    <Comment
-                                        key={com._id}
-                                        currentUser={currentUser}
-                                        postId={postId}
-                                        comment={com}
-                                        like={handleLikeComment}
-                                        edit={handleEditComment}
-                                        setComments={setPostComments}
-                                    />
-                                ))}
-                            </ul>
-                        }
-                    </>
-                )
+                postComments.length > 0
+                    ? (
+                        <>
+                            <div className='flex items-center mt-4 mb-2 gap-1'>
+                                <p className='mb-0.5'>Comments: </p>
+                                <p className='px-2 shadow-xs shadow-base-content'>{postComments.length}</p>
+                            </div>
+                            {
+                                <ul className='list'>
+                                    {postComments.map(com => (
+                                        <Comment
+                                            key={com._id}
+                                            currentUser={currentUser}
+                                            post={post}
+                                            comment={com}
+                                            like={handleLikeComment}
+                                            edit={handleEditComment}
+                                            setComments={setPostComments}
+                                            setRefresh={setRefresh}
+                                            setShowMore={setShowMore}
+                                            totalComs={totalComs}
+                                            setTotalComs={setTotalComs}
+                                            setFetchCount={setFetchCount}
+                                        />
+                                    ))}
+                                </ul>
+                            }
+                            {showMore && (
+                                <Button
+                                    onClick={handleShowMore}
+                                    text={loadingMore ? <Loader /> : "Show More Users"}
+                                    style="imp"
+                                    className="mt-4"
+                                />
+                            )}
+                        </>
+                    )
+                    : (
+                        !loading &&
+                        firstFetchDone && (
+                            <p className='mt-4 text-xl font-semibold'>No Comments!</p>
+                        )
+                    )
             }
         </div>
     )

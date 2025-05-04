@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Loader, Button, DeletePost } from '../../../Components/CompsIndex.js'
+import { Loader, Button, DeletePost, PageTitle } from '../../../Components/CompsIndex.js'
 import { API } from "../../../API/API.js";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -61,6 +61,7 @@ const AllPosts = () => {
   }
   return (
     <>
+    <PageTitle title="All Posts" />
       {loading && <Loader />}
       {posts.length > 0 ? (
 

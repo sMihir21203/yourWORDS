@@ -22,11 +22,6 @@ const Header = () => {
     }
   }, [currentUser])
 
-  // console.log(theme)
-  const Radhe = () => {
-    alert("Radhe Radhe")
-  }
-
   return (
     <>
       <div className='navbar px-8 lg:px-14 bg-base-100 fixed top-0 left-0 right-0 z-10  shadow-[-0px_7px_7px_-11px] shadow-base-content flex items-center justify-between'>
@@ -69,11 +64,10 @@ const Header = () => {
               <div
                 className="dropdown dropdown-bottom dropdown-end ">
                 <div tabIndex={0} role="button" className="btn btn-circle avatar -mt-2 h-12 w-12  border-none shadow hover:shadow-md shadow-base-content">
-                  <div className="rounded-full">
+                 
                     <img
-                      src={avatar} alt="avatar"
+                      src={avatar} alt="avatar" className="rounded-full object-cover"
                     />
-                  </div>
                 </div>
                 <ul className="menu dropdown-content bg-base-100 shadow-sm shadow-base-content rounded-lg max-w-auto p-4 mt-1 gap-y-2  place-items-center">
                   <p className="font-bold mb-2">@{username}</p>
@@ -89,8 +83,7 @@ const Header = () => {
                 <Button
                   text="Sign In"
                   style="gradient"
-                  className="h-9 md:pb-1  md:px-4"
-                  onClick={Radhe}
+                  className="h-9 md:pb-1 px-2  md:px-4"
                 />
               </Link>)
             }

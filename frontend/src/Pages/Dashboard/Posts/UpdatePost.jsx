@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Loader, TextEditor } from '../../../Components/CompsIndex.js';
+import { Button, Container, Loader, PageTitle, TextEditor } from '../../../Components/CompsIndex.js';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { API } from '../../../API/API';
@@ -139,6 +139,7 @@ const UpdatePost = () => {
 
   return (
     <Container>
+      <PageTitle title={`Update Post: ${updatePostData.postTitle}`} />
       <form onSubmit={handleOnSubmitUpdatePostData} className="w-sm md:w-lg lg:w-full space-y-2">
         <div className={`${!loading ? "" : "opacity-50"}`}>
           <h1 className="text-center text-2xl md:text-3xl font-semibold mb-8">

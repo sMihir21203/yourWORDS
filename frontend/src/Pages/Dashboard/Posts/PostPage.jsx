@@ -1,7 +1,7 @@
 import "./PostPage.css"
 import React, { useEffect, useState } from 'react'
-import { AddCommentSection, Container, Loader } from "../../../Components/CompsIndex"
-import { useParams, Link } from 'react-router-dom'
+import { AddCommentSection, Container, Loader, PageTitle } from "../../../Components/CompsIndex"
+import { useParams, Link, useLocation, useNavigate } from 'react-router-dom'
 import { API } from '../../../API/API'
 import { MoreUserPosts, PostCard } from "./PostIndex.js"
 
@@ -59,8 +59,20 @@ const PostPage = () => {
     getRecentPosts()
   }, [])
 
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const handleGetMoreCategoryPosts = (e) => {
+    e.preventDefault()
+    const urlParams = new URLSearchParams(location.search)
+    urlParams.set('searchTerm', postInfo.postCategory)
+    const searchQuery = urlParams.toString()
+    navigate(`/search?${searchQuery}`)
+  }
+
   return (
     <Container>
+      <PageTitle title={`${postInfo.postTitle}`} />
       {
         loading
           ? <Loader />
@@ -79,6 +91,7 @@ const PostPage = () => {
             >
               <span>{new Date(postInfo.createdAt).toLocaleDateString()}</span>
               <Link
+                onClick={handleGetMoreCategoryPosts}
                 className='tooltip tooltip-left hover:scale-105 hover:font-bold'
                 data-tip={`See More ${postInfo.postCategory} Related Post?`}
               >
@@ -93,7 +106,7 @@ const PostPage = () => {
 
             {/* commentSection */}
             <AddCommentSection
-              postId={postInfo._id}
+              post={postInfo}
             />
 
 

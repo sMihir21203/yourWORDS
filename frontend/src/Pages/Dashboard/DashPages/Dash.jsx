@@ -3,7 +3,7 @@ import { API } from '../../../API/API.js'
 import { useSelector } from 'react-redux'
 import { FaArrowUp, FaComment } from 'react-icons/fa'
 import { HiDocumentText } from 'react-icons/hi'
-import { Button, Loader } from '../../../Components/CompsIndex.js'
+import { Button, Loader, PageTitle } from '../../../Components/CompsIndex.js'
 import { Link } from 'react-router-dom'
 
 const Dash = () => {
@@ -64,6 +64,7 @@ const Dash = () => {
 
   return (
     <>
+      <PageTitle title="Dashboard" />
       {
         loading
           ? <Loader />
@@ -144,7 +145,7 @@ const Dash = () => {
                             </td>
                             <td>
                               <Link to={`/post/${post.slug}`}>
-                              <span className='link-hover'>{post.postTitle}</span>
+                                <span className='link-hover'>{post.postTitle}</span>
                               </Link>
                             </td>
                             <td>

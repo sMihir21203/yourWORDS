@@ -1,9 +1,10 @@
 import React from 'react'
-import { Container } from '../Components/CompsIndex.js'
+import { Container, PageTitle } from '../Components/CompsIndex.js'
 
 const Privacy_and_Policy = () => {
     return (
         <Container>
+            <PageTitle title="Privacy and Policy" />
             <div className='flex flex-col gap-8 text-lg'>
                 <h1 className='font-bold text-2xl md:text-3xl self-center justify-self-center mb-2 shadow-xs shadow-base-content w-fit p-2 rounded-md'>Privacy Policy for YourWORD</h1>
                 <div>

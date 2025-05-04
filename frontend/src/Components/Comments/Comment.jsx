@@ -4,11 +4,12 @@ import { Button, DeleteComment, Loader } from "../CompsIndex.js"
 import moment from "moment"
 import { FaThumbsUp } from "react-icons/fa"
 
-const Comment = ({ currentUser, comment, postId, like, edit, setComments }) => {
+const Comment = ({ currentUser, comment, post, like, edit, setComments,setRefresh,setShowMore,totalComs,setTotalComs,setFetchCount }) => {
   const [user, setUser] = useState({})
   const [editing, setEditing] = useState(false)
   const [editedComment, setEditedComment] = useState(comment.comment)
   const [loading, setLoading] = useState(false)
+
   const maxChar = 200
 
   useEffect(() => {
@@ -75,20 +76,20 @@ const Comment = ({ currentUser, comment, postId, like, edit, setComments }) => {
                     onChange={(e) => setEditedComment(e.target.value)}
                     className='w-[15rem] md:w-xl rounded-sm h-16 p-2 border-none outline-none shadow-xs shadow-base-content text-sm'
                   />
-                  <div className="flex items-center justify-between mx-1 my-1">
+                  <div className="flex lg:flex-row flex-col space-y-1 items-center justify-between mx-1 my-1">
                     <p className="text-xs opacity-70">{maxChar - editedComment.length} characters remaining</p>
-                    <div className="space-x-2">
+                    <div className="space-x-2 flex items-center">
                       <Button
                         type="submit"
                         text={loading ? <Loader /> : "Save"}
-                        className='w-fit px-2 rounded-sm bg-gradient-to-r from-[#ff007f] via-sky-300 to-[#003cff] text-transparent bg-clip-text shadow-sky-300'
+                        className='w-12 px-2 rounded-sm'
                         disabled={!editedComment.trim()}
                       />
                       <Button
                         type="button"
                         onClick={() => setEditing(false)}
                         text="Cancle"
-                        className='w-fit px-1.5 shadow-sky-300 rounded-sm'
+                        className='w-14 rounded-sm'
                       />
                     </div>
                   </div>
@@ -129,11 +130,16 @@ const Comment = ({ currentUser, comment, postId, like, edit, setComments }) => {
                   </p>
                 )}
 
-                {(comment.userId === currentUser._id || currentUser.isAdmin || comment.postId === postId) && (
-                  <DeleteComment 
-                  comment={comment} 
-                  setComments={setComments} 
-                  className='opacity-70 hover:text-error hover:opacity-100'/>
+                {(comment.userId === currentUser._id || post.userId === currentUser._id || currentUser.isAdmin) && (
+                  <DeleteComment
+                    comment={comment}
+                    setComments={setComments}
+                    refresh={setRefresh}
+                    setShowMore={setShowMore}
+                    totalComs={totalComs}
+                    setTotalComs={setTotalComs}
+                    setFetchCount={setFetchCount}
+                    className='opacity-70 hover:text-error hover:opacity-100' />
                 )}
               </>
             )}

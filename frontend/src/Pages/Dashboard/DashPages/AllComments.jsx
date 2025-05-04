@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DeleteComment, Loader, Button } from '../../../Components/CompsIndex.js'
+import { DeleteComment, Loader, Button, PageTitle } from '../../../Components/CompsIndex.js'
 import { API } from "../../../API/API.js";
 import { Link } from 'react-router-dom';
 
@@ -60,6 +60,7 @@ const AllComments = () => {
 
   return (
     <>
+      <PageTitle title="All Comments" />
       {loading && <Loader />}
       {comments.length > 0 ? (
 

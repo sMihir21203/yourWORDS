@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, Links, useNavigate } from 'react-router-dom'
-import { Button, Input, GoogleAuth, Container, Loader } from '../Components/CompsIndex.js'
+import { Button, Input, GoogleAuth, Container, Loader, PageTitle } from '../Components/CompsIndex.js'
 import { FaUser, FaKey } from 'react-icons/fa'
 import { useDispatch, useSelector } from "react-redux"
 import { signInStart, signInSuccess, signInFailure, clearAllMessages } from "../Store/User/userSlice.js"
@@ -58,6 +58,7 @@ const SignIn = () => {
   }
   return (
     <Container>
+      <PageTitle title="SignIn"/>
       <div className="flex flex-col">
         {
           errorMsg && (
@@ -75,9 +76,9 @@ const SignIn = () => {
           </div>
         )}
         <div className='hero-content flex-col lg:flex-row'>
-          <div className='text-center lg:text-left lg:mr-2'>
-            <h1 className="text-5xl font-bold text-nowrap">
-              <span className='bg-gradient-to-r hover:bg-gradient-to-l from-[#ff007f] via-sky-300 to-[#003cff] text-transparent bg-clip-text'>
+          <div className='font-semibold text-center lg:text-left lg:mr-2'>
+            <h1 className="text-5xl text-nowrap">
+              <span className='font-bold'>
                 signIn
               </span> Now!
             </h1>
