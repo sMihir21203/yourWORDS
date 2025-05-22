@@ -22,7 +22,7 @@ const SignIn = () => {
     if (errorMsg || successMsg) {
       setTimeout(() => {
         dispatch(clearAllMessages())
-      }, 3000);
+      }, 5000);
     }
   }, [errorMsg, successMsg])
 
@@ -59,12 +59,12 @@ const SignIn = () => {
   return (
     <Container>
       <PageTitle title="SignIn"/>
-      <div className="flex flex-col">
+      <div className="flex flex-col items-center">
         {
           errorMsg && (
             <div
               role="alert"
-              className="alert alert-error alert-soft flex justify-center text-center mb-12"
+              className="alert alert-error alert-soft flex justify-center text-center mb-4"
             >
               {`👀 ${errorMsg}`}
             </div>
@@ -75,8 +75,8 @@ const SignIn = () => {
             {`✅ ${successMsg}`}
           </div>
         )}
-        <div className='hero-content flex-col lg:flex-row'>
-          <div className='font-semibold text-center lg:text-left lg:mr-2'>
+        <div className='flex flex-col lg:flex-row lg:mb-8'>
+          <div className='lg:my-auto font-semibold text-center lg:text-left lg:mr-6'>
             <h1 className="text-5xl text-nowrap">
               <span className='font-bold'>
                 signIn

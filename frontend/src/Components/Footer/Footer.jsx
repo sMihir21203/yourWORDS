@@ -6,8 +6,8 @@ import { AiFillMail } from 'react-icons/ai'
 
 const Footer = () => {
   return (
-    <footer className="footer footer-horizontal footer-center shadow-[-0px_-7px_7px_-11px] shadow-base-content p-6">
-      <div className='flex flex-wrap'>
+    <footer className="w-full footer footer-horizontal footer-center shadow-[-0px_-7px_7px_-11px] shadow-base-content p-6">
+      <div className='flex flex-wrap justify-center'>
         <Menu
           makeActive="no"
           links={[

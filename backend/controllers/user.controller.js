@@ -379,7 +379,7 @@ const sendResetPassLink = asyncHandler(async (req, res, next) => {
       return next(new ApiError(500, "failed to generate resetPassToken"));
     }
 
-    const resetPassLink = `http://localhost:5173/reset-password/${resetPassToken}`;
+    const resetPassLink = `http://yourwords.onrender.com/reset-password/${resetPassToken}`;
 
     await sendResetPassLinkEmail(email, resetPassLink);
     return res
@@ -599,7 +599,7 @@ const getUserPosts = asyncHandler(async (req, res, next) => {
   const slug = getQueryValue(req.query.slug);
   const category = getQueryValue(req.query.category);
   const searchQuery = getQueryValue(req.query.searchTerm);
-  const setLimit = parseInt(req.query.setLimit) || 9;
+  const setLimit = parseInt(req.query.setLimit) || 12;
   const setStartIndex = parseInt(req.query.setStartIndex) || 0;
   const sortDirection = req.query?.sort === "asc" ? 1 : -1;
 

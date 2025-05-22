@@ -20,6 +20,7 @@ const AllComments = () => {
 
         const { data } = await API.get(`/comment/comments`)
         if (data) {
+          console.log(data)
           const commentsInfo = data?.data?.comments || []
           const totalComs = data?.data?.totalComments || 0
 

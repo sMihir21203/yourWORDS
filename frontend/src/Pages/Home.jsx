@@ -32,10 +32,10 @@ const Home = () => {
       <div className='p-4 pt-21 space-y-8 flex flex-col items-center'>
         <div className='flex flex-col justify-between items-center p-4 w-full h-fit shadow-md shadow-base-content rounded-md'>
           <div className="flex flex-col items-center gap-2 mb-6 lg:mb-8">
-            <h1 className='text-4xl lg:text-7xl'>
+            <h1 className='text-3xl lg:text-7xl'>
               Welcome to YourWORDS
             </h1>
-            <p className='text-md lg:text-2xl'>"Write Freely. Speak Boldly. Live YourWORDS."</p>
+            <p className='text-sm lg:text-2xl'>"Write Freely. Speak Boldly. Live YourWORDS."</p>
           </div>
           <Searchbar />
         </div>

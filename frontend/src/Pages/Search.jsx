@@ -24,8 +24,8 @@ const Search = () => {
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search)
         const searchFromURL = urlParams.get('searchTerm') || ""
-        const sortFromURL = urlParams.get('sort') !== "null" ? urlParams.get('sort') : "desc"
-        const categoryFromURL = urlParams.get('category') !== "null" ? urlParams.get('category') : ""
+        const sortFromURL = urlParams.get('sort') ?? "desc"
+        const categoryFromURL = urlParams.get('category') ?? ""
 
         if (searchFromURL || sortFromURL || categoryFromURL) {
             setFilterData(prev => ({
@@ -99,12 +99,14 @@ const Search = () => {
 
     const handleShowMore = async () => {
         setShowMoreLoading(true)
-        const setStartIndex = totalPosts
-        const urlParams = new URLSearchParams()
+        const setStartIndex = posts.length
+        const urlParams = new URLSearchParams(location.search)
         urlParams.set('setStartIndex', setStartIndex)
+
         const searchQuery = urlParams.toString()
+        
         try {
-            const { data } = await API.get(`/user/posts/${searchQuery}`)
+            const { data } = await API.get(`/user/posts/?${searchQuery}`)
             if (data) {
                 const morePosts = data?.data?.userPosts || []
                 setPosts(prev => [...prev, ...morePosts])

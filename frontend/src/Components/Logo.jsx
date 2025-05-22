@@ -8,7 +8,7 @@ const Logo = ({ className = "" }) => {
       to={"/"}
       className={`w-42 md:w-60 text-xl md:text-3xl font-bold flex items-center ${className}`}
     >
-      <img src={YourWORDS} alt="YourWORDS Logo" className="mt-1 h-6 md:h-8.5 w-auto" />
+      <img src={YourWORDS} alt="YourWORDS Logo" className="mt-0.5 md:mt-1  h-5 md:h-8.5 w-auto" />
       <p>Your<span className="font-extrabold">WORDS</span></p>
     </Link>
   );

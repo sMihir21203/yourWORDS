@@ -39,7 +39,7 @@ const addComment = asyncHandler(async (req, res, next) => {
 
 const getPostComments = asyncHandler(async (req, res, next) => {
   const postId = new mongoose.Types.ObjectId(req?.params?.postId);
-  const setStartIndex = parseInt(req?.query?.setStartIndex) || 0;
+  const setStartIndex = parseInt(req.query?.setStartIndex) || 0;
 
   try {
     if (!postId) {
@@ -53,7 +53,7 @@ const getPostComments = asyncHandler(async (req, res, next) => {
         $facet: {
           commentsData: [
             { $skip: setStartIndex },
-            { $limit: 11 },
+            { $limit: 9 },
             {
               $project: {
                 _id: 1,
@@ -67,11 +67,13 @@ const getPostComments = asyncHandler(async (req, res, next) => {
               },
             },
           ],
+          totalComs: [{ $count: "totalComs" }],
         },
       },
     ]);
 
     const postComments = comments?.[0]?.commentsData || [];
+    const totalComments = comments?.[0]?.totalComs?.[0]?.totalComs || 0;
     if (!postComments.length) {
       return next(new ApiError(404, "No Comments Yet!"));
     }
@@ -79,7 +81,11 @@ const getPostComments = asyncHandler(async (req, res, next) => {
     return res
       .status(200)
       .json(
-        new ApiResponse(200, postComments, "post comments fetched successfully")
+        new ApiResponse(
+          200,
+          { postComments, totalComments },
+          "post comments fetched successfully"
+        )
       );
   } catch (error) {
     console.log(error);

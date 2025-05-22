@@ -68,7 +68,7 @@ const Dash = () => {
       {
         loading
           ? <Loader />
-          : <div className='md:mx-auto'>
+          : <div className='md:mx-auto mt-6 md:mt-10 lg:mt-0'>
             {/* above Data */}
             <div className='flex flex-wrap gap-4 justify-center'>
 

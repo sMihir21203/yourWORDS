@@ -28,7 +28,7 @@ const Searchbar = ({
     return (
         <form
             onSubmit={handleOnSubmit}
-            className={`${className}w-sm md:w-2xl lg:w-4xl p-2 flex items-center rounded-lg h-12 shadow-xs shadow-base-content`}>
+            className={`${className} w-xs md:w-2xl lg:w-4xl p-2 flex items-center rounded-lg h-12 shadow-xs shadow-base-content`}>
             <input
                 placeholder='FIND your READ...'
                 className='border-none outline-none w-full'

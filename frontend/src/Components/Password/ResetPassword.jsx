@@ -42,9 +42,6 @@ const ResetPassword = () => {
         } catch (error) {
             console.error(error)
             setErrorMsg(error?.response?.data?.message || "failed to reset password")
-            setTimeout(() => {
-                navigate('/forgot-password')
-            }, 5000);
         } finally {
             setLoading(false)
         }
