@@ -18,7 +18,7 @@ const AllComments = () => {
   const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
-    
+
     const getUserInfo = async () => {
       try {
         const { data } = await API.get(`/user/${userId}`)
@@ -78,11 +78,11 @@ const AllComments = () => {
 
   return (
     <>
-    <PageTitle title={`Comments: @${userInfo.username}`}/>
+      <PageTitle title={`Comments: @${userInfo.username}`} />
       {loading && <Loader />}
       {comments.length > 0 ? (
 
-        <div className="lg:mt-0 lg:w-7xl w-full h-auto">
+        <div className="w-sm md:w-lg lg:w-7xl">
           <div className='text-center font-semibold text-4xl'>Comments</div>
           {/* userinfo */}
           <div className='flex flex-row items-center gap-2 mb-4'>
@@ -120,12 +120,7 @@ const AllComments = () => {
                       <td >
                         <span className='flex items-center gap-1 mr-2'>
                           <img src={com.avatar} alt={com.username} className='w-8 h-8 object-cover rounded-full mt-1' />
-                          <Link
-                            to={`/post/${com.userId}`}
-                            className="cursor-pointer link-hover"
-                          >
-                            {com.username}
-                          </Link>
+                          <p>{com.username}</p>
                         </span>
                       </td>
                       <td>
@@ -170,8 +165,8 @@ const AllComments = () => {
       ) : (
         !loading &&
         firstFetchDone && (
-          <div className="font-bold text-3xl text-center">
-            We Dont't Have Any Posts Comments Yet!
+          <div className="text-3xl text-center">
+            <span className='font-bold'>@{userInfo.username} </span>don't have any posts comments yet!
           </div>
         )
       )}

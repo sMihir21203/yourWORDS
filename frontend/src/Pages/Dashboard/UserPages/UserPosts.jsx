@@ -82,7 +82,7 @@ const AllPosts = () => {
       {loading && <Loader />}
       {posts.length > 0 ? (
 
-        <div className="lg:mt-0 lg:w-7xl w-full h-auto">
+        <div className="w-sm md:w-lg lg:w-7xl">
           <div className='text-center font-semibold text-4xl'>Posts</div>
           {/* userinfo */}
           <div className='flex flex-row items-center gap-2 mb-4'>
@@ -146,8 +146,8 @@ const AllPosts = () => {
       ) : (
         !loading &&
         firstFetchDone && (
-          <div className="font-bold text-3xl text-center">
-            We Dont't Have Any Posts Yet!
+          <div className="text-3xl text-center">
+            <span className='font-bold'>@{userInfo.username} </span>not created any posts yet!
           </div>
         )
       )}

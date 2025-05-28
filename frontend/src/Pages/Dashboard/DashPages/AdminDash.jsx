@@ -92,7 +92,7 @@ const AdminDash = () => {
       {
         loading
           ? <Loader />
-          : <div className='md:mx-auto'>
+          : <div className='md:mx-auto mt-6 md:mt-10 lg:mt-0 w-sm md:w-lg lg:w-7xl'>
             {/* above Data */}
             <div className='flex flex-wrap gap-4 justify-center'>
               {/* Users */}

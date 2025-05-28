@@ -65,7 +65,7 @@ const AllPosts = () => {
       {loading && <Loader />}
       {posts.length > 0 ? (
 
-        <div className="mt-12 lg:mt-0 lg:w-7xl w-full h-auto">
+        <div className="mt-12 lg:mt-0 w-sm md:w-lg lg:w-7xl">
           <div className="overflow-x-auto overflow-y-auto border-none shadow-md shadow-base-content rounded-sm">
             <table className="table text-nowrap">
               <thead className="bg-base-300 text-lg text-base-content">
@@ -96,7 +96,7 @@ const AllPosts = () => {
                     <td>{post.postCategory}</td>
                   
                     <td>
-                      <DeletePost postId={post._id} userId={userId} />
+                      <DeletePost refresh={setRefresh} postId={post._id} userId={userId} />
                     </td>
                   </tr>
                 ))}
@@ -118,7 +118,7 @@ const AllPosts = () => {
         !loading &&
         firstFetchDone && (
           <div className="font-bold text-3xl text-center">
-            We Dont't Have Any Posts Yet!
+             Dont't Have Any Posts Yet!
           </div>
         )
       )}

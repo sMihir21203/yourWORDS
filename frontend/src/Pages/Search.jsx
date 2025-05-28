@@ -127,8 +127,8 @@ const Search = () => {
             <div className='p-4 pt-21 flex flex-col justify-center items-center space-y-4'>
                 <form
                     onSubmit={handleOnSubmit}
-                    className={`p-4 flex flex-col items-center justify-center gap-2 lg:gap-8 shadow-sm shadow-base-content rounded-md`}>
-                    <div className='w-sm md:w-2xl lg:w-4xl p-2 flex items-center rounded-lg h-12 shadow-xs shadow-base-content'>
+                    className={`p-4 flex flex-wrap items-center justify-items-center gap-2 md:gap-4 shadow-sm shadow-base-content rounded-md`}>
+                    <div className='w-xs md:w-2xl lg:w-4xl p-2 flex items-center rounded-lg h-12 shadow-xs shadow-base-content'>
                         <input
                             placeholder='FIND your READ...'
                             className='border-none outline-none w-full'
@@ -142,8 +142,8 @@ const Search = () => {
                             <AiOutlineSearch size={30} className='cursor-pointer' />
                         </button>
                     </div>
-                    <div className='flex flex-wrap items-center gap-4 lg:gap-2'>
-                        <div className="flex items-center gap-1">
+                    <div className='flex flex-col md:flex-row md:items-center items-start gap-2'>
+                        <div className="flex flex-col md:flex-row md:items-center gap-1">
                             <span>Category:</span>
                             <select
                                 value={filterData.category}
@@ -158,7 +158,7 @@ const Search = () => {
                                 <option value="marvel">Marvel</option>
                             </select>
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex flex-col md:flex-row md:items-center gap-1">
                             <span>Order:</span>
                             <select
                                 value={filterData.sort}
@@ -174,7 +174,7 @@ const Search = () => {
                                 text='Apply'
                                 type="submit"
                                 style='gradient'
-                                className='px-2 mb-1'
+                                className='w-20 h-9 md:mt-0 md:mb-0.5 md:ml-2'
                             />
                         </div>
                     </div>

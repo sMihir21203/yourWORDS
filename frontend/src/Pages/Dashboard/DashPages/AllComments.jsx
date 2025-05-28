@@ -65,7 +65,7 @@ const AllComments = () => {
       {loading && <Loader />}
       {comments.length > 0 ? (
 
-        <div className="mt-12 lg:mt-0 lg:w-7xl w-full h-auto">
+        <div className="mt-12 lg:mt-0 w-sm md:w-lg lg:w-7xl">
           <div className="overflow-x-auto overflow-y-auto border-none shadow-md shadow-base-content rounded-sm">
             <table className="table text-nowrap">
               <thead className="bg-base-300 text-lg text-base-content">
@@ -90,19 +90,14 @@ const AllComments = () => {
                       <td >
                         <span className='flex items-center gap-1 mr-2'>
                           <img src={com.avatar} alt={com.username} className='w-8 h-8 object-cover rounded-full mt-1' />
-                          <Link
-                            to={`/post/${com.userId}`}
-                            className="cursor-pointer link-hover"
-                          >
-                            {com.username}
-                          </Link>
+                          <p>{com.username}</p>
                         </span>
                       </td>
                       <td>
                         <span className='flex items-center gap-1 mr-2'>
                           <img src={com.postImg} alt={com.postTitle} className='w-8 h-8 object-cover rounded-sm mt-1' />
                           <Link
-                            to={`/post/${com.slug}`}
+                            to={`/post/${com.userId}`}
                             className="cursor-pointer link-hover"
                           >
                             {com.postTitle}

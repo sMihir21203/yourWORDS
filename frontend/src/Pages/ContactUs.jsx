@@ -8,7 +8,7 @@ const ContactUs = () => {
         <Container>
             <div className='flex flex-col items-center gap-8 text-lg mb-32'>
                 <div>
-                    <h1 className='font-bold text-2xl md:text-3xl self-center justify-self-center mb-2 shadow-xs shadow-base-content w-fit p-2 rounded-md'>Contact YourWORDS</h1>
+                    <h1 className='font-bold text-2xl md:text-3xl self-center justify-self-center mb-2 shadow-xs shadow-base-content w-fit p-2 rounded-md text-center'>Contact YourWORDS</h1>
                 </div>
                 <div className='space-y-6 flex flex-col items-center'>
                     <div>

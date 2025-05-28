@@ -9,7 +9,7 @@ const AboutUs = () => {
       <PageTitle title="About Us" />
       <div className='flex flex-col gap-8 text-lg'>
         <div>
-          <h1 className='font-bold text-2xl md:text-3xl self-center justify-self-center mb-2 shadow-xs shadow-base-content w-fit p-2 rounded-md'> About YourWORDS</h1>
+          <h1 className='font-bold text-2xl md:text-3xl self-center justify-self-center mb-2 shadow-xs shadow-base-content w-fit p-2 rounded-md text-center'>About YourWORDS</h1>
 
           <div className='space-y-2'>
             <p>

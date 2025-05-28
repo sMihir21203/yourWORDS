@@ -3,7 +3,7 @@ import { Container } from '../Components/CompsIndex.js'
 const NotFound = () => {
   return (
     <Container>
-    <div>NotFound</div>
+    <div className='text-4xl font-bold'>Nothing to See Here! 😁</div>
     </Container>
   )
 }

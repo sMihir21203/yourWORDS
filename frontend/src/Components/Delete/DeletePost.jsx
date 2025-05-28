@@ -11,8 +11,9 @@ const DeletePost = ({ userId, postId }) => {
       if (!deletePost.status === 200) {
         console.log(deletePost.data?.message || "Delete Post Issue")
       } else {
-        window.location.href = "/dashboard?tab=my-posts"
-        // alert(deletePost.data?.message);
+        const searchParams = new URLSearchParams(window.location.search)
+        const currentPage = searchParams.get("tab")
+        window.location.href = `dashboard?tab=${currentPage}`
       }
     } catch (error) {
       console.log(error.response?.data?.message || "DeletePost Issue")

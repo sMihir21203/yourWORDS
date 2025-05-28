@@ -73,10 +73,10 @@ const UserProfile = () => {
   return (
     <>
       <PageTitle title={`Profile: @${userInfo.username}`} />
-      <div className='md:mx-auto space-y-4'>
-        <div className='text-center font-semibold text-4xl mb-12'>Profile</div>
+      <div className='mx-auto w-sm md:w-lg lg:w-7xl'>
+        <div className='text-center font-semibold text-4xl mb-8'>Profile</div>
         {/* userinfo */}
-        <div className='flex flex-row items-center justify-center gap-2'>
+        <div className='flex flex-row items-center justify-center gap-2 mb-4'>
           <div className='text-3xl font-bold'>
             @{userInfo.username}
           </div>
@@ -130,7 +130,7 @@ const UserProfile = () => {
         </div>
 
         {/* tables */}
-        <div className='flex flex-wrap gap-4 justify-center'>
+        <div className='mt-4 flex flex-wrap gap-4 justify-center'>
           <div className='p-4 flex flex-col gap-2 w-md md:w-auto rounded-md shadow-xs shadow-base-content'>
             <div className='flex justify-between text-center'>
               <h1 className='p-2 text-center font-bold text-lg'>Recent Posts</h1>

@@ -6,7 +6,7 @@ const Terms_and_Conditions = () => {
     <Container>
       <PageTitle title="Terms and Conditions" />
       <div className='flex flex-col gap-8 text-lg'>
-        <h1 className='font-bold text-2xl md:text-3xl self-center justify-self-center mb-2 shadow-xs shadow-base-content w-fit p-2 rounded-md'>Terms and Conditions for YourWORDS</h1>
+        <h1 className='font-bold text-2xl md:text-3xl self-center justify-self-center mb-2 shadow-xs shadow-base-content w-fit p-2 rounded-md text-center'>Terms and Conditions for YourWORDS</h1>
         <div>
           <h1 className='font-bold md:text-2xl'>Introduction</h1>
           <p>

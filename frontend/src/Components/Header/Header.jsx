@@ -12,13 +12,13 @@ const Header = () => {
   const { theme } = useSelector(state => state.theme)
   const [avatar, setAvatar] = useState(null);
   const [username, setUsername] = useState(null);
-  const [errMsg, setErrMsg] = useState(null)
-  const navigate = useNavigate()
+  const [isAdmin, setIsAdmin] = useState(null)
 
   useEffect(() => {
     if (currentUser) {
       setAvatar(currentUser.avatar),
         setUsername(currentUser.username)
+      setIsAdmin(currentUser.isAdmin)
     }
   }, [currentUser])
 
@@ -64,16 +64,22 @@ const Header = () => {
               <div
                 className="dropdown dropdown-bottom dropdown-end ">
                 <div tabIndex={0} role="button" className="btn btn-circle avatar -mt-2 h-12 w-12  border-none shadow hover:shadow-md shadow-base-content">
-                 
-                    <img
-                      src={avatar} alt="avatar" className="rounded-full object-cover"
-                    />
+
+                  <img
+                    src={avatar} alt="avatar" className="rounded-full object-cover"
+                  />
                 </div>
                 <ul className="menu dropdown-content bg-base-100 shadow-sm shadow-base-content rounded-lg max-w-auto p-4 mt-1 gap-y-2  place-items-center">
                   <p className="font-bold mb-2">@{username}</p>
-                  <Menu
+                  <Menu className="text-center"
                     links={[
-                      { name: "Profile", path: "/dashboard?tab=profile" }
+                      { name: "Profile", path: "/dashboard?tab=profile" },
+                      { name: "Dashboard", path: "/dashboard?tab=dash" },
+                      ...(
+                        isAdmin
+                          ? [{ name: "Admin Dashboard", path: "/dashboard?tab=admin-dash" },]
+                          : []
+                      )
                     ]}
                   />
                   <SignOutBtn />

@@ -65,26 +65,26 @@ const PostPage = () => {
   const handleGetMoreCategoryPosts = (e) => {
     e.preventDefault()
     const urlParams = new URLSearchParams(location.search)
-    urlParams.set('searchTerm', postInfo.postCategory)
+    urlParams.set('category', postInfo.postCategory)
     const searchQuery = urlParams.toString()
     navigate(`/search?${searchQuery}`)
   }
 
   return (
-    <Container>
+    <div className="mt-20 mx-auto w-sm md:w-lg lg:w-7xl">
       <PageTitle title={`${postInfo.postTitle}`} />
       {
         loading
           ? <Loader />
           : <div className='space-y-2'>
             <h1
-              className='text-center text-xl md:text-3xl font-bold shadow-sm rounded-sm'
+              className='text-center text-xl md:text-3xl font-bold shadow-sm rounded-sm' 
             >{postInfo.postTitle}
             </h1>
             <img
               src={postInfo.postImg}
               alt={postInfo.postTitle}
-              className='w-full rounded-md shadow-sm shadow-base-content self-center justify-self-center'
+              className='w-sm md:w-full rounded-md shadow-sm shadow-base-content self-center justify-self-center'
             />
             <p
               className='border-b-1 flex justify-between font-semibold text-xs md:text-sm'
@@ -127,7 +127,7 @@ const PostPage = () => {
             </div>
           </div>
       }
-    </Container>
+    </div>
   )
 }
 
