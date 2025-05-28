@@ -146,7 +146,7 @@ const AllPosts = () => {
       ) : (
         !loading &&
         firstFetchDone && (
-          <div className="text-3xl text-center">
+          <div className="text-3xl text-center mt-8 md:mt-0">
             <span className='font-bold'>@{userInfo.username} </span>not created any posts yet!
           </div>
         )

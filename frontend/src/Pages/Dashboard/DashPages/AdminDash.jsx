@@ -98,7 +98,7 @@ const AdminDash = () => {
               {/* Users */}
               {
                 currentUser.isAdmin && (
-                  <div className='w-sm flex flex-col p-4 shadow-xs shadow-base-content rounded-sm'>
+                  <div className='w-xs md:w-sm flex flex-col p-4 shadow-xs shadow-base-content rounded-sm'>
                     <div className='flex justify-between'>
                       <div>
                         <h3>Total Users</h3>
@@ -118,7 +118,7 @@ const AdminDash = () => {
               }
 
               {/* Posts */}
-              <div className='w-sm flex flex-col p-4 shadow-xs shadow-base-content rounded-sm'>
+              <div className='w-xs md:w-sm flex flex-col p-4 shadow-xs shadow-base-content rounded-sm'>
                 <div className='flex justify-between'>
                   <div>
                     <h3>Total Posts</h3>
@@ -136,7 +136,7 @@ const AdminDash = () => {
               </div>
 
               {/* Comments */}
-              <div className='w-sm flex flex-col p-4 shadow-xs shadow-base-content rounded-sm'>
+              <div className='w-xs md:w-sm flex flex-col p-4 shadow-xs shadow-base-content rounded-sm'>
                 <div className='flex justify-between'>
                   <div className=''>
                     <h3>Total Comments</h3>
@@ -157,7 +157,7 @@ const AdminDash = () => {
             </div>
             {/* tables */}
             <div className='mt-4 flex flex-wrap gap-4 justify-center'>
-              <div className='p-4 flex flex-col gap-2 w-md md:w-md rounded-md shadow-xs shadow-base-content'>
+              <div className='p-4 flex flex-col gap-2 w-sm md:w-md rounded-md shadow-xs shadow-base-content'>
                 <div className='flex justify-between text-center'>
                   <h1 className='p-2 text-center font-bold text-lg'>Recent Users</h1>
                   <Link to="?tab=all-users">
@@ -198,7 +198,7 @@ const AdminDash = () => {
                   </table>
                 </div>
               </div>
-              <div className='p-4 flex flex-col gap-2 w-md md:w-auto rounded-md shadow-xs shadow-base-content'>
+              <div className='p-4 flex flex-col gap-2 w-sm md:w-auto rounded-md shadow-xs shadow-base-content'>
                 <div className='flex justify-between text-center'>
                   <h1 className='p-2 text-center font-bold text-lg'>Recent Posts</h1>
                   <Link to="?tab=all-posts">
@@ -244,7 +244,7 @@ const AdminDash = () => {
                   </table>
                 </div>
               </div>
-              <div className='p-4 flex flex-col gap-2 w-md md:w-auto rounded-md shadow-xs shadow-base-content'>
+              <div className='p-4 flex flex-col gap-2 w-sm md:w-auto rounded-md shadow-xs shadow-base-content'>
                 <div className='flex justify-between text-center'>
                   <h1 className='p-2 text-center font-bold text-lg'>Recent Comments</h1>
                   <Link to="/dashboard?tab=all-comments">

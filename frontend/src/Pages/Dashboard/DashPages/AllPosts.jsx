@@ -117,8 +117,8 @@ const AllPosts = () => {
       ) : (
         !loading &&
         firstFetchDone && (
-          <div className="font-bold text-3xl text-center">
-             Dont't Have Any Posts Yet!
+          <div className="font-bold text-3xl text-center mt-8 md:mt-0">
+            We Dont't Have Any User's Posts Yet!
           </div>
         )
       )}

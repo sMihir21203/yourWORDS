@@ -138,7 +138,7 @@ const Comments = () => {
             ) : (
                 !loading &&
                 firstFetchDone && (
-                    <div className="font-bold text-3xl text-center">
+                    <div className="font-bold text-3xl text-center mt-8 md:mt-0">
                         You Dont't Have Any Posts Comments Yet!
                     </div>
                 )

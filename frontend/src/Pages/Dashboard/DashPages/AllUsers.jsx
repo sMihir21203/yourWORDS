@@ -122,7 +122,7 @@ const AllUsers = () => {
       ) : (
         !loading &&
         firstFetchDone && (
-          <div className="font-bold text-3xl text-center mt-8">
+          <div className="font-bold text-3xl text-center mt-8 md:mt-0">
             We Dont't Have Any Users Yet!
           </div>
         )

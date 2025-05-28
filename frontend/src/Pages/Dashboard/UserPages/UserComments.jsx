@@ -165,7 +165,7 @@ const AllComments = () => {
       ) : (
         !loading &&
         firstFetchDone && (
-          <div className="text-3xl text-center">
+          <div className="text-3xl text-center mt-8 md:mt-0">
             <span className='font-bold'>@{userInfo.username} </span>don't have any posts comments yet!
           </div>
         )
