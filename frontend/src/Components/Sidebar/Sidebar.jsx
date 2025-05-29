@@ -57,7 +57,7 @@ const Sidebar = () => {
               <Link
                 to="/dashboard?tab=dash"
                 className={`${activeLink("?tab=dash")}`}>
-                <FaSlidersH />  Dasboard
+                <FaSlidersH />  Dashboard
               </Link>
             </li>
             {/* onlyAdmin Access */}
@@ -67,7 +67,7 @@ const Sidebar = () => {
                   <Link
                     to="/dashboard?tab=admin-dash"
                     className={`${activeLink("?tab=admin-dash")}`}>
-                    <FaSlidersH />  Admin Dasboard
+                    <FaSlidersH />  Admin Dashboard
                   </Link>
                 </li>
                 <li>

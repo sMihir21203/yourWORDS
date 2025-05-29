@@ -129,7 +129,8 @@ const UpdatePost = () => {
       console.log(res);
       const updatedPost = res.data?.data;
       const message = res.data?.message;
-      console.log(updatedPost, message);
+      navigate(`/post/${updatedPost.slug}`)
+      alert(message)
     } catch (error) {
       console.log(error.response?.data?.message || "Error while updating post!");
     } finally {
@@ -175,7 +176,7 @@ const UpdatePost = () => {
               <option value="Mythology">Mythology</option>
               <option value="sports">Sports</option>
               <option value="reactjs">React JS</option>
-              <option value="web-evelopment">Web Development</option>
+              <option value="web-development">Web Development</option>
               <option value="marvel">Marvel</option>
             </select>
           </div>
