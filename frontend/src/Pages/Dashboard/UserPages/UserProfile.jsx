@@ -131,7 +131,7 @@ const UserProfile = () => {
 
         {/* tables */}
         <div className='mt-4 flex flex-wrap gap-4 justify-center'>
-          <div className='p-4 flex flex-col gap-2 w-md md:w-auto rounded-md shadow-xs shadow-base-content'>
+          <div className='p-4 flex flex-col gap-2 w-sm md:w-auto rounded-md shadow-xs shadow-base-content'>
             <div className='flex justify-between text-center'>
               <h1 className='p-2 text-center font-bold text-lg'>Recent Posts</h1>
               <Link to={`?tab=posts/${userInfo._id}`}>
@@ -174,7 +174,7 @@ const UserProfile = () => {
               </table>
             </div>
           </div>
-          <div className='p-4 flex flex-col gap-2 w-md md:w-auto rounded-md shadow-xs shadow-base-content'>
+          <div className='p-4 flex flex-col gap-2 w-sm md:w-auto rounded-md shadow-xs shadow-base-content'>
             <div className='flex justify-between text-center'>
               <h1 className='p-2 text-center font-bold text-lg'>Recent Comments</h1>
               <Link to={`?tab=comments/${userInfo._id}`}>

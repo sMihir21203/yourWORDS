@@ -86,14 +86,14 @@ const AllPosts = () => {
           <div className='text-center font-semibold text-4xl'>Posts</div>
           {/* userinfo */}
           <div className='flex flex-row items-center gap-2 mb-4'>
-            <div className='text-3xl font-bold'>
+            <div className='text-xl md:text-3xl font-bold'>
               @{userInfo.username}
             </div>
             <div>
               <img
                 src={userInfo.avatar}
                 alt="user"
-                className='w-15 h-15 rounded-full object-cover shadow-md shadow-base-content' />
+                className='w-9 h-9 md:w-15 md:h-15 rounded-full object-cover shadow-md shadow-base-content' />
             </div>
           </div>
           <div className="overflow-x-auto overflow-y-auto border-none shadow-md shadow-base-content rounded-sm">
