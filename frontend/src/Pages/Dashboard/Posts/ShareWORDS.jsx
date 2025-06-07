@@ -17,8 +17,7 @@ const ShareWORDS = () => {
   const navigate = useNavigate()
 
   const validImgTypes = ["image/jpeg", "image/png", "image/jpg"]
-  const maxSize = 1 * 1024 * 1024 //1mb
-  const minSize = 500 * 1024  //500kb
+  const maxSize = 1 * 1024 * 1024 
 
   const handleOnChangePostData = (e, editorContent = null) => {
 
@@ -41,8 +40,8 @@ const ShareWORDS = () => {
         return
       }
 
-      if (file.size < minSize || file.size > maxSize) {
-        alert("Post Image size must be between 500KB and 2MB.");
+      if (file.size > maxSize) {
+        alert("Post Image size must be less then 2MB.");
         e.target.value = null
         return
       }
